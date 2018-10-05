@@ -1,0 +1,35 @@
+
+.container {
+    padding: 100px;
+}
+
+.fluid-container {
+    text-align: left;
+}
+
+#profile-container {
+    margin-left: 1%;
+    padding: 20px;
+}
+
+
+.btn-primary{
+    margin: 1%;
+}
+
+.change-form {
+    text-align: center;
+    width: 50%;
+    margin-top: 10%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.form-control {
+    text-align: center;
+    margin: 1%;
+}
+
+.d-inline-block {
+    text-align: center;
+}
