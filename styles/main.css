@@ -1,77 +1,142 @@
-        .container {
-            border: 2px solid #dedede;
-            background-color: #f1f1f1;
-            border-radius: 5px;
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
 
-            margin: 10px 0;
-            width: 100%;
-            height: 25%;
-        }
+    margin: 10px 0;
+    width: 100%;
+    height: 25%;
+}
 
-        .darker {
-            border-color: #ccc;
-            background-color: #ddd;
-        }
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
 
-        .container::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
-        .container img {
-            float: left;
-            max-width: 15%;
-            width: 5%;
-            margin-right: 5%;
-            border-radius: 50%;
-        }
+.container img {
+    float: left;
+    max-width: 15%;
+    width: 5%;
+    margin-right: 5%;
+    border-radius: 50%;
+}
 
-        .container .right {
-            float: right;
-            margin-left: 20px;
-            margin-right: 0;
-        }
+.container .right {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
 
-        .time-right {
-            float: right;
-            color: #aaa;
-        }
+.time-right {
+    float: right;
+    color: #aaa;
+}
 
-        .time-left {
-            float: left;
-            color: #999;
+.time-left {
+    float: left;
+    color: #999;
 
-        }
+}
 
-        .message {
-            position: absolute;
-            bottom: 0%;
+.message {
+    position: absolute;
+    bottom: 0%;
 
-        }
+}
 
-        #message {
+#message {
 
-            width: 75%;
+    width: 75%;
 
-        }
+}
 
-        .shadow-textarea textarea.form-control::placeholder {
-            font-weight: 300;
-        }
+.shadow-textarea textarea.form-control::placeholder {
+    font-weight: 300;
+}
 
-        .shadow-textarea textarea.form-control {
-            padding-left: 0.8rem;
-        }
+.shadow-textarea textarea.form-control {
+    padding-left: 0.8rem;
+}
 
-        #imaginary_container {
-            position: absolute;
-            right: 0%;
-        }
+#imaginary_container {
+    position: absolute;
+    right: 0%;
+}
 
-        #messageContainer {
-     
-              width: 100%;
-              height: 500px;
-            overflow: auto;
-        }
+#messageContainer {
+
+      width: 100%;
+      height: 500px;
+    overflow: auto;
+}
+
+.sidebar{
+    background-color: #def;
+    height: 100%;
+    width: 200px;
+    position:fixed;
+    border-style:solid;
+    border-left:5px;
+    border-color:#0bf;
+}
+.sidebarHeading{
+    text-align:center;
+    border: solid #0bf 1px;
+}
+html, body{
+    margin: 0;
+    height: 100%;
+    background-color: #FFE;
+}
+.main{
+    margin-left:205px;
+}
+/*Unused Right now*/
+.sidebarLink{
+    color:darkviolet;
+    background-color:#cee6ff;
+    display:block;
+    text-align:center;
+    font-size: 1.5em;
+    padding: 10px 0px;
+    margin: 10px;
+    border: solid 1px;
+    text-decoration: none;
+}
+.conversation{
+    background-color:#cee6ff;
+    border: solid darkviolet 1px;
+    border-radius:7px;
+}
+.conversation img{
+    width: 20%;
+}
+.convName{
+    font-size: 1.2em;
+    text-decoration:none;
+    color:darkviolet;
+    vertical-align:middle;
+}
+#myAccount{
+   padding: 20px 5px;
+    margin-bottom:20px;
+    
+}
+#myAccountPhoto{
+    width:20%;
+}
+#myAccountName{
+    display:block;
+    font-size: 1.5em;
+    font-family:serif, sans-serif;
+}
+#myAccountSettings{
+    float: right;
+    width:20%;
+}
