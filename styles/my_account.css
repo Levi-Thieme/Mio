@@ -7,12 +7,12 @@
     text-align: left;
 }
 
-#profile-container {
+#profile_container {
     margin-left: 1%;
     padding: 20px;
 }
 
-#back-btn {
+#back_btn {
     float: right;
     margin-right: 1%;
 }
@@ -31,6 +31,4 @@
     margin: 1%;
 }
 
-.d-inline-block {
-    text-align: center;
-}
+
