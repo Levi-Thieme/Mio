@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <script>
+      function validate() {
+        if (document.getElementById("message").value=="") {
+          return false;
+        }
+        else{
+            var message = document.getElementById("message").value
+            alert(message);
+        return true; 
+        }
+
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div id="myAccount">
+        <a href="account.html">
+            <img id="myAccountPhoto" src="../imgs/user.png" alt="My Account Photo">
+        </a>
+        <a href="account.html">
+            <img id="myAccountSettings" src="../imgs/gear.png">
+        </a>
+        <label id="myAccountName">Student 1337</label>
+      </div>
+      <div id="recentConversations">
+        <h3 class="sidebarHeading">Recent Conversations</h3>
+        <div class="conversation">
+          <a href="account.html">
+                <img src="../imgs/user.png" alt="Noah Parker">
+            </a>
+          <a class="convName" href="account.html">Noah Parker</a>
+        </div>
+        <div class="conversation">
+          <a href="account.html">
+                <img src="../imgs/user.png" alt="Jared Johnson">
+            </a>
+          <a class="convName" href="account.html">Jared Johnson</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div id="imaginary_container">
+        <input type="text" class="form-control" placeholder="Search">
+      </div>
+
+
+      <div id="messageContainer">
+        <ol class="discussion">
+          <li class="other">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>yeah, they do early flights cause they connect with big airports. they wanna get u to your connection</p>
+              <time datetime="2009-11-13T20:00">Noah Parker  51 min</time>
+            </div>
+          </li>
+          <li class="self">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>That makes sense.</p>
+              <p>It's a pretty small airport.</p>
+              <time datetime="2009-11-13T20:14">37 mins</time>
+            </div>
+          </li>
+          <li class="other">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>that mongodb thing looks good, huh?</p>
+              <p>
+                tiny master db, and huge document store</p>
+            </div>
+          </li>
+          <li class="self">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>That makes sense.</p>
+              <p>It's a pretty small airport.</p>
+              <time datetime="2009-11-13T20:14">37 mins</time>
+            </div>
+          </li>
+          <li class="other">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>that mongodb thing looks good, huh?</p>
+              <p>
+                tiny master db, and huge document store</p>
+            </div>
+          </li>
+          <li class="self">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>That makes sense.</p>
+              <p>It's a pretty small airport.</p>
+              <time datetime="2009-11-13T20:14">37 mins</time>
+            </div>
+          </li>
+          <li class="other">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>that mongodb thing looks good, huh?</p>
+              <p>
+                tiny master db, and huge document store</p>
+            </div>
+          </li>
+          <li class="self">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>That makes sense.</p>
+              <p>It's a pretty small airport.</p>
+              <time datetime="2009-11-13T20:14">37 mins</time>
+            </div>
+          </li>
+          <li class="other">
+            <div class="avatar">
+              <img src="../imgs/user.png" />
+            </div>
+            <div class="messages">
+              <p>that mongodb thing looks good, huh?</p>
+              <p>
+                tiny master db, and huge document store</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <form class="poz" action="" method="get" onsubmit="return validate();">
+
+        <div class="form-group shadow-textarea">
+          <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
+        </div>
+        <input name="submit" id="submitButton" type="submit" value="Send" />
+
+      </form>
+    </div>
+  </body>
+
+</html>
