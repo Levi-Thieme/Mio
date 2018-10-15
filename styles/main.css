@@ -1,55 +1,113 @@
-.container {
-    border: 2px solid #dedede;
-    background-color: #f1f1f1;
-    border-radius: 5px;
 
-    margin: 10px 0;
-    width: 100%;
-    height: 25%;
+.conversation{
+    background-color:#cee6ff;
+    border: solid darkviolet 1px;
+    border-radius:7px;
 }
-
-.darker {
-    border-color: #ccc;
-    background-color: #ddd;
+.conversation img{
+    width: 20%;
 }
-
-.container::after {
-    content: "";
-    clear: both;
-    display: table;
+.convName{
+    font-size: 1.2em;
+    text-decoration:none;
+    color:darkviolet;
+    vertical-align:middle;
 }
-
-.container img {
-    float: left;
-    max-width: 15%;
-    width: 5%;
-    margin-right: 5%;
-    border-radius: 50%;
+#myAccount{
+   padding: 20px 5px;
+    margin-bottom:20px;
+    
 }
-
-.container .right {
+#myAccountPhoto{
+    width:20%;
+}
+#myAccountName{
+    display:block;
+    font-size: 1.5em;
+    font-family:serif, sans-serif;
+}
+#myAccountSettings{
     float: right;
-    margin-left: 20px;
-    margin-right: 0;
+    width:20%;
+}
+.discussion {
+  list-style: none;
+
+  margin: 0;
+  padding: 0 0 50px 0;
+}
+.discussion li {
+  padding: 0.5rem;
+  overflow: hidden;
+  display: flex;
+}
+.discussion .avatar {
+  width: 40px;
+  position: relative;
+}
+.discussion .avatar img {
+  display: block;
+  width: 100%;
 }
 
-.time-right {
-    float: right;
-    color: #aaa;
+.other .avatar:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border: 5px solid white;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+hr{
+    color: black;
+    border-style: inset;
+    border-width: 1px;
+}
+.self {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.self .messages {
+  order: 1;
+  border-bottom-right-radius: 0;
+}
+.self .avatar {
+  order: 2;
+}
+.self .avatar:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: 5px solid white;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.time-left {
-    float: left;
-    color: #999;
+.messages {
+  background: white;
+  padding: 10px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.messages p {
+  font-size: 0.8rem;
+  margin: 0 0 0.2rem 0;
+}
+.messages time {
+  font-size: 0.7rem;
+  color: #ccc;
+}
+#submitButton{
+    position:relative;
 
 }
-
-.message {
-    position: absolute;
-    bottom: 0%;
-
-}
-
 #message {
 
     width: 75%;
@@ -65,14 +123,14 @@
 }
 
 #imaginary_container {
-    position: absolute;
-    right: 0%;
+    float: right;
+
 }
 
 #messageContainer {
 
       width: 100%;
-      height: 500px;
+      height: 800px;
     overflow: auto;
 }
 
@@ -110,6 +168,7 @@ html, body{
     border: solid 1px;
     text-decoration: none;
 }
+
 .conversation{
     background-color:#cee6ff;
     border: solid darkviolet 1px;
