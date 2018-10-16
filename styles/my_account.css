@@ -7,12 +7,12 @@
     text-align: left;
 }
 
-#profile_container {
+#profileContainer {
     margin-left: 1%;
     padding: 20px;
 }
 
-#back_btn {
+#backBtn {
     float: right;
     margin-right: 1%;
 }
