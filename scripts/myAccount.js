@@ -44,16 +44,25 @@ $(document).ready(function () {
             alert("Invalid username.");
             $("#deletePassword").val("");
             $("#deletePasswordConfirm").val("");
+            $("#confirmDeleteCheckbox").prop("checked", false);
             return false;
         }
         else if (!validPassword(username, password)) {
             alert("Incorrect password.");
             $("#deletePassword").val("");
             $("#deletePasswordConfirm").val("");
+            $("#confirmDeleteCheckbox").prop("checked", false);
             return false;
         }
         else if (password != passwordConfirm) {
             alert("Passwords do not match.");
+            $("#deletePassword").val("");
+            $("#deletePasswordConfirm").val("");
+            $("#confirmDeleteCheckbox").prop("checked", false);
+            return false;
+        }
+        else if (!$("#confirmDeleteCheckbox").prop("checked")) {
+            alert("You must select the confirmation checkbox.");
             $("#deletePassword").val("");
             $("#deletePasswordConfirm").val("");
             return false;
