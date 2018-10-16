@@ -30,7 +30,28 @@ $(document).ready(function () {
     Updates the password for this account.
     */
     $("#updatePasswordBtn").click(function() {
-        alert("You have successfully updated your password.");
+        let password = $("#updatePasswordPasswordInput").val();
+        let newPassword = $("#newPassword").val();
+        let newPasswordConfirm = $("#newPasswordConfirm").val();
+        
+        if (password == "") {
+            alert("You must enter your password.");
+        }
+        else if (newPassword == "") {
+            alert("You must enter a new password.");
+        }
+        else if (newPasswordConfirm == "") {
+            alert("You must enter a confirmation for your new password.");
+        }
+        else if (newPassword != newPasswordConfirm) {
+            alert("Your new password does not match its confirmation.");
+        }
+        else if (newPassword == password) {
+            alert("Your new password must be different from your old password.");
+        }
+        else {
+            alert("Your password has been successfully updated.");
+        }
     });
     
     /*

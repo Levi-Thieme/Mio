@@ -1,3 +1,7 @@
+.body {
+    background-color: #feebb9;
+}
+
 .container {
     padding: 10px;
 }
@@ -10,6 +14,8 @@
     margin: 1%;
     margin-left: auto;
     margin-right: auto;
+    background-color: #f79824;
+    color: black;
 }
 
 .well .well-lg .change-form {
@@ -31,6 +37,10 @@
     margin: 1%;
 }
 
+#profileRowDiv {
+    margin: 1%;
+}
+
 #profileContainer {
     margin-left: 1%;
     padding: 20px;
@@ -38,5 +48,6 @@
 
 #backBtn {
     float: right;
-    margin-right: 1%;
+    margin-top: auto;
+    margin-bottom: auto;
 }
