@@ -1,3 +1,6 @@
+.body {
+    background-color: #feebb9;
+}
 
 .container {
     padding: 100px;
@@ -15,6 +18,7 @@
 
 .btn-primary{
     margin: 1%;
+    background-color: #f790824;
 }
 
 .change-form {
