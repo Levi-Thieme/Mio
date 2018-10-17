@@ -137,7 +137,7 @@ hr{
 .sidebar{
     background-color: #def;
     height: 100%;
-    width: 180px;
+    width: 190px;
     position:fixed;
     margin-left: 10px;
     border-style:solid;
@@ -146,6 +146,8 @@ hr{
 }
 .sidebarHeading{
     text-align:center;
+    padding: 5px 0px;
+    margin: 0px 5px;
     border: solid #0bf 1px;
 }
 html, body{
@@ -202,4 +204,16 @@ html, body{
 #myAccountSettings{
     float: right;
     width:20%;
+}
+
+#sidebarData{
+    position: absolute;
+    max-height:70%;
+    width:183px;
+    overflow-y: auto;
+}
+
+#sidebar-subaccount{
+    height:70vh;
+    bottom:0;
 }
