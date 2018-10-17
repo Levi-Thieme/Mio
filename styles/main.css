@@ -1,0 +1,205 @@
+
+.conversation{
+    background-color:#cee6ff;
+    border: solid darkviolet 1px;
+    border-radius:7px;
+}
+.conversation img{
+    width: 20%;
+}
+.convName{
+    font-size: 1.2em;
+    text-decoration:none;
+    color:darkviolet;
+    vertical-align:middle;
+}
+#myAccount{
+   padding: 20px 5px;
+    margin-bottom:20px;
+    
+}
+#myAccountPhoto{
+    width:20%;
+}
+#myAccountName{
+    display:block;
+    font-size: 1.5em;
+    font-family:serif, sans-serif;
+}
+#myAccountSettings{
+    float: right;
+    width:20%;
+}
+.discussion {
+  list-style: none;
+
+  margin: 0;
+  padding: 0 0 50px 0;
+}
+.discussion li {
+  padding: 0.5rem;
+  overflow: hidden;
+  display: flex;
+}
+.discussion .avatar {
+  width: 40px;
+  position: relative;
+}
+.discussion .avatar img {
+  display: block;
+  width: 100%;
+}
+
+.other .avatar:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border: 5px solid white;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+hr{
+    color: black;
+    border-style: inset;
+    border-width: 1px;
+}
+.self {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.self .messages {
+  order: 1;
+  border-bottom-right-radius: 0;
+}
+.self .avatar {
+  order: 2;
+}
+.self .avatar:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: 5px solid white;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.messages {
+  background: white;
+  padding: 10px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.messages p {
+  font-size: 0.8rem;
+  margin: 0 0 0.2rem 0;
+}
+.messages time {
+  font-size: 0.7rem;
+  color: #ccc;
+}
+#submitButton{
+    position:relative;
+
+}
+#message {
+
+    width: 75%;
+
+}
+
+.shadow-textarea textarea.form-control::placeholder {
+    font-weight: 300;
+}
+
+.shadow-textarea textarea.form-control {
+    padding-left: 0.8rem;
+}
+
+#imaginary_container {
+    float: right;
+
+}
+
+#messageContainer {
+
+      width: 100%;
+      height: 800px;
+    overflow: auto;
+}
+
+.sidebar{
+    background-color: #def;
+    height: 100%;
+    width: 180px;
+    position:fixed;
+    margin-left: 10px;
+    border-style:solid;
+    border-radius: 20px;
+    border-color:#0bf;
+}
+.sidebarHeading{
+    text-align:center;
+    border: solid #0bf 1px;
+}
+html, body{
+    margin: 0;
+    height: 100%;
+    background-color: #FFE;
+}
+.main{
+    margin-left:205px;
+}
+/*Unused Right now*/
+.sidebarLink{
+    color:darkviolet;
+    background-color:#cee6ff;
+    display:block;
+    text-align:center;
+    font-size: 1.5em;
+    padding: 10px 0px;
+    margin: 10px;
+    border: solid 1px;
+    text-decoration: none;
+}
+
+.conversation{
+    background-color:#cee6ff;
+    border: solid darkviolet 1px;
+    border-radius:7px;
+    margin: 5px 5px;
+}
+.conversation img{
+    width: 15%;
+}
+.conversation a{
+    text-decoration: none;
+}
+.convName{
+    font-size: 1.2em;
+    color:darkviolet;
+    vertical-align:middle;
+}
+#myAccount{
+   padding: 5px;;
+    margin-bottom:20px;
+    
+}
+#myAccountPhoto{
+    width:20%;
+}
+#myAccountName{
+    display:block;
+    font-size: 1.5em;
+    font-family:serif, sans-serif;
+}
+#myAccountSettings{
+    float: right;
+    width:20%;
+}
