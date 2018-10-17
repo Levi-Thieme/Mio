@@ -1,74 +1,41 @@
 <!doctype html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title> Sign Up </title>
     <style>
         body {
-            background-color: lightblue;
+            background-color: #feebb9;
+            float: none;
         }
     </style>
-
+    <script type = "text/javascript" src = "../scripts/confirmInfo.js"></script>
 </head>
-
 <body>
     <div style="text-align: center">
         <h1> Sign Up </h1>
-        <form action method="get">
-            <label>
-                Name:
-                <input name = "name" type = "text">
-            </label>
+        <br><br>
+        <form name = "signup" action="" method="get" onsubmit="return validate();">
+            Name: <input name="name" type="text">
+            <br><br> 
+            Email: <input name="email" type="text">
+            <br><br> 
+            Password: <input name="password1" type="password">
+            <br><br> 
+            Confirm Password: <input name="password2" type="password">
+            <br><br>
+            <input name="gender" type="radio" value="F"> Female
+            <input name="gender" type="radio" value="M"> Male
+            <br><br>
+            Birthday:
+            <input type="date" name="bday">
             <br>
-            <br>
-            <label>
-                    Email:
-                    <input name = "email" type = "text">
-                </label>
-            <br>
-            <br>
-            <label>
-                    Password:
-                    <input name = "password1" type = "password">
-                </label>
-            <br>
-            <br>
-            <label>
-                    Confirm Password:
-                    <input name = "password2" type = "password">
-                </label>
-            <br>
-            <br>
-            <label>
-                    <input name = "gender" type = "radio" value = "F">
-                    Female
-                </label>
-            <label>
-                    <input name = "gender" type = "radio" value = "M">
-                    Male
-                </label>
-            <br>
-            <br>
-            <form action="/action_page.php">
-                <label>
-                    Birthday:
-                    <input type="date" name="bday">
-                </label>
-            </form>
-            <br>
-            <label>
-                I agree to the terms and conditions:
-                <input name = "agree" type = "checkbox">
-                <br>
-                <br>
-                <label>
-                    <button type="button" class="btn btn-primary disabled"> Sign Up </button>
-                </label>
-            </label>
+            I agree to the terms and conditions:
+            <input name = "agree" type = "checkbox" onclick = "document.forms.signup.button.disabled = !document.forms.signup.button.disabled;">
+            <br><br>
+            <input disabled="disabled" name="button" type="submit" value="Sign Up">
         </form>
     </div>
 </body>
-
 </html>
