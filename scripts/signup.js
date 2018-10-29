@@ -1,38 +1,28 @@
 
 $(document).ready(function validate() {
     
-    /*
-    Updates the email address for this account.
-    */
     $("#signupBtn").click(function validate() {
         let usernameValid = validUsername($("#username").val());
         let emailValid = validEmail($("#email").val());
         let passwordValid = validPassword("username", $("#password").val());
-        if ((usernameValid && emailValid) && passwordValid) {
-            alert("Your credentials have been recorded. Loading main page...");
-            $("#username").val(""); 
-            $("#email").val(""); 
-            $("#password").val("");
-        }
-        else if((!usernameValid) && (!emailValid) && (!passwordValid)) { //invalid email and invalid password
-            alert("Please enter your information.");
+
+        if(!usernameValid) { //invalid username
+            alert("Please enter a valid username.");
             $("#username").val("");
-            $("#email").val("");
             $("#password").val("");
+            return false;
         }
-        else if(!usernameValid) {
-            alert("Your username is invalid.");
-            $("#username").val("");
-        }
-        else if (!emailValid) { //invalid email and valid password
-            alert("Your email address is invalid. Please try again.");
-            $("#email").val("");
-        }
-        else if(!passwordValid) { //valid email and invalid password
-            alert("Your password is incorrect.");
+        else if(!emailValid) { //invalid email
+            alert("Please enter a valid email address.");
             $("#password").val("");
+            return false;
         }
-        
+        else if (!passwordValid) { //invalid password
+            alert("Please enter a valid password.");
+            $("#password").val("");
+            return false;
+        }
+        return true;
     });
     /*
     Returns true if email is a valid email address.
