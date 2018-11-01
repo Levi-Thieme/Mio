@@ -1,14 +1,13 @@
 <?php
+
+    include './db.php';
+
     $conn = null;
     
     /*
     Attempts to connect to the server specified by parameters.
     */
     function connect($servername, $username, $password, $dbName) {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbName = "mio";
         
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbName);
@@ -17,7 +16,7 @@
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error . "\n");
         } 
-        echo "Connected successfully\n";
+        echo "Connected successfully \n";
         return $conn;
     }
     
@@ -26,9 +25,9 @@
     */
     function execQuery($sql, $conn) {
         if ($conn->query($sql) === TRUE) {
-            log($sql . "  Executed successfully");
+            echo($sql . "  Executed successfully");
         } else {
-            log("Error: " . $sql . "<br>" . $conn->error);
+            echo("Error: " . $sql . "<br>" . $conn->error);
         }
     }
     
@@ -51,67 +50,11 @@
     }
     
     //Connect
-    $conn = connect();
+    $conn = connect("127.0.0.1", "thielt01", "", "mio");
     //Show databases
     showDatabases($conn);
-    //Insert user
-    newUser($conn, "Joe the Great");
+    
+    updateUserProfileImage("./img.jpg", 3);
     //Close the connection
     $conn->close();
-    
-    /* ------------------------------------------------------------
-                Database functions for CRUD operations.
-    
-    ---------------------------------------------------------------*/
-    
-    /*
-    Inserts a new user with the given name.
-    */
-    function newUser($conn, $name) {
-        $sql = "INSERT INTO user (name)
-                VALUES ({$name})";
-        execQuery($sql, $conn);
-    }
-    
-    /*
-    Updates a user's email address.
-    */
-    function updateUserEmail($email, $id) {
-        $sql = "UPDATE user SET email = {$email} where id = {$id}";
-        if ($conn == null) {
-            $conn = connect();
-        }
-        execQuery($sql, $conn);
-    }
-    
-    /*
-    Updates a user's password.
-    */
-    function updateUserPassword($password, $id) {
-        $sql = "UPDATE user SET password = {$password} where id = {$id}";
-        if ($conn == null) {
-            $conn = connect();
-        }
-        execQuery($sql, $conn);
-    }
-    
-    /*
-    Deletes a user's account.
-    */
-    function deleteUserAccount($id) {
-        $sql = "DELETE FROM user where id = {$id}";
-        if ($conn == null) {
-            $conn = connect();
-        }
-        execQuery($sql, $conn);
-    }
-    
-    
-    /*
-    Updates the user's profile image.
-    */
-    function updateUserProfileImage($image, $id) {
-        $sql = "UPDATE user SET image = {$image} WHERE id = {$id}";
-    }
-    
 ?>
