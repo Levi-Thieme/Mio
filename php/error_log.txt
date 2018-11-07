@@ -1,0 +1,1 @@
+UPDATE user SET email = 'asdf@gmail.com' where name = 'bob'  Executed successfullyUPDATE user SET email = 'gb4life@gmail.com' where name = 'bob'  Executed successfully
