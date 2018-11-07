@@ -1,30 +1,24 @@
 
+
+
+
 $(document).ready(function () {
-    
     /*
-    Updates the email address for this account.
+    Verifies email and password inputs for changing email on the myAccount page.
     */
-    $("#updateEmailButtton").click(function() {
+    function changeEmail(e) {
+        //Get username and password
         let emailValid = validEmail($("#updateEmailEmailInput").val());
-        let passwordValid = validPassword("username", $("#updateEmailPasswordInput").val());
+        let passwordValid = validPassword($("#updateEmailPasswordInput").val());
+        //Validate email and password
         if (emailValid && passwordValid) {
-            alert("Your email address has been succesfully updated.");
-            $("#updateEmailEmailInput").val("");
-            $("#updateEmailPasswordInput").val("");
+            return true;
         }
-        else if (!emailValid && passwordValid) { //invalid email and valid password
-            alert("Your email address is invalid. Please try again.");
-            $("#updateEmailPasswordInput").val("");
-        }
-        else if(emailValid && !passwordValid) { //valid email and invalid password
-            alert("Your password is incorrect.");
-            $("#updateEmailPasswordInput").val("");
-        }
-        else if(!emailValid && !passwordValid) { //invalid email and invalid password
-            alert("Your email and password are invalid.");
-            $("#updateEmailPasswordInput").val("");
-        }
-    });
+        return false;
+    }
+        
+    //Bind changeEmail validation function to the change email form.
+    $("changeEmailForm").on("submit", changeEmail);
 
     /*
     Updates the password for this account.
@@ -36,21 +30,27 @@ $(document).ready(function () {
         
         if (password == "") {
             alert("You must enter your password.");
+            return false;
         }
         else if (newPassword == "") {
             alert("You must enter a new password.");
+            return false;
         }
         else if (newPasswordConfirm == "") {
             alert("You must enter a confirmation for your new password.");
+            return false;
         }
         else if (newPassword != newPasswordConfirm) {
             alert("Your new password does not match its confirmation.");
+            return false;
         }
         else if (newPassword == password) {
             alert("Your new password must be different from your old password.");
+            return false;
         }
         else {
             alert("Your password has been successfully updated.");
+            return false;
         }
     });
     
@@ -104,7 +104,7 @@ $(document).ready(function () {
     This will be properly implemented in the future when accounts are
     properly stored in a database with their passwords' salts and hashes.
     */
-    function validPassword(username, password) {
+    function validPassword(password) {
         return password != "";
     }
     
