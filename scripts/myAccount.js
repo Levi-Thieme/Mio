@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     /*
-    Verifies email and password inputs for changing email on the myAccount page.
+    Handles client side verification of update email for the myAccount page.
     */
     function changeEmail(e) {
         //Get username and password
@@ -14,16 +14,17 @@ $(document).ready(function () {
         if (emailValid && passwordValid) {
             return true;
         }
+        alert("HI");
         return false;
     }
         
     //Bind changeEmail validation function to the change email form.
-    $("changeEmailForm").on("submit", changeEmail);
+    ///$("changeEmailForm").on("submit", changeEmail);
 
     /*
-    Updates the password for this account.
+    Handles client side verification of update password for the myAccount page.
     */
-    $("#updatePasswordBtn").click(function() {
+    function updatePassword(e) {
         let password = $("#updatePasswordPasswordInput").val();
         let newPassword = $("#newPassword").val();
         let newPasswordConfirm = $("#newPasswordConfirm").val();
@@ -50,14 +51,16 @@ $(document).ready(function () {
         }
         else {
             alert("Your password has been successfully updated.");
-            return false;
+            return true;
         }
-    });
+    }
+    
+    //$("changePasswordForm").on("submit", updatePassword);
     
     /*
-    Deletes the user's account
+    Handles client side verification of update password for the myAccount page.
     */
-    $("#deleteAccountBtn").click(function() {
+    function deleteAccount() {
         let username = $("#deleteUsername").val();
         let password = $("#deletePassword").val();
         let passwordConfirm = $("#deletePasswordConfirm").val();
@@ -89,7 +92,9 @@ $(document).ready(function () {
             return false;
         }
         return true;
-    });
+    }
+    
+    //$("deleteAccountForm").on("submit", deleteAccount);
     
     /*
     Returns true if email is a valid email address.

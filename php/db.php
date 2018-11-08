@@ -16,14 +16,22 @@
     }
     
     /*
-    Executes a query.
+    Filters sql input strings
+    */
+    function filter($sql) {
+        return mysql_real_escape_string($sql);
+    }
+    
+    /*
+    Executes a query. Returns false if error, else returns results of query.
+    The $sql parameter should be filtered before passing to this function.
     */
     function execQuery($sql, $conn) {
-        if ($conn->query($sql) === TRUE) {
-            error_log($sql . "  Executed successfully", 3, "error_log.txt");
-        } else {
+        $result = $conn->query($sql);
+        if ($result === false) {
             error_log("Error: $sql \n" . $conn->error, 3, "error_log.txt");
         }
+        return $result;
     }
 
     /*
@@ -56,7 +64,7 @@
     */
     function getUsers($conn) {
         $sql = "SELECT * FROM user";
-        $result = $conn->query($sql);
+        $result = execQuery($sql, $conn);
         $users = array();
         while($user = $result->fetch_array(MYSQLI_NUM)) { // for each row of the resultset
             $users[] = $user; 
@@ -65,38 +73,49 @@
     }
     
     /*
-    Inserts a new user with the given name.
+    Inserts a new user with name, email, and password
     */
-    function newUser($conn, $name) {
-        $sql = "INSERT INTO user (name)
-                VALUES ('{$name}')";
-        execQuery($sql, $conn);
+    function newUser($conn, $name, $email, $password) {
+        $sql = "INSERT INTO user (name, email, password)
+                VALUES ('$name', '$email', '$password')";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Returns true if password is associated with the username for an account
+    */
+    function isPassword($conn, $username, $pass) {
+        //$username = filter($username);
+        //$pass = filter($pass);
+        $sql = "SELECT * from user WHERE name = '$username' AND password = '$pass'";
+        $result = execQuery($sql, $conn);
+        return $result->num_rows === 1;
     }
     
     /*
     Updates a user's email address.
     */
     function updateUserEmail($conn, $email, $name) {
-        $sql = "UPDATE user SET email = '$email' where name = '$name'";
+        $sql = "UPDATE user SET email = '$email' WHERE name = '$name'";
         execQuery($sql, $conn);
     }
     
     /*
     Updates a user's password.
     */
-    function updateUserPassword($conn, $password, $id) {
-        $sql = "UPDATE user SET password = '$password' where id = '$id'";
+    function updateUserPassword($conn, $name, $password, $newPassword) {
+        $sql = "UPDATE user SET password = '$newPassword' 
+            WHERE name = '$name' AND password = '$password'";
         execQuery($sql, $conn);
     }
     
     /*
     Deletes a user's account.
     */
-    function deleteUserAccount($conn, $id) {
-        $sql = "DELETE FROM user where id = '$id'";
-        execQuery($sql, $conn);
+    function deleteUser($conn, $name, $password) {
+        $sql = "DELETE FROM user WHERE name = '$name' AND password = '$password'";
+        return execQuery($sql, $conn);
     }
-    
     
     /*
     Updates the user's profile image.
