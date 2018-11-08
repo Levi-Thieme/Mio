@@ -1,22 +1,76 @@
 <?php
     include './db.php';
-    //Connect
-    $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+    
+    $conn;
+    //Connect to DB if not already connected
+    if (!isset($_SERVER["connection"])) {
+        $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+    }
+    
+    //temporary code, session state should be handled with login in future
     session_start();
     $_SESSION["username"] = "bob";
+    /////////////////////
+    
+    $username = $_SESSION["username"];
     
     
+    //Email change form submitted
     if (isset($_POST["updateEmailSubmit"])) {
-        if (!empty($_POST["emailInput"]) && !empty($_POST["updateEmailPasswordInput"])) {
-            $newEmail = $_POST["emailInput"];
-            updateUserEmail($conn, $newEmail, $_SESSION["username"]);
+        $newEmail = $_POST["emailInput"];
+        $password = $_POST["updateEmailPasswordInput"];
+        if (!empty($newEmail) && !empty($password)) {
+            //if correct password update email address
+            if (isPassword($conn, $username, $password))
+                updateUserEmail($conn, $newEmail, $_SESSION["username"]);
+            else {
+                echo "Wrong password";
+            }
+        }
+    }//Password change form submitted
+    else if (isset($_POST["updatePasswordSubmit"])) {
+        $currPass = $_POST["updatePasswordPasswordInput"];
+        $newPass = $_POST["newPassword"];
+        $newPassConfirm = $_POST["newPasswordConfirm"];
+        if (!empty($currPass) && !empty($newPass) && !empty($newPassConfirm)) {
+            if (isPassword($conn, $username, $currPass)) {
+                if ($newPass === $newPassConfirm) {
+                    updateUserPassword($conn, $username, $currPass, $newPass);
+                }
+                else {
+                    echo "New passwords don't match.";
+                }
+            }
+            else {
+                echo "Wrong password!";
+            }
+        }
+        
+    }//Delete account form submitted
+    else if (isset($_POST["deleteAccountSubmit"])) {
+        $inputUsername = $_POST["deleteUsername"];
+        $dPassword = $_POST["deletePassword"];
+        $passwordConfirm = $_POST["deletePasswordConfirm"];
+        $confirmChecked = $_POST["confirmDeleteCheckbox"];
+        if ($inputUsername === $username && !empty($dPassword) && !empty($passwordConfirm) && $confirmChecked) {
+            if ($dPassword === $passwordConfirm && isPassword($conn, $username, $dPassword)) {
+                if (!deleteUser($conn, $username, $dPassword)) {
+                    error_log("Error: $sql \n" . $conn->error, 3, "./logs/error_log.txt");
+                }
+                else {
+                    error_log("Successfully deleted user. $username\n", 3, "./logs/error_log.txt");
+                    session_destroy();
+                    $host = $_SERVER["HTTP_HOST"];
+                    header("Location: https://$host/html/signup.html");
+                    exit;
+                }
+            }
+        }
+        else {
+            echo "Incorrect Inputs for account deletion.";
         }
     }
-    else if (isset($_POST["updatePasswordSubmit"])) {
-        
-    }
-    session_destroy();
-    $conn->close();
+    
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +85,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- client side form validation -->
-    <script type="text/javascript" src="../scripts/myAccount.js"></script>
+    <!--<script type="text/javascript" src="../scripts/myAccount.js"></script> -->
     <!-- Custom styling -->
     <link rel="stylesheet" href="../styles/myAccount.css">
     
@@ -82,7 +136,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="./login.html" id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
         </form>
