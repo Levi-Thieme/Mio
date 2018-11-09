@@ -10,6 +10,10 @@
 </head>
 
 <body>
+    <?php
+        // Begin the session.
+        session_start();
+    ?>
     <div class="sidebar">
         <div id="myAccount">
             <a href="myAccount.html">
@@ -19,6 +23,11 @@
                 <img id="myAccountSettings" src="../imgs/gear.png">
             </a>
             <label id="myAccountName">Student 1337</label>
+            
+            <form action = "./logout.php">
+                <input id = "logoutButton" name = "logout" type="submit" value="Log out">
+            </form>
+        
         </div>
         <div id="sidebar-subaccount">
             <div id="sidebarData">
