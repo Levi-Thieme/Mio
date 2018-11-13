@@ -17,6 +17,16 @@
 </head>
 <html lang="en">
     <body>
+        <style>
+            button: #logoutButton {
+                color: orange;
+                background-color: orange;
+                border-style: solid;
+                border-radius: 20px;
+                border-color: black;
+            }
+        </style>
+        
         <div id="profileContainer" class="fluid-container">
             <div class="well well-sm">
                 <div class="row" id="profileRowDiv">
@@ -27,7 +37,7 @@
                     </div>
                     <div>
                         <form action = "./logout.php">
-                            <input id = "logoutButton" name = "logout" type="submit" value="Log out">
+                                <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
                         </form>
                     </div>
                 </div>

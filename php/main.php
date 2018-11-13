@@ -14,6 +14,17 @@
         // Begin the session.
         session_start();
     ?>
+    
+    <style>
+            button: #logoutButton {
+                color: orange;
+                background-color: orange;
+                border-style: solid;
+                border-radius: 20px;
+                border-color: black;
+            }
+        </style>
+    
     <div class="sidebar">
         <div id="myAccount">
             <a href="myAccount.html">
@@ -24,9 +35,12 @@
             </a>
             <label id="myAccountName">Student 1337</label>
             
-            <form action = "./logout.php">
-                <input id = "logoutButton" name = "logout" type="submit" value="Log out">
+            <div style = "text-align: center">
+                <form action = "./logout.php">
+                <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
             </form>
+            </div>
+            
         
         </div>
         <div id="sidebar-subaccount">
