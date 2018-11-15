@@ -76,6 +76,9 @@
     Inserts a new user with name, email, and password
     */
     function newUser($conn, $name, $email, $password) {
+        $name = filter($name);
+        $email = filter($email);
+        $password = filter($password);
         $sql = "INSERT INTO user (name, email, password)
                 VALUES ('$name', '$email', '$password')";
         return execQuery($sql, $conn);
@@ -85,8 +88,8 @@
     Returns true if password is associated with the username for an account
     */
     function isPassword($conn, $username, $pass) {
-        //$username = filter($username);
-        //$pass = filter($pass);
+        $username = filter($username);
+        $pass = filter($pass);
         $sql = "SELECT * from user WHERE name = '$username' AND password = '$pass'";
         $result = execQuery($sql, $conn);
         return $result->num_rows === 1;
@@ -96,6 +99,8 @@
     Updates a user's email address.
     */
     function updateUserEmail($conn, $email, $name) {
+        $email = filter($email);
+        $name = filter($name);
         $sql = "UPDATE user SET email = '$email' WHERE name = '$name'";
         execQuery($sql, $conn);
     }
@@ -104,6 +109,9 @@
     Updates a user's password.
     */
     function updateUserPassword($conn, $name, $password, $newPassword) {
+        $name = filter($name);
+        $password = filter($password);
+        $newPassword = filter($newPassword);
         $sql = "UPDATE user SET password = '$newPassword' 
             WHERE name = '$name' AND password = '$password'";
         execQuery($sql, $conn);
@@ -113,6 +121,8 @@
     Deletes a user's account.
     */
     function deleteUser($conn, $name, $password) {
+        $name = filter($name);
+        $password = filter($password);
         $sql = "DELETE FROM user WHERE name = '$name' AND password = '$password'";
         return execQuery($sql, $conn);
     }
@@ -121,6 +131,7 @@
     Updates the user's profile image.
     */
     function updateUserProfileImage($conn, $image, $id) {
+        $id = filter(strval($id));
         $sql = "UPDATE user SET image = $image WHERE id = '$id'";
         execQuery($sql, $conn);
     }
@@ -129,6 +140,7 @@
     Gets the user's email address
     */
     function getUserEmail($conn, $username) {
+        $username = filter($username);
         $sql = "SELECT email FROM user WHERE name = '$username'";
         return execQuery($sql, $conn);
     }
