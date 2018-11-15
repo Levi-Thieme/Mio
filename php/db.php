@@ -59,6 +59,11 @@
     
     ---------------------------------------------------------------*/
     
+    
+    /*-----------------------------
+    Functions for the user table.
+    ------------------------------*/
+    
     /*
     Retrieves all users
     */
@@ -102,7 +107,7 @@
         $email = filter($email);
         $name = filter($name);
         $sql = "UPDATE user SET email = '$email' WHERE name = '$name'";
-        execQuery($sql, $conn);
+        return execQuery($sql, $conn);
     }
     
     /*
@@ -114,7 +119,7 @@
         $newPassword = filter($newPassword);
         $sql = "UPDATE user SET password = '$newPassword' 
             WHERE name = '$name' AND password = '$password'";
-        execQuery($sql, $conn);
+        return execQuery($sql, $conn);
     }
     
     /*
@@ -133,7 +138,7 @@
     function updateUserProfileImage($conn, $image, $id) {
         $id = filter(strval($id));
         $sql = "UPDATE user SET image = $image WHERE id = '$id'";
-        execQuery($sql, $conn);
+        return execQuery($sql, $conn);
     }
     
     /*
@@ -145,4 +150,165 @@
         return execQuery($sql, $conn);
     }
     
+    /*
+    Gets the id associated with the username
+    */
+    function getUserId($conn, $username) {
+        $sql = "SELECT id FROM user WHERE name = '$username'";
+        return execQuery($sql, $conn)->get_assoc()["id"];
+    }
+    
+    /*-----------------------------
+    Functions for the friends table.
+    ------------------------------*/
+    
+    /*
+    Gets all friends for a user
+    
+    $username - username of the user for which to query all current friends    
+    */
+    function getFriends($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM friends WHERE from = $userId";
+        return execQuery($sql, $conn)->get_assoc();
+    }
+    
+    /*
+    Gets all friend requests for the user
+    
+    $username - username of the user for which to query friend requests where user is the recipient.
+    */
+    function getFriendRequests($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM friends WHERE to = $userId AND pending";
+        return execQuery($sql, $conn)->get_assoc();
+    }
+    
+    /*
+    Gets all pending requests sent from the user
+    
+    $username - username of the user for which to query friend requests where user is the sender.
+    */
+    function getPendingFriendRequests($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM friends WHERE from = $userId AND pending";
+        return execQuery($sql, $conn)->get_assoc();
+    }
+    
+    /*
+    Creates a friend request from user to recipient
+    
+    $requester - username of the user requesting the friend request
+    $recipient - username of the recipient
+    */
+    function createFriendRequest($conn, $requester, $recipient) {
+        $requesterId = getUserId($conn, $requester);
+        $recipientId = getUserId($conn, $recipient);
+        $sql = "INSERT INTO friends('from', 'to') VALUES($requesterId, $recipientId)";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Accepts a friend request
+    
+    $acceptor - username of the person accepting the request
+    $requester - username of the person who sent the request
+    */
+    function acceptFriendRequest($conn, $acceptor, $requester) {
+        $acceptorId = getUserId($conn, $acceptor);
+        $requestorId = getUserId($conn, $requestor);
+        $sql = "UPDATE TABLE friends SET pending = false WHERE from = $requestorId AND to = $acceptorId";
+        return execQuery($sql, $conn);
+    }
+    
+    
+    
+    
+    
+    
+    /*-------------------------------
+    Functions for the room table.
+    -------------------------------*/
+    
+    /*
+    Retrieves the id associated with the room name
+    
+    $roomName - the name of the room
+    */
+    function getRoomId($conn, $roomName) {
+        $sql = "SELECT id FROM room WHERE name = '$roomName'";
+        return execQuery($sql, $conn)->get_assoc()["id"];
+    }
+    
+    /*
+    Deletes a room
+    
+    $ownerName - the username of the room's owner
+    $roomName - the name of the room
+    */
+    function deleteRoom($conn, $ownerName, $roomName) {
+        $ownerId = getUserId($conn, $ownerName);
+        $sql = "DROP FROM room WHERE user_id = $ownerId AND name = '$roomName'";
+        return execQuery($sql, $conn);
+    }
+    
+    
+    /*
+    Creates a room
+    
+    $username - the owner of the room
+    $roomName - the name of the room
+    */
+    function createRoom($conn, $username, $roomName) {
+        $userId = getUserId($conn, $username);
+        $sql = "INSERT INTO room(user_id, name) VALUES($userId, '$roomName')";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Adds a member to a room
+    
+    $roomName - the name of the room to add a member to
+    $memberName - the username of the member to add
+    */
+    function addRoomMember($conn, $roomName, $memberName) {
+        $memberId = getUserId($conn, $memberName);
+        $sql = "INSERT INTO room_member(room, usr) VALUES('$roomName', '$memberId')";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Removes a member from a room
+    
+    $username - the username of the user to remove
+    $roomName - the name of the room
+    */
+    function removeMember($conn, $username, $roomName) {
+        $userId = getUserId($conn, $username);
+        
+        $sql = "DROP FROM room_member WHERE room = '$roomName' AND usr = $userId";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Gets all rooms where user is the owner.
+    
+    $usernam - the username of the owner for which to retrieve rooms.
+    */
+    function getOwnedRooms($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM room WHERE user_id = $userId";
+        return execQuery($sql, $conn)->get_assoc();
+    }
+    
+    /*
+    Gets all rooms where user is a participant, but not the owner
+    
+    $username - the username of the participant
+    */
+    function getParticipantRooms($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM room r WHERE r.id IN (SELECT rm.room FROM room_member rm where usr = $userId)";
+        return execQuery($sql, $conn)->get_assoc();
+    }
 ?>
