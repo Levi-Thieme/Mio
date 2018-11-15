@@ -1,3 +1,101 @@
+<?php
+    include './db.php';
+    include './errors.php';
+    
+    $conn;
+    //Connect to DB if not already connected
+    if (!isset($_SERVER["connection"])) {
+        $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+    }
+    
+    //temporary code, session state should be handled with login in future
+    session_start();
+    $_SESSION["username"] = "bob";
+    /////////////////////
+    
+    $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
+    $username = $_SESSION["username"];
+    
+    
+    //Email change form submitted
+    if (isset($_POST["updateEmailSubmit"])) {
+        $newEmail = $_POST["emailInput"];
+        $password = $_POST["updateEmailPasswordInput"];
+        
+        //if correct password then update email address
+        if (isPassword($conn, $username, $password)) {
+            $_SESSION["credentialsError"] = "";
+            updateUserEmail($conn, $newEmail, $_SESSION["username"]);
+            $_SESSION["email"] = $newEmail;
+        }
+        else {
+            $_SESSION["credentialsError"] = "passError";
+        }
+    }//Password change form submitted
+    else if (isset($_POST["updatePasswordSubmit"])) {
+        $currPass = $_POST["updatePasswordPasswordInput"];
+        $newPass = $_POST["newPassword"];
+        $newPassConfirm = $_POST["newPasswordConfirm"];
+        if (!empty($currPass) && !empty($newPass) && !empty($newPassConfirm)) {
+            if (isPassword($conn, $username, $currPass)) {
+                if ($newPass === $newPassConfirm) {
+                    updateUserPassword($conn, $username, $currPass, $newPass);
+                    $_SESSION["credentialsError"] = "";
+                }
+                else {
+                    $_SESSION["credentialsError"] = "passConfirmError";
+                }
+            }
+            else {
+                $_SESSION["credentialsError"] = "passError";
+            }
+        }
+        else {
+            $_SESSION["credentialsError"] = "";
+        }
+        
+    }//Delete account form submitted
+    else if (isset($_POST["deleteAccountSubmit"])) {
+        $inputUsername = $_POST["deleteUsername"];
+        $dPassword = $_POST["deletePassword"];
+        $passwordConfirm = $_POST["deletePasswordConfirm"];
+        $confirmChecked = $_POST["confirmDeleteCheckbox"];
+        if ($inputUsername === $username) {
+            if ($confirmChecked) {
+                if ($dPassword === $passwordConfirm) {
+                    if (isPassword($conn, $username, $dPassword)) {
+                        $_SESSION["credentialsError"] = "";
+                        if (!deleteUser($conn, $username, $dPassword)) {
+                            error_log("Error: $sql \n" . $conn->error, 3, "./logs/error_log.txt");
+                        }
+                        else {
+                            error_log("Successfully deleted user. $username\n", 3, "./logs/error_log.txt");
+                            session_destroy();
+                            $host = $_SERVER["HTTP_HOST"];
+                            header("Location: https://$host/html/signup.html");
+                            exit;
+                        }
+                    }
+                    else {
+                        $_SESSION["credentialsError"] = "passError";
+                    }
+                } 
+                else {
+                    $_SESSION["credentialsError"] = "passConfirmError";
+                }
+            }
+            else {
+                $_SESSION["credentialsError"] = "confirmNotChecked";
+            }
+        }
+        else {
+            $_SESSION["credentialsError"] = "userError";
+        }
+    }
+    else {
+        $_SESSION["credentialsError"] = "";
+    }
+?>
 <!DOCTYPE html>
 <head>
     <title>My Account</title>
@@ -9,8 +107,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Script for this page -->
-    <script src="../scripts/myAccount.js"></script>
+    <!-- client side form validation for the myAccount page-->
+    <script type="text/javascript" src="../scripts/myAccount.js"></script>
     <!-- Custom styling -->
     <link rel="stylesheet" href="../styles/myAccount.css">
     
@@ -26,7 +124,6 @@
                 border-color: black;
             }
         </style>
-        
         <div id="profileContainer" class="fluid-container">
             <div class="well well-sm">
                 <div class="row" id="profileRowDiv">
@@ -39,6 +136,9 @@
                         <form action = "./logout.php">
                                 <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
                         </form>
+                    <a href="../html/main.html" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <div>
+                        <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
                     </div>
                 </div>
             </div>
@@ -59,6 +159,24 @@
                 <div class="form-group">
                     <label for="updatePasswordPasswordInput">Update Password</label>
                     <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" aria-describedby="emailHelp" placeholder="Enter old password">
+        <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg">
+                <div class="form-group">
+                    <?php if (isset($_POST["updateEmailSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
+                    <label for="updateEmailEmailInput">Update Email address</label>
+                    <input type="email" class="form-control" id="updateEmailEmailInput" name="emailInput" aria-describedby="emailHelp" placeholder="Enter new email">
+                    <label for="updateEmailPasswordInput">Password</label>
+                    <input type="password" class="form-control" id="updateEmailPasswordInput" name="updateEmailPasswordInput" placeholder="Password">
+                    <button type="submit" id="updateEmailButtton" name="updateEmailSubmit" class="btn btn-primary">Update Email</button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return validateUpdatePassword()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg">
+                <div class="form-group">
+                    <?php if (isset($_POST["updatePasswordSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
+                    <label for="updatePasswordPasswordInput">Update Password</label>
+                    <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" placeholder="Enter old password">
                 </div>
                 <div class="form-group">
                     <label for="newPassword newPasswordConfirm">Password</label>
@@ -72,13 +190,24 @@
             <div class="alert alert-danger">
                 <strong>Delete My Account</strong>
                 <div class="form-group">
+                    <button type="submit" id="updatePasswordBtn" name="updatePasswordSubmit" class="btn btn-primary">Update Password</button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return validateDeleteAccount()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="alert alert-danger">
+                <div class="form-group">
+                    <strong>Delete My Account</strong>
+                    <?php if (isset($_POST["deleteAccountSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <input type="username" class="form-control" id="deleteUsername" name="deleteUsername" placeholder="Username">
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
                     <a href="./login.html" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
         </form>
     </body>
+</html>
 </html>
