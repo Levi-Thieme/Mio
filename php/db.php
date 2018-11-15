@@ -125,4 +125,12 @@
         execQuery($sql, $conn);
     }
     
+    /*
+    Gets the user's email address
+    */
+    function getUserEmail($conn, $username) {
+        $sql = "SELECT email FROM user WHERE name = '$username'";
+        return execQuery($sql, $conn);
+    }
+    
 ?>
