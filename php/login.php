@@ -3,9 +3,9 @@
     // enable sessions
     session_start();
 
-    define("USER", "bradeberbach");
-    define("PASS", "CS372");
-    define("DB", "mio_db");
+    define("USER", "thielt01");
+    define("PASS", "sharky21");
+    define("DB", "mio");
 
     // connect to database
     if (($connection = mysql_connect('localhost', USER, PASS)) === false)

@@ -18,6 +18,8 @@ $(document).ready(function(){
             $(".discussion").append(codeBlockResponse);
             //set message input textarea to empty string to clear out the sent message
             $("#message").val("");
+            //Focus on message content body
+            
         }
     });
 });
