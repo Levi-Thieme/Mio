@@ -48,8 +48,6 @@ CREATE TABLE `user`
  `name`           VARCHAR(64) NOT NULL ,
  `email`          VARCHAR(64) NOT NULL ,
  `password`       VARCHAR(64) NOT NULL ,
- `salt`           VARCHAR(64) NOT NULL ,
- `hash_algorithm` VARCHAR(64) NOT NULL ,
  `image`          LONGBLOB NOT NULL ,
 
 PRIMARY KEY (`id`)
@@ -70,9 +68,11 @@ CREATE TABLE `room_member`
 
 PRIMARY KEY (`id`, `room`),
 KEY `room_member_room_id` (`room`),
-CONSTRAINT `fk_room_member_room_id` FOREIGN KEY (`room`) REFERENCES `room` (`id`),
+CONSTRAINT `fk_room_member_room_id` FOREIGN KEY (`room`) REFERENCES `room` (`id`)
+ON DELETE CASCADE,
 KEY `room_member_user_id` (`usr`),
 CONSTRAINT `fk_room_member_user_id` FOREIGN KEY (`usr`) REFERENCES `user` (`id`)
+
 );
 
 
@@ -85,14 +85,16 @@ CONSTRAINT `fk_room_member_user_id` FOREIGN KEY (`usr`) REFERENCES `user` (`id`)
 CREATE TABLE `friends`
 (
  `id`   INT NOT NULL AUTO_INCREMENT,
- `from` INT NOT NULL ,
- `to`   INT NOT NULL ,
+ `from_id` INT NOT NULL ,
+ `to_id`   INT NOT NULL ,
 
-PRIMARY KEY (`id`, `from`),
-KEY `friends_user_id_to` (`to`),
-CONSTRAINT `fk_friends_user_to` FOREIGN KEY (`to`) REFERENCES `user` (`id`),
-KEY `friends_user_id_from` (`from`),
-CONSTRAINT `fk_friends_user_from` FOREIGN KEY (`from`) REFERENCES `user` (`id`)
+PRIMARY KEY (`id`, `from_id`),
+KEY `friends_user_id_to` (`to_id`),
+CONSTRAINT `fk_friends_user_to` FOREIGN KEY (`to_id`) REFERENCES `user` (`id`)
+ON DELETE CASCADE,
+KEY `friends_user_id_from` (`from_id`),
+CONSTRAINT `fk_friends_user_from` FOREIGN KEY (`from_id`) REFERENCES `user` (`id`)
+ON DELETE CASCADE
 );
 
 
@@ -112,6 +114,7 @@ CREATE TABLE `message`
 PRIMARY KEY (`id`, `user_id`),
 KEY `message_user_id` (`user_id`),
 CONSTRAINT `fk_message_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+ON DELETE CASCADE
 );
 
 
