@@ -115,20 +115,12 @@
 </head>
 <html lang="en">
     <body>
-        <style>
-            button: #logoutButton {
-                color: orange;
-                background-color: orange;
-                border-style: solid;
-                border-radius: 20px;
-                border-color: black;
-            }
-        </style>
+        
         <div id="profileContainer" class="fluid-container">
             <div class="well well-sm">
                 <div class="row" id="profileRowDiv">
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
-                    <a href="./main.html" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <div>
                         Username<br>Email Address
                     </div>
@@ -136,7 +128,6 @@
                         <form action = "./logout.php">
                                 <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
                         </form>
-                    <a href="../html/main.html" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <div>
                         <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
                     </div>

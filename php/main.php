@@ -3,104 +3,58 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="../scripts/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <?php
-        // Begin the session.
-        session_start();
-    ?>
+    <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
+      
+      
+      <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
     
-    <style>
-            button: #logoutButton {
-                color: orange;
-                background-color: orange;
-                border-style: solid;
-                border-radius: 20px;
-                border-color: black;
-            }
-        </style>
-    
-    <div class="sidebar">
-        <div id="myAccount">
-            <a href="myAccount.html">
-                <img id="myAccountPhoto" src="../imgs/user.png" alt="My Account Photo">
-            </a>
-            <a href="myAccount.html">
-                <img id="myAccountSettings" src="../imgs/gear.png">
-            </a>
-            <label id="myAccountName">Student 1337</label>
-            
-            <div style = "text-align: center">
-                <form action = "./logout.php">
-                <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
-            </form>
-            </div>
-            
+      <!-- Panel for My Chats accordion -->
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
+              <i class="fa fa-angle-double-down" style="float:right"></i></a>
+            </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">Chat 1</div>
+            <div class="panel-footer">Chat 2</div>
+          </div>
+        </div>
         
+        <!-- Panel for Friends accordion -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a data-toggle="collapse" class="list-group-item" href="#collapse2">Friends
+              <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
+            </h4>
+          </div>
+          <div id="collapse2" class="panel-collapse collapse">
+            <?php echo "<div class='panel-body'>Bob</div>"; ?>
+          </div>
         </div>
-        <div id="sidebar-subaccount">
-            <div id="sidebarData">
-                <div id="myChats">
-                    <h3 class="sidebar-heading">My Chats</h3>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                            <img src="../imgs/user.png" alt="Noah Parker">
-                        </a>
-                        <a class="conv-name" href="myAccount.html">Noah Parker</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                            <img src="../imgs/user.png" alt="Jared Johnson">
-                        </a>
-                        <a class="conv-name" href="myAccount.html">Jared Johnson</a>
-                    </div>
-                </div>
-                <div id="myFriends">
-                    <h3 class="sidebar-heading">My Friends</h3>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Noah Parker">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Noah Parker</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Jared Johnson">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Jared Johnson</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Isaac Smith">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Isaac Smith</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Kazuto Kirigaya">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Kazuto Kirigaya</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Homer Simpson">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Homer Simpson</a>
-                    </div>
-                    <div class="conversation">
-                        <a href="myAccount.html">
-                    <img src="../imgs/user.png" alt="Dr. Chen">
-                </a>
-                        <a class="conv-name" href="myAccount.html">Dr. Chen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+      
+      <a id="signout" class="list-group-item" href="#"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+
+      
+  
     </div>
 
     <div class="main">
@@ -113,14 +67,12 @@
         </ol>
       </div>
       
-        <form class="poz" action="" method="get">
-
+        <div class="container" id="imControls">
             <div class="form-group shadow-textarea">
                 <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
+                <a href="#" id="submitButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
             </div>
-            <input id="submitButton" name="submit" type="button" value="Send" />
-
-        </form>
+        </div>
     </div>
 </body>
 

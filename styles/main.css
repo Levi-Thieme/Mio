@@ -1,4 +1,4 @@
-html,
+
 body {
     margin: 0;
     height: 100%;
@@ -11,9 +11,7 @@ body {
 
 #myAccount {
     padding: 5px;
-    ;
     margin-bottom: 20px;
-
 }
 
 #myAccountPhoto {
@@ -43,6 +41,7 @@ body {
     bottom: 0;
 }
 
+
 .conversation {
     background: transparent;
     border: solid #f79824 1px;
@@ -68,13 +67,12 @@ body {
 
 .sidebar {
     color: white;
-    background-color: #4169e1;
     height: 100%;
     width: 190px;
     position: fixed;
     margin-left: 10px;
     border-style: solid;
-    border-radius: 20px;
+    
     border-color: #0bf;
 }
 
@@ -86,16 +84,8 @@ body {
     border-bottom: solid white 1px;
 }
 
-
-#submitButton {
-    position: relative;
-
-}
-
 #message {
-
     width: 75%;
-
 }
 
 #searchContainer {
@@ -105,7 +95,7 @@ body {
 
 #messageContainer {
     width: 100%;
-    height: 800px;
+    height: 100%;
     overflow: auto;
 }
 
@@ -193,4 +183,21 @@ body {
 
 .shadow-textarea textarea.form-control {
     padding-left: 0.8rem;
+    float: left;
 }
+
+#submitButton {
+    display: block;
+    padding-top: 25px ;
+    
+}
+
+#imControls {
+    position: fixed;
+    bottom: 5px;
+}
+
+.fa {
+    color: #e68a00;
+}
+
