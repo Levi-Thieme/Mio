@@ -1,3 +1,8 @@
+<?php
+require "./db.php";
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -46,12 +51,20 @@
             </h4>
           </div>
           <div id="collapse2" class="panel-collapse collapse">
-            <?php echo "<div class='panel-body'>Bob</div>"; ?>
+            <?php 
+              $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+              $username = "Joe";
+              $friends = getFriends($conn, $username);
+              foreach ($friends as $friend) {
+                echo "<a class='list-group-item' href=''>$friend <i class='fa fa-comment fa-fw'
+                style='float:right' aria-hidden='true'></i>&nbsp;</a>";
+              }
+            ?>
           </div>
         </div>
       </div>
       
-      <a id="signout" class="list-group-item" href="#"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+      <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
 
       
   

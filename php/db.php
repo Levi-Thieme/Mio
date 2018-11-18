@@ -155,7 +155,15 @@
     */
     function getUserId($conn, $username) {
         $sql = "SELECT id FROM user WHERE name = '$username'";
-        return execQuery($sql, $conn)->get_assoc()["id"];
+        return execQuery($sql, $conn)->fetch_assoc()["id"];
+    }
+    
+    /*
+    Gets the username associated with the id
+    */
+    function getUsername($conn, $id) {
+        $sql = "SELECT name FROM user WHERE id = '$id'";
+        return execQuery($sql, $conn)->fetch_assoc()["name"];
     }
     
     /*-----------------------------
@@ -163,14 +171,22 @@
     ------------------------------*/
     
     /*
-    Gets all friends for a user
+    Gets the names of all friends for a user
     
     $username - username of the user for which to query all current friends    
     */
     function getFriends($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE from = $userId";
-        return execQuery($sql, $conn)->get_assoc();
+        $sql = "SELECT * FROM friends WHERE from_id = $userId";
+        $friendRecords = execQuery($sql, $conn)->fetch_all(MYSQLI_ASSOC);
+        //error_log($friendRecords, 3, "./error_log.txt");
+        $friends = array();
+        foreach($friendRecords as $friend) {
+            $name = getUsername($conn, $friend["to_id"]);
+            $friends[] = $name;
+        }
+        sort($friends);
+        return $friends;
     }
     
     /*
@@ -180,8 +196,8 @@
     */
     function getFriendRequests($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE to = $userId AND pending";
-        return execQuery($sql, $conn)->get_assoc();
+        $sql = "SELECT * FROM friends WHERE to_id = $userId AND pending";
+        return execQuery($sql, $conn)->fetch_assoc();
     }
     
     /*
@@ -191,8 +207,8 @@
     */
     function getPendingFriendRequests($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE from = $userId AND pending";
-        return execQuery($sql, $conn)->get_assoc();
+        $sql = "SELECT * FROM friends WHERE from_id = $userId AND pending";
+        return execQuery($sql, $conn)->fetch_assoc();
     }
     
     /*
@@ -204,7 +220,7 @@
     function createFriendRequest($conn, $requester, $recipient) {
         $requesterId = getUserId($conn, $requester);
         $recipientId = getUserId($conn, $recipient);
-        $sql = "INSERT INTO friends('from', 'to') VALUES($requesterId, $recipientId)";
+        $sql = "INSERT INTO friends('from_id', 'to_id') VALUES($requesterId, $recipientId)";
         return execQuery($sql, $conn);
     }
     
@@ -217,7 +233,7 @@
     function acceptFriendRequest($conn, $acceptor, $requester) {
         $acceptorId = getUserId($conn, $acceptor);
         $requestorId = getUserId($conn, $requestor);
-        $sql = "UPDATE TABLE friends SET pending = false WHERE from = $requestorId AND to = $acceptorId";
+        $sql = "UPDATE TABLE friends SET pending = false WHERE from_id = $requestorId AND to_id = $acceptorId";
         return execQuery($sql, $conn);
     }
     
@@ -237,7 +253,7 @@
     */
     function getRoomId($conn, $roomName) {
         $sql = "SELECT id FROM room WHERE name = '$roomName'";
-        return execQuery($sql, $conn)->get_assoc()["id"];
+        return execQuery($sql, $conn)->fetch_assoc()["id"];
     }
     
     /*
@@ -298,7 +314,7 @@
     function getOwnedRooms($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room WHERE user_id = $userId";
-        return execQuery($sql, $conn)->get_assoc();
+        return execQuery($sql, $conn)->fetch_assoc();
     }
     
     /*
@@ -309,6 +325,6 @@
     function getParticipantRooms($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room r WHERE r.id IN (SELECT rm.room FROM room_member rm where usr = $userId)";
-        return execQuery($sql, $conn)->get_assoc();
+        return execQuery($sql, $conn)->fetch_assoc();
     }
 ?>
