@@ -96,7 +96,6 @@
         $_SESSION["credentialsError"] = "";
     }
 ?>
-
 <!DOCTYPE html>
 <head>
     <title>My Account</title>
@@ -116,10 +115,27 @@
 </head>
 <html lang="en">
     <body>
+        <style>
+            button: #logoutButton {
+                color: orange;
+                background-color: orange;
+                border-style: solid;
+                border-radius: 20px;
+                border-color: black;
+            }
+        </style>
         <div id="profileContainer" class="fluid-container">
             <div class="well well-sm">
                 <div class="row" id="profileRowDiv">
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
+                    <a href="./main.html" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <div>
+                        Username<br>Email Address
+                    </div>
+                    <div>
+                        <form action = "./logout.php">
+                                <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
+                        </form>
                     <a href="../html/main.html" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <div>
                         <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
@@ -127,6 +143,22 @@
                 </div>
             </div>
         </div>
+        <form action="" method="get" id=changeEmailForm class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg">
+                <div class="form-group">
+                    <label for="updateEmailEmailInput">Update Email address</label>
+                    <input type="email" class="form-control" id="updateEmailEmailInput" name="updateEmailEmailInput" aria-describedby="emailHelp" placeholder="Enter new email">
+                    <label for="updateEmailPasswordInput">Password</label>
+                    <input type="password" class="form-control" id="updateEmailPasswordInput" name="updateEmailPasswordInput" placeholder="Password">
+                    <button type="submit" id="updateEmailButtton" class="btn btn-primary">Update Email</button>
+                </div>
+            </div>
+        </form>
+        <form action="" method="get" id="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg">
+                <div class="form-group">
+                    <label for="updatePasswordPasswordInput">Update Password</label>
+                    <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" aria-describedby="emailHelp" placeholder="Enter old password">
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg">
                 <div class="form-group">
@@ -150,6 +182,14 @@
                     <label for="newPassword newPasswordConfirm">Password</label>
                     <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New password">
                     <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirm new password">
+                    <button type="submit" id="updatePasswordBtn" class="btn btn-primary">Update Password</button>
+                </div>
+            </div>
+        </form>
+        <form action="" method="get" id="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="alert alert-danger">
+                <strong>Delete My Account</strong>
+                <div class="form-group">
                     <button type="submit" id="updatePasswordBtn" name="updatePasswordSubmit" class="btn btn-primary">Update Password</button>
                 </div>
             </div>
@@ -163,10 +203,11 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
+                    <a href="./login.html" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
                     <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
         </form>
     </body>
 </html>
-
+</html>

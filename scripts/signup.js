@@ -1,5 +1,4 @@
-
-$(document).ready(function validate() {
+function validate() {
     
     $("#signupBtn").click(function validate() {
         let usernameValid = validUsername($("#username").val());

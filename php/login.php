@@ -53,10 +53,8 @@
         else{
             echo "Incorrect Username and/or Password.";
             echo $_POST["password"];
-        }
-            
+        }  
     }
-        
 ?>
 
 <!DOCTYPE html>
