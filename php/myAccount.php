@@ -8,14 +8,7 @@
         $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
     }
     
-    //temporary code, session state should be handled with login in future
-    session_start();
-    $_SESSION["username"] = "bob";
-    /////////////////////
-    
-    $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
     $username = $_SESSION["username"];
-    
     
     //Email change form submitted
     if (isset($_POST["updateEmailSubmit"])) {
@@ -121,9 +114,6 @@
                 <div class="row" id="profileRowDiv">
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
                     <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
-                    <div>
-                        Username<br>Email Address
-                    </div>
                     <div>
                         <form action = "./logout.php">
                                 <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
