@@ -1,6 +1,60 @@
-
 <?php
+    
+    // enable sessions
+    session_start();
 
+    define("USER", "bradeberbach");
+    define("PASS", "CS372");
+    define("DB", "mio_db");
+
+    // connect to database
+    if (($connection = mysql_connect('localhost', USER, PASS)) === false)
+    {    die("Could not connect to database");
+        
+    }
+    // select database
+    if (mysql_select_db(DB, $connection) === false)
+        die("Could not select database");
+
+    // if username and password were submitted, check them
+    if (isset($_POST["username"]) && isset($_POST["password"]))
+    {
+        // prepare SQL
+        $sql = sprintf("SELECT * FROM user WHERE name='%s' AND password=PASSWORD('%s')",
+                       mysql_real_escape_string($_POST["username"]),
+                       mysql_real_escape_string($_POST["password"]));
+
+        
+        // execute query
+        $result = mysql_query($sql);
+        echo $result;
+        if ($result === false)
+            die("Could not query database");
+
+        // check whether we found a row
+        if (mysql_num_rows($result) == 1)
+        {
+            // fetch row
+            $row = mysql_fetch_assoc($result);
+ 
+            
+            
+            // remember that user's logged in
+                $_SESSION["authenticated"] = true;
+
+            // redirect user to home page, using absolute path, per
+            // http://us2.php.net/manual/en/function.header.php
+            $host = $_SERVER["HTTP_HOST"];
+            $path = rtrim(dirname($_SERVER["PHP_SELF"]), "/\\");
+            header("Location: ../html/main.html");
+            exit;
+            
+        }
+        else{
+            echo "Incorrect Username and/or Password.";
+            echo $_POST["password"];
+        }  
+    }
 ?>
 
 <!DOCTYPE html>
@@ -20,16 +74,16 @@
 </head>
 <html lang="en">
     <body>
-        <form id=login-form name="loginForm" class="change-form col-md-4 col-md-offset-4" onsubmit="return validate();">
+        <form id=loginform name="loginForm" class="change-form col-md-4 col-md-offset-4" action="login.php" method="post">
             <div class="well well-lg">
                 <h2>Mio Login Page</h2><br>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputUsername1" placeholder="Enter username">
+                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                 </div>
                 <input type="submit" class="btn btn-primary" value="Login">
                 <br><br><button type="button">I Forgot My Password</button>
