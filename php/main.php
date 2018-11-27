@@ -16,22 +16,36 @@ require "./db.php";
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- This page's custom styling -->
     <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <!-- Search area styling -->
+    <link rel="stylesheet" href="../styles/search.css" type="text/css">
+    
+    <script>
+      /* Open the sidenav */
+      function openNav() {
+          document.getElementById("mySidenav").style.width = "100%";
+          
+      }
+      
+      /* Close/hide the sidenav */
+      function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+      }
+    </script>
 </head>
 
 <body>
+  
     <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
-      
-      
       <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
-    
       <!-- Panel for My Chats accordion -->
       <div class="panel-group">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a id = "createChatBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a id = "searchChatBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
@@ -46,8 +60,8 @@ require "./db.php";
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a id = "addFriendBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a id = "searchFriendsBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#collapse2">Friends
               <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
             </h4>
@@ -65,17 +79,32 @@ require "./db.php";
           </div>
         </div>
       </div>
-      
       <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
-
-      
-  
     </div>
-
+    
+    
+    
     <div class="main">
-        <div id="searchContainer">
-            <input type="text" class="form-control" placeholder="Search">
-        </div>
+      
+      <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <form action="" method="post" id=addForm class="change-form col-md-4 col-md-offset-4">
+            <div id="searchWell" class="well well-lg">
+                <div class="form-group">
+                    <label for="search"><h1>Search</h1></label>
+                    <input type="text" class="form-control" id="search" name="search" placeholder="">
+                    <button type="submit" id="searchBtn" class="btn btn-primary">Add/Create</button>
+                </div>
+            </div>
+        </form>
+      </div>
+      
+      
+      <div id="searchContainer">
+          <input type="text" class="form-control" placeholder="Search">
+      </div>
+        
+      
         
       <div id="messageContainer">
         <ol class="discussion">

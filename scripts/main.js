@@ -1,3 +1,23 @@
+    // Open the full screen search box 
+    function openSearch() {
+      document.getElementById("myOverlay").style.display = "block";
+    }
+    
+    // Close the full screen search box 
+    function closeSearch() {
+      document.getElementById("myOverlay").style.display = "none";
+    }
+    
+    /* Open the sidenav */
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "100%";
+    }
+    
+    /* Close/hide the sidenav */
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+
 
 $(document).ready(function(){
     
