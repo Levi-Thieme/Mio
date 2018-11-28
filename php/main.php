@@ -1,3 +1,41 @@
+  
+<?php
+
+        if(!empty($_POST["message"])){
+                 sendMessage("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+        }
+                
+    
+   function sendMessage($servername, $username, $password, $dbName) {
+        
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbName);
+        
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error . "\n");
+        } 
+        
+          $content = htmlspecialchars($_POST["message"]);
+   
+            $sql = "INSERT INTO message (user_id, content) VALUES (1, '$content')";
+            execQuery($sql,$conn);
+            
+   }
+   
+   function execQuery($sql, $conn)
+    {
+    
+        if ($conn->query($sql) === TRUE) {
+           
+        } else {
+            
+        }
+    
+    
+    }
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -64,12 +102,19 @@
         </ol>
       </div>
       
-        <div class="container" id="imControls">
+      
+    
+
+            <div class="container" id="imControls">
+                        
+            <form id="messaging" class="poz" method="post">
             <div class="form-group shadow-textarea">
-                <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
-                <a href="#" id="submitButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
+                <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
+             <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
             </div>
-        </div>
+               </form>
+            </div>
+     
     </div>
 </body>
 
