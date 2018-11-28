@@ -5,7 +5,7 @@
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
-        $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+        $conn = connect("127.0.0.1", "iharter", "phpuser43", "mio_DB");
     }
     
     //temporary code, session state should be handled with login in future
