@@ -1,15 +1,18 @@
   
 <?php
-
+    require_once("../php/db.php");
+  
+    $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+    $userId = "1";
+  
         if(!empty($_POST["message"])){
-                 sendMessage("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+                 sendMessage($conn);
         }
                 
     
-   function sendMessage($servername, $username, $password, $dbName) {
+   function sendMessage($conn) {
         
-        // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbName);
+       
         
         // Check connection
         if ($conn->connect_error) {
@@ -17,23 +20,18 @@
         } 
         
           $content = htmlspecialchars($_POST["message"]);
-   
-            $sql = "INSERT INTO message (user_id, content) VALUES (1, '$content')";
+          $time = $_POST["time"];
+            $sql = "INSERT INTO message (user_id, content,time) VALUES (1, '$content','$time')";
+            //$test = "INSERT INTO room_message (room_id,message_id,user_id) values (1,LAST_INSERT_ID(),1)";
             execQuery($sql,$conn);
+            execQuery($test,$conn);
+            $_POST["message"] = "";
+       
             
    }
+  
    
-   function execQuery($sql, $conn)
-    {
-    
-        if ($conn->query($sql) === TRUE) {
-           
-        } else {
-            
-        }
-    
-    
-    }
+  
 
 ?>
 <!DOCTYPE html>
@@ -45,9 +43,9 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../scripts/main.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="../scripts/main.js"></script>
 </head>
 
 <body>
