@@ -1,3 +1,4 @@
+ var loaded = 0;
   function update()
 {
    var dt = new Date();
@@ -19,11 +20,31 @@
  
     setTimeout('update()', 1000);
 }
- 
+function loadMessages(){
+  
+    $.post("../php/message.php", {}, function(data){ 
+       
+                var string = data;
+                var allData = new Array();
+                allData = string.split(",");
+                for (var i=0; i<allData.length; i++) {
+                    var temp = new Array();
+                    var classStyle = "other";
+                    temp = allData[i].split("/");
+                    if(temp[1]=="1"){
+                        classStyle="self";
+                    }
+                    displayMessage(temp[0],classStyle);
+                };});  
+}
 $(document).ready(
  
 function() 
     {
+    if(loaded==0){
+        loadMessages()
+        loaded == 1;
+    }
      update();
     });
 
