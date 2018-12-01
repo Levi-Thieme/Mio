@@ -5,12 +5,12 @@
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
-        $conn = connect("127.0.0.1", "iharter", "phpuser43", "mio_DB");
+        $conn = connect("localhost", "bradeberbach", "CS372", "mio_db");
     }
     
     //temporary code, session state should be handled with login in future
     session_start();
-    $_SESSION["username"] = "bob";
+    //$_SESSION["username"] = "bob";
     /////////////////////
     
     $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
@@ -122,15 +122,13 @@
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
                     <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <div>
-                        Username<br>Email Address
+                        <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
                     </div>
                     <div>
                         <form action = "./logout.php">
                                 <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
                         </form>
-                    <div>
-                        <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -194,7 +192,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="./login.html" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <a href="./login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
                     <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
