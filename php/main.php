@@ -3,14 +3,15 @@
     require_once("../php/db.php");
          
     $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
-  
+   $userId = '1';
+    $roomId = '1';
   
         if(!empty($_POST["message"])){
-                 sendMessage($conn);
+                 sendMessage($conn,$userId,$roomId);
         }
                 
     
-   function sendMessage($conn) {
+   function sendMessage($conn,$userId,$roomId) {
         
        
         
@@ -21,9 +22,7 @@
         
           $content = htmlspecialchars($_POST["message"]);
           $time = $_POST["time"];
-             $userId = '1';
-             $roomId = '1';
-  
+         
     
             $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
             $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($roomId,LAST_INSERT_ID(),$userId)";

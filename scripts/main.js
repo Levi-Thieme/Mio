@@ -34,8 +34,10 @@ function loadMessages(){
                     if(temp[1]=="1"){
                         classStyle="self";
                     }
-                    displayMessage(temp[0],classStyle);
+                    displayMessage(temp[0],classStyle,temp[2]);
                 };});  
+                
+                
 }
 $(document).ready(
  
@@ -60,19 +62,19 @@ function()
             dataType: "JSON",
       
         });
-    displayMessage(message,"self");
+    displayMessage(message,"self",currentDate);
     clearMessage();
 }
 
     
-   function displayMessage(message,classStyle)
+   function displayMessage(message,classStyle,time)
    {
         if (message == "") {
             return;
         }
         else {
                  //Create and append the message to the chat
-            var codeBlock ='<li class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time datetime="2009-11-13T20:14">37 mins</time></div></li>';
+            var codeBlock ='<li class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
             $(".discussion").append(codeBlock);
             //set message input textarea to empty string to clear out the sent message
 
