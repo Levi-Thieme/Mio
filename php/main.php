@@ -1,3 +1,42 @@
+  
+<?php
+    require_once("../php/db.php");
+         
+    $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+   $userId = '1';
+    $roomId = '1';
+  
+        if(!empty($_POST["message"])){
+                 sendMessage($conn,$userId,$roomId);
+        }
+                
+    
+   function sendMessage($conn,$userId,$roomId) {
+        
+       
+        
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error . "\n");
+        } 
+        
+          $content = htmlspecialchars($_POST["message"]);
+          $time = $_POST["time"];
+         
+    
+            $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
+            $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($roomId,LAST_INSERT_ID(),$userId)";
+            execQuery($sql,$conn);
+            execQuery($test,$conn);
+            $_POST["message"] = "";
+       
+            
+   }
+  
+   
+  
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -7,9 +46,9 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../scripts/main.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="../scripts/main.js"></script>
 </head>
 
 <body>
@@ -64,12 +103,19 @@
         </ol>
       </div>
       
-        <div class="container" id="imControls">
+      
+    
+
+            <div class="container" id="imControls">
+                        
+            <form id="messaging" class="poz" method="post">
             <div class="form-group shadow-textarea">
-                <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
-                <a href="#" id="submitButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
+                <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
+             <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
             </div>
-        </div>
+               </form>
+            </div>
+     
     </div>
 </body>
 

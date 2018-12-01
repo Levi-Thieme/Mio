@@ -1,25 +1,87 @@
+ var loaded = 0;
+  function update()
+{
+   var dt = new Date();
+   var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
+    $.post("../php/message.php", {currentDate: currentDate}, function(data){ 
+       
+                var string = data;
+                var allData = new Array();
+                allData = string.split(",");
+                for (var i=0; i<allData.length; i++) {
+                    var temp = new Array();
+                    var classStyle = "other";
+                    temp = allData[i].split("/");
+                    if(temp[1]=="1"){
+                        classStyle="self";
+                    }
+                    displayMessage(temp[0],classStyle);
+                };});  
+ 
+    setTimeout('update()', 1000);
+}
+function loadMessages(){
+  
+    $.post("../php/message.php", {}, function(data){ 
+       
+                var string = data;
+                var allData = new Array();
+                allData = string.split(",");
+                for (var i=0; i<allData.length; i++) {
+                    var temp = new Array();
+                    var classStyle = "other";
+                    temp = allData[i].split("/");
+                    if(temp[1]=="1"){
+                        classStyle="self";
+                    }
+                    displayMessage(temp[0],classStyle,temp[2]);
+                };});  
+                
+                
+}
+$(document).ready(
+ 
+function() 
+    {
+    if(loaded==0){
+        loadMessages()
+        loaded == 1;
+    }
+     update();
+    });
 
-$(document).ready(function(){
+  function insertData() {
+    var message=$("#message").val();
+     var dt = new Date();
+    var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
+// AJAX code to send data to php file.
+        $.ajax({
+            type: "POST",
+            url: "../php/main.php",
+            data: {message: message, time: currentDate},
+            dataType: "JSON",
+      
+        });
+    displayMessage(message,"self",currentDate);
+    clearMessage();
+}
+
     
-    /*
-    Click handler for message send button.
-    */
-    $("#submitButton").click(function() {
-        var message = $("#message").val();
+   function displayMessage(message,classStyle,time)
+   {
         if (message == "") {
             return;
         }
         else {
-            //Create and append the message to the chat
-            var codeBlock ='<li class="self"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time datetime="2009-11-13T20:14">37 mins</time></div></li>';
+                 //Create and append the message to the chat
+            var codeBlock ='<li class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
             $(".discussion").append(codeBlock);
-            //Create and append a fake response to the chat
-            var codeBlockResponse ='<li class="other"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>Sample Response</p><time datetime="2009-11-13T20:14">37 mins</time></div></li>';
-            $(".discussion").append(codeBlockResponse);
             //set message input textarea to empty string to clear out the sent message
-            $("#message").val("");
-            //Focus on message content body
-            
+
+         
         }
-    });
-});
+   }
+   function clearMessage(){
+       $("#message").val("");
+   }
+   
