@@ -105,10 +105,9 @@
                     $conn->real_escape_string($_POST['email']),
                     $conn->real_escape_string($_POST['password']));
                     if ($conn->query($sql) === true) {
-                        echo "<b style='color:blue;'>SUCCESS</b>";
                         reroute();
                     } else {
-                        echo "<b style='color:red;'>FAILURE</b>";
+                        echo "<b style='color:red;'>FAILURE IN QUERY</b>";
                     }
                 }
             }
@@ -120,7 +119,6 @@
                 <div class="form-group" align = "center">
                     <h2> Sign Up </h2>
                     <br>
-                    <?php echo "<b>" . $_POST['name'] . "</b>"; ?>
                     <label for="name">Name</label>
                     <input <?php echo (submittedEmpty('name') || badName()) ? "style='border:solid red;'" : ''
                             ?> name="name" type="text" class="form-control" id="username" aria-describedby="enter name" placeholder="Enter your name" value ="<?php echo isset($_POST['name']) ? $_POST['name'] : '' ?>">
