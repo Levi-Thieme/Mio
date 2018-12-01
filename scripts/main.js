@@ -1,25 +1,53 @@
-    // Open the full screen search box 
-    function openSearch() {
-      document.getElementById("myOverlay").style.display = "block";
-    }
+/* Open the sidenav */
+function openSlider() {
+    document.getElementById("slider").style.width = "100%";
+}
     
-    // Close the full screen search box 
-    function closeSearch() {
-      document.getElementById("myOverlay").style.display = "none";
-    }
-    
-    /* Open the sidenav */
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "100%";
-    }
-    
-    /* Close/hide the sidenav */
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
+/* Close/hide the sidenav */
+function closeSlider() {
+    document.getElementById("slider").style.width = "0";
+}
 
+function setSliderMode(mode) {
+    if (mode === "addFriend") {
+        document.getElementById("sliderName").innerHTML = "Friend Name";
+        document.getElementById("sliderAction").innerHTML = "Send Request";
+    }
+    else if (mode === "addChat") {
+        document.getElementById("sliderName").innerHTML = "Chat Name";
+        document.getElementById("sliderAction").innerHTML = "Create";
+    }
+}
 
+var addCreate;
+    
 $(document).ready(function(){
+    
+    //Add handler for slider
+    $("#createChatBtn").on("click", function() {
+        setSliderMode("addChat");
+        openSlider();
+    });
+    
+    $("#addFriendBtn").on("click",  function() {
+        setSliderMode("addFriend");
+        openSlider();
+    });
+    
+    $("#closeBtn").attr("onclick", "closeSlider()");
+    
+    addCreate = function() {
+        let mode = document.getElementById("sliderAction").innerHTML;
+        let name = document.getElementById("addName").value;
+        if (mode === "Create") {
+            
+        }
+        else if(mode === "Send Request") {
+            
+        }
+    }
+    $("#sliderAction").attr("onclick", "addCreate()");
+    
     
     /*
     Click handler for message send button.

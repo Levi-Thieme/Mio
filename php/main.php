@@ -10,8 +10,8 @@ require "./db.php";
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../scripts/main.js"></script> 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script> 
     <!-- Styles -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -20,19 +20,6 @@ require "./db.php";
     <link rel="stylesheet" href="../styles/main.css" type="text/css">
     <!-- Search area styling -->
     <link rel="stylesheet" href="../styles/search.css" type="text/css">
-    
-    <script>
-      /* Open the sidenav */
-      function openNav() {
-          document.getElementById("mySidenav").style.width = "100%";
-          
-      }
-      
-      /* Close/hide the sidenav */
-      function closeNav() {
-          document.getElementById("mySidenav").style.width = "0";
-      }
-    </script>
 </head>
 
 <body>
@@ -44,8 +31,7 @@ require "./db.php";
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a id = "createChatBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a id = "searchChatBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a id = "createChatBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
@@ -60,8 +46,7 @@ require "./db.php";
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a id = "addFriendBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a id = "searchFriendsBtn" onclick="openNav()" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
+              <a id = "addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#collapse2">Friends
               <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
             </h4>
@@ -86,16 +71,14 @@ require "./db.php";
     
     <div class="main">
       
-      <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div id="slider" class="slider">
+        <a href="javascript:void(0)" id="closeBtn" class="closebtn">&times;</a>
         <form action="" method="post" id=addForm class="change-form col-md-4 col-md-offset-4">
-            <div id="searchWell" class="well well-lg">
-                <div class="form-group">
-                    <label for="search"><h1>Search</h1></label>
-                    <input type="text" class="form-control" id="search" name="search" placeholder="">
-                    <button type="submit" id="searchBtn" class="btn btn-primary">Add/Create</button>
+                <div id="sliderFormDiv" class="form-group">
+                    <label for="search"><h1 id="sliderName">Name</h1></label>
+                    <input type="text" class="form-control" id="addName" name="addName" placeholder="">
+                    <button id="sliderAction" type="submit" class="btn btn-primary"></button>
                 </div>
-            </div>
         </form>
       </div>
       
