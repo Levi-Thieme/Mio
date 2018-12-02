@@ -18,8 +18,8 @@
     /*
     Filters sql input strings
     */
-    function filter($conn, $sql) {
-        return mysqli_real_escape_string($conn, $sql);
+    function filter($connection, $sql) {
+        return mysqli_real_escape_string($connection, $sql);
     }
     
     /*
@@ -104,8 +104,8 @@
     Updates a user's email address.
     */
     function updateUserEmail($conn, $email, $name) {
-        $email = filter($email);
-        $name = filter($name);
+        $email = filter($conn, $email);
+        $name = filter($conn, $name);
         $sql = "UPDATE user SET email = '$email' WHERE name = '$name'";
         return execQuery($sql, $conn);
     }
@@ -114,9 +114,9 @@
     Updates a user's password.
     */
     function updateUserPassword($conn, $name, $password, $newPassword) {
-        $name = filter($name);
-        $password = filter($password);
-        $newPassword = filter($newPassword);
+        $name = filter($conn, $name);
+        $password = filter($conn, $password);
+        $newPassword = filter($conn, $newPassword);
         $sql = "UPDATE user SET password = '$newPassword' 
             WHERE name = '$name' AND password = '$password'";
         return execQuery($sql, $conn);
@@ -136,7 +136,7 @@
     Updates the user's profile image.
     */
     function updateUserProfileImage($conn, $image, $id) {
-        $id = filter(strval($id));
+        $id = filter($conn, strval($id));
         $sql = "UPDATE user SET image = $image WHERE id = '$id'";
         return execQuery($sql, $conn);
     }
@@ -145,7 +145,7 @@
     Gets the user's email address
     */
     function getUserEmail($conn, $username) {
-        $username = filter($username);
+        $username = filter($conn, $username);
         $sql = "SELECT email FROM user WHERE name = '$username'";
         return execQuery($sql, $conn);
     }

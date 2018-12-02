@@ -140,6 +140,9 @@ body {
     order: 1;
     border-bottom-right-radius: 0;
 }
+.self .messages p{
+     font-size: 1.2em;
+}
 
 .self .avatar {
     order: 2;
@@ -166,7 +169,7 @@ body {
 }
 
 .messages p {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     margin: 0 0 0.2rem 0;
 }
 

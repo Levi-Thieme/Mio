@@ -112,20 +112,78 @@ $(document).ready(function(){
     */
     $("#submitButton").click(function() {
         var message = $("#message").val();
+  function update()
+{  
+   var roomId = $("#roomId").val();
+   var userId = $("#userId").val();
+    $.post("../php/message.php", {roomId, roomId}, function(data){ 
+                if(data==""){
+                    
+                }
+                else{
+                    var string = data;
+                    var allData = new Array();
+                    var allData = string.split(",");
+                    for (var i=0; i<allData.length; i++) {
+                        temp = new Array();
+                        var classStyle = "other";
+                        var temp = allData[i].split("/");
+                        if(temp[1]==userId){
+                            classStyle="self";
+                        }
+                        if($('#'+temp[3]).length){
+                        
+                        }
+                        else{
+                            displayMessage(temp[0],classStyle,temp[2],temp[3]);
+                        }
+                    };
+                }
+              
+    }); 
+  setTimeout('update()', 10);
+}
+
+$(document).ready(
+ 
+function() 
+    {  
+     update();
+    });
+
+  function insertData() {
+    var message=$("#message").val();
+     var dt = new Date();
+      var roomId = $("#roomId").val();
+    var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
+// AJAX code to send data to php file.
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: "../php/main.php",
+            data: {message: message, nowRoomId:roomId, time: currentDate},
+            dataType: "JSON",
+      
+        });
+    clearMessage();
+}
+
+    
+   function displayMessage(message,classStyle,time,id)
+   {
         if (message == "") {
             return;
         }
         else {
-            //Create and append the message to the chat
-            var codeBlock ='<li class="self"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time datetime="2009-11-13T20:14">37 mins</time></div></li>';
+                 //Create and append the message to the chat
+            var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
             $(".discussion").append(codeBlock);
-            //Create and append a fake response to the chat
-            var codeBlockResponse ='<li class="other"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>Sample Response</p><time datetime="2009-11-13T20:14">37 mins</time></div></li>';
-            $(".discussion").append(codeBlockResponse);
             //set message input textarea to empty string to clear out the sent message
-            $("#message").val("");
-            //Focus on message content body
-            
+
+         
         }
-    });
-});
+   }
+   function clearMessage(){
+       $("#message").val("");
+   }
+   

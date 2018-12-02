@@ -1,7 +1,63 @@
 <?php
-require "./db.php";
-?>
+    session_start();
+    require_once("./db.php");
+   $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+    
+    //TODO ADD AUTHENTICATION
+    if($_SESSION["authenticated"]){
+      $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
+      $result = execQuery($sql, $conn);
+      if ($result !== false) {
+        $userId = $result->fetch_assoc()['id'];
+      } else {
+        die("Could not get username");
+      }
+    }else {
+      die("Not Logged in");
+    }
+    if(isset($_GET['room_id'])){
+      $roomId = $_GET['room_id'];
+    } else {
+      $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
+      error_log("Error: $sql \n" . $conn->error, 3, "error_log.txt");
+      $result = execQuery($sql, $conn);
+      $roomId = $result->fetch_assoc()['room'];
+    }
+  
+        if(!empty($_POST["message"])){
+                 sendMessage($conn,$userId,$roomId);
+        }
+                
+    
+   function sendMessage($conn,$userId,$roomId) {
+        
+       
+        
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error . "\n");
+        } 
+        
+          $content = htmlspecialchars($_POST["message"]);
+       
+            $time = $_POST["time"];
+            $nowRoomId= $_POST["nowRoomId"];
+            $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
+            $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($nowRoomId,LAST_INSERT_ID(),$userId)";
+            execQuery($sql,$conn);
+            execQuery($test,$conn);
+            $_POST["message"] = "";
+       
+            
+   }
+  
+  function getRoomsFromUserId() {
+    return array(1=>"Boys Only", 2=>"Room2", 3=>"Room3"); 
+  }
+   
+  
 
+?>
 
 <!DOCTYPE html>
 <html>
@@ -23,8 +79,9 @@ require "./db.php";
 </head>
 
 <body>
-  
-    <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
+  <input type='hidden' name="room_id" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
+  <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
+  <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
       <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->
       <div class="panel-group">
@@ -37,6 +94,15 @@ require "./db.php";
             </h4>
           </div>
           <div id="collapse1" class="panel-collapse collapse">
+            <?php
+              $myChatRooms = getRoomsFromUserId();
+              foreach($myChatRooms as $room_id => $room_name) {
+                echo "<a onclick = \"document.getElementById('chat" . $room_id . "').submit(); return false;\"><div style='cursor:pointer;' class='panel-body'> " . $room_id . ": " . $room_name . "</div>";
+                echo "<form id='chat" . $room_id . "' action=''> <input name='room_id' type='hidden' value='". $room_id . "'/></form>";
+                echo "</a>\n";
+              }
+            ?>
+            <div class="panel-footer"></div>
           </div>
         </div>
         
@@ -84,12 +150,19 @@ require "./db.php";
         </ol>
       </div>
       
-        <div class="container" id="imControls">
+      
+    
+
+            <div class="container" id="imControls">
+                        
+            <form id="messaging" class="poz" method="post">
             <div class="form-group shadow-textarea">
-                <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
-                <a href="#" id="submitButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
+                <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
+             <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
             </div>
-        </div>
+               </form>
+            </div>
+     
     </div>
 </body>
 

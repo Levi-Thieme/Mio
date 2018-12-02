@@ -3,9 +3,9 @@
     // enable sessions
     session_start();
 
-    define("USER", "thielt01");
-    define("PASS", "sharky21");
-    define("DB", "mio");
+    define("USER", "bradeberbach");
+    define("PASS", "CS372");
+    define("DB", "mio_db");
 
     // connect to database
     if (($connection = mysql_connect('localhost', USER, PASS)) === false)
@@ -40,19 +40,20 @@
             
             
             // remember that user's logged in
-                $_SESSION["authenticated"] = true;
+            $_SESSION["authenticated"] = true;
+            $_SESSION["username"] = $_POST["username"];
 
             // redirect user to home page, using absolute path, per
             // http://us2.php.net/manual/en/function.header.php
             $host = $_SERVER["HTTP_HOST"];
             $path = rtrim(dirname($_SERVER["PHP_SELF"]), "/\\");
-            header("Location: ../html/main.html");
+            header("Location: ./main.php");
             exit;
             
         }
         else{
             echo "Incorrect Username and/or Password.";
-            echo $_POST["password"];
+            
         }  
     }
 ?>
@@ -86,7 +87,7 @@
                     <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                 </div>
                 <input type="submit" class="btn btn-primary" value="Login">
-                <br><br><button type="button">I Forgot My Password</button>
+                
             </div>
         </form>
     </body>

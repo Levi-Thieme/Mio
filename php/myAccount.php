@@ -5,9 +5,10 @@
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
-        $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+        $conn = connect("localhost", "bradeberbach", "CS372", "mio_db");
     }
     
+    $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
     $username = $_SESSION["username"];
     
     //Email change form submitted
@@ -115,12 +116,13 @@
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
                     <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <div>
+                        <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
+                    </div>
+                    <div>
                         <form action = "./logout.php">
                                 <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
                         </form>
-                    <div>
-                        <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -140,6 +142,9 @@
                 <div class="form-group">
                     <label for="updatePasswordPasswordInput">Update Password</label>
                     <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" aria-describedby="emailHelp" placeholder="Enter old password">
+                </div>
+            </div>
+        </form>
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg">
                 <div class="form-group">
@@ -184,7 +189,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="./login.html" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <a href="./login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
                     <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
