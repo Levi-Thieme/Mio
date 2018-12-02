@@ -1,10 +1,29 @@
   
 <?php
+    session_start();
     require_once("../php/db.php");
-         
-    $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
-   $userId = '1';
-    $roomId = '1';
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+    
+    //TODO ADD AUTHENTICATION
+    if($_SESSION["authenticated"]){
+      $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
+      $result = execQuery($sql, $conn);
+      if ($result !== false) {
+        $userId = $result->fetch_assoc()['id'];
+      } else {
+        die("Could not get username");
+      }
+    }else {
+      die("Not Logged in");
+    }
+    if(isset($_GET['room_id'])){
+      $roomId = $_GET['room_id'];
+    } else {
+      $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
+      error_log("Error: $sql \n" . $conn->error, 3, "error_log.txt");
+      $result = execQuery($sql, $conn);
+      $roomId = $result->fetch_assoc()['room'];
+    }
   
         if(!empty($_POST["message"])){
                  sendMessage($conn,$userId,$roomId);
@@ -33,6 +52,9 @@
             
    }
   
+  function getRoomsFromUserId() {
+    return array(1=>"Boys Only", 2=>"Room2", 3=>"Room3"); 
+  }
    
   
 
@@ -52,6 +74,8 @@
 </head>
 
 <body>
+  <input type='hidden' name="roomId" value=<?php echo "'" . $roomId . "'";?>/>
+  <input type='hidden' name="userId" value=<?php echo "'" . $userId . "'";?>/>
     <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
       
       
@@ -69,8 +93,15 @@
             </h4>
           </div>
           <div id="collapse1" class="panel-collapse collapse">
-            <div class="panel-body">Chat 1</div>
-            <div class="panel-footer">Chat 2</div>
+            <?php
+              $myChatRooms = getRoomsFromUserId();
+              foreach($myChatRooms as $room_id => $room_name) {
+                echo "<a onclick = \"document.getElementById('chat" . $room_id . "').submit(); return false;\"><div style='cursor:pointer;' class='panel-body'> " . $room_id . ": " . $room_name . "</div>";
+                echo "<form id='chat" . $room_id . "' action=''> <input name='room_id' type='hidden' value='". $room_id . "'/></form>";
+                echo "</a>\n";
+              }
+            ?>
+            <div class="panel-footer"></div>
           </div>
         </div>
         
