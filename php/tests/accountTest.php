@@ -45,6 +45,52 @@
         return true;
     }
     
+    function testNoConfirm($conn) {
+        $success = false;
+        //Create and insert two users
+        $sender = "Sender User";
+        $senderEmail = "$sender@gmail.com";
+        $senderPass = "$senderpassword";
+        if (!newUser($conn, $sender, $email, $pass)) {
+            p("Failed to insert new user");
+            return false;
+        }
+        p("Inserted user $name.");
+        
+        $receiver = "Receiver User";
+        $receiverEmail = "receiver@gmail.com";
+        $receiverPass = "receiverpassword";
+        if (!newUser($conn, $receiver, $receiverEmail, $receiverPass)) {
+            p("Failed to insert new user");
+            return false;
+        }
+        p("Inserted user $receiver.");
+        
+        if (createFriendRequestNoConfirm($conn, $sender, $receiver)) {
+            p("Successfully added a friend.");
+            $success = true;
+        }
+        else {
+            p("Failed to add a friend.");
+            p($conn->error);
+            $success = false;
+        }
+        
+        //Delete the users
+        if (!deleteUser($conn, $sender, $senderPass)) {
+            p("Failed to delete user: $sender");
+            return false;
+        }
+        p("Deleted user: $sender");
+        
+        if (!deleteUser($conn, $receiver, $receiverPass)) {
+            p("Failed to delete user: $receiver");
+            return false;
+        }
+        p("Deleted user: $receiver");
+        
+        return $success;
+    }
     
     
     /*
@@ -71,7 +117,7 @@
     }
     
     //Create list of all test functions to run and call them
-    $functionsToTest = array(testIsPassword, testDeleteUser);
+    $functionsToTest = array(testIsPassword, testDeleteUser, testNoConfirm);
     foreach ($functionsToTest as $function) {
         p("<div style='color: blue'>Running $function test...</div>");
         printTestResult($function, $function($conn));

@@ -8,14 +8,8 @@
         $conn = connect("localhost", "bradeberbach", "CS372", "mio_db");
     }
     
-    //temporary code, session state should be handled with login in future
-    session_start();
-    //$_SESSION["username"] = "bob";
-    /////////////////////
-    
     $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
     $username = $_SESSION["username"];
-    
     
     //Email change form submitted
     if (isset($_POST["updateEmailSubmit"])) {
