@@ -1,10 +1,11 @@
   
 <?php
+    session_start();
     require_once("../php/db.php");
     $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     
     //TODO ADD AUTHENTICATION
-    if(isset($_SESSION['username'])){
+    if($_SESSION["authenticated"]){
       $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
       $result = execQuery($sql, $conn);
       if ($result !== false) {
