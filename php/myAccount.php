@@ -148,6 +148,9 @@
                 <div class="form-group">
                     <label for="updatePasswordPasswordInput">Update Password</label>
                     <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" aria-describedby="emailHelp" placeholder="Enter old password">
+                </div>
+            </div>
+        </form>
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg">
                 <div class="form-group">
