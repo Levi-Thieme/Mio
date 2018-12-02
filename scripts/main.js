@@ -1,52 +1,34 @@
- var loaded = 0;
+
   function update()
-{
-   var dt = new Date();
-   var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
-    $.post("../php/message.php", {currentDate: currentDate}, function(data){ 
-       
-                var string = data;
-                var allData = new Array();
-                allData = string.split(",");
-                for (var i=0; i<allData.length; i++) {
-                    var temp = new Array();
-                    var classStyle = "other";
-                    temp = allData[i].split("/");
-                    if(temp[1]=="1"){
-                        classStyle="self";
-                    }
-                    displayMessage(temp[0],classStyle);
-                };});  
- 
-    setTimeout('update()', 1000);
-}
-function loadMessages(){
-  
+{  
+   
     $.post("../php/message.php", {}, function(data){ 
-       
+    
                 var string = data;
                 var allData = new Array();
-                allData = string.split(",");
+                var allData = string.split(",");
                 for (var i=0; i<allData.length; i++) {
-                    var temp = new Array();
+                    temp = new Array();
                     var classStyle = "other";
-                    temp = allData[i].split("/");
+                    var temp = allData[i].split("/");
                     if(temp[1]=="1"){
                         classStyle="self";
                     }
-                    displayMessage(temp[0],classStyle,temp[2]);
-                };});  
-                
-                
+                    if($('#'+temp[3]).length){
+                        
+                    }
+                    else{
+                        displayMessage(temp[0],classStyle,temp[2],temp[3]);
+                    }
+                };
+    }); 
+  setTimeout('update()', 10);
 }
+
 $(document).ready(
  
 function() 
-    {
-    if(loaded==0){
-        loadMessages()
-        loaded == 1;
-    }
+    {  
      update();
     });
 
@@ -57,24 +39,24 @@ function()
 // AJAX code to send data to php file.
         $.ajax({
             type: "POST",
+            async: true,
             url: "../php/main.php",
             data: {message: message, time: currentDate},
             dataType: "JSON",
       
         });
-    displayMessage(message,"self",currentDate);
     clearMessage();
 }
 
     
-   function displayMessage(message,classStyle,time)
+   function displayMessage(message,classStyle,time,id)
    {
         if (message == "") {
             return;
         }
         else {
                  //Create and append the message to the chat
-            var codeBlock ='<li class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
+            var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
             $(".discussion").append(codeBlock);
             //set message input textarea to empty string to clear out the sent message
 
