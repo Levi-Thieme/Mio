@@ -9,9 +9,6 @@ else {
     $conn = $_SESSION["connection"];
 }
 
-$_SESSION["username"] = "Joe";
-echo "Receiver: " . $_POST["receiver"];
-
 if (isset($_SESSION["username"]) && isset($_POST["receiver"])) {
     //createFriendRequest($conn, $_POST["username"], $_POST["receiver"]);
     createFriendRequestNoConfirm($conn, $_SESSION["username"], $_POST["receiver"]);

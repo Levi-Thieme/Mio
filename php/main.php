@@ -37,8 +37,6 @@ require "./db.php";
             </h4>
           </div>
           <div id="collapse1" class="panel-collapse collapse">
-            <div class="panel-body">Chat 1</div>
-            <div class="panel-footer">Chat 2</div>
           </div>
         </div>
         
