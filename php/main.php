@@ -1,11 +1,7 @@
   
 <?php
     require_once("../php/db.php");
-         
     $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
-    
-    
-    $_SESSION['username'] = "joe";
     
     //TODO ADD AUTHENTICATION
     if(isset($_SESSION['username'])){
