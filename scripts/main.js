@@ -1,26 +1,32 @@
 
   function update()
 {  
-   
-    $.post("../php/message.php", {}, function(data){ 
-    
-                var string = data;
-                var allData = new Array();
-                var allData = string.split(",");
-                for (var i=0; i<allData.length; i++) {
-                    temp = new Array();
-                    var classStyle = "other";
-                    var temp = allData[i].split("/");
-                    if(temp[1]=="1"){
-                        classStyle="self";
-                    }
-                    if($('#'+temp[3]).length){
+   var roomId = $("#roomId").val();
+   var userId = $("#userId").val();
+    $.post("../php/message.php", {roomId, roomId}, function(data){ 
+                if(data==""){
+                    
+                }
+                else{
+                    var string = data;
+                    var allData = new Array();
+                    var allData = string.split(",");
+                    for (var i=0; i<allData.length; i++) {
+                        temp = new Array();
+                        var classStyle = "other";
+                        var temp = allData[i].split("/");
+                        if(temp[1]==userId){
+                            classStyle="self";
+                        }
+                        if($('#'+temp[3]).length){
                         
-                    }
-                    else{
-                        displayMessage(temp[0],classStyle,temp[2],temp[3]);
-                    }
-                };
+                        }
+                        else{
+                            displayMessage(temp[0],classStyle,temp[2],temp[3]);
+                        }
+                    };
+                }
+              
     }); 
   setTimeout('update()', 10);
 }
@@ -35,13 +41,14 @@ function()
   function insertData() {
     var message=$("#message").val();
      var dt = new Date();
+      var roomId = $("#roomId").val();
     var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
 // AJAX code to send data to php file.
         $.ajax({
             type: "POST",
             async: true,
             url: "../php/main.php",
-            data: {message: message, time: currentDate},
+            data: {message: message, nowRoomId:roomId, time: currentDate},
             dataType: "JSON",
       
         });
