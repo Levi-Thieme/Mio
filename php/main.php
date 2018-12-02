@@ -2,9 +2,28 @@
 <?php
     require_once("../php/db.php");
          
-    $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
-   $userId = '1';
-    $roomId = '1';
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+    
+    
+    $_SESSION['username'] = "joe";
+    
+    //TODO ADD AUTHENTICATION
+    if(isset($_SESSION['username'])){
+      $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
+      $result = execQuery($sql, $conn);
+      if ($result !== false) {
+        $userId = $result->fetch_assoc()['id'];
+      } else {
+        die("Could not get username");
+      }
+    }else {
+      die("Not Logged in");
+    }
+    if(isset($_POST['room_id'])){
+      $roomId = $_POST['room_id'];
+    } else {
+      $sql = "SELECT room FROM room_member WHERE usr='" . $userId . "' LIMIT=1;";
+    }
   
         if(!empty($_POST["message"])){
                  sendMessage($conn,$userId,$roomId);
@@ -33,6 +52,9 @@
             
    }
   
+  function getChatsFromUserId() {
+    return array(1=>"Boys Only", 2=>"Room2", 3=>"Room3"); 
+  }
    
   
 
@@ -69,6 +91,15 @@
             </h4>
           </div>
           <div id="collapse1" class="panel-collapse collapse">
+            <?php
+            
+            
+            
+              $myChatRooms = getRoomsFromUserId();
+              
+              
+              
+            ?>
             <div class="panel-body">Chat 1</div>
             <div class="panel-footer">Chat 2</div>
           </div>
