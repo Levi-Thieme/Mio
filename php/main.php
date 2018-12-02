@@ -2,7 +2,7 @@
 <?php
     session_start();
     require_once("../php/db.php");
-    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+   $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
     
     //TODO ADD AUTHENTICATION
     if($_SESSION["authenticated"]){
@@ -40,11 +40,11 @@
         } 
         
           $content = htmlspecialchars($_POST["message"]);
-          $time = $_POST["time"];
-         
-    
+       
+            $time = $_POST["time"];
+            $nowRoomId= $_POST["nowRoomId"];
             $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
-            $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($roomId,LAST_INSERT_ID(),$userId)";
+            $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($nowRoomId,LAST_INSERT_ID(),$userId)";
             execQuery($sql,$conn);
             execQuery($test,$conn);
             $_POST["message"] = "";
@@ -74,8 +74,8 @@
 </head>
 
 <body>
-  <input type='hidden' name="roomId" value=<?php echo "'" . $roomId . "'";?>/>
-  <input type='hidden' name="userId" value=<?php echo "'" . $userId . "'";?>/>
+  <input type='hidden' name="room_id" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
+  <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
       
       
