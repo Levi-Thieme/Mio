@@ -2,6 +2,7 @@
     include './db.php';
     include './errors.php';
     
+    session_start();
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
