@@ -47,20 +47,11 @@ require "./db.php";
           <div class="panel-heading">
             <h4 class="panel-title">
               <a id = "addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a data-toggle="collapse" class="list-group-item" href="#collapse2">Friends
+              <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" onclick="refreshFriendsList()">Friends
               <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
             </h4>
           </div>
-          <div id="collapse2" class="panel-collapse collapse">
-            <?php 
-              $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
-              $username = "Joe";
-              $friends = getFriends($conn, $username);
-              foreach ($friends as $friend) {
-                echo "<a class='list-group-item' href=''>$friend <i class='fa fa-comment fa-fw'
-                style='float:right' aria-hidden='true'></i>&nbsp;</a>";
-              }
-            ?>
+          <div id="friendsCollapse" class="panel-collapse collapse">
           </div>
         </div>
       </div>
@@ -73,11 +64,12 @@ require "./db.php";
       
       <div id="slider" class="slider">
         <a href="javascript:void(0)" id="closeBtn" class="closebtn">&times;</a>
-        <form action="" method="post" id=addForm class="change-form col-md-4 col-md-offset-4">
+        
                 <div id="sliderFormDiv" class="form-group">
                     <label for="search"><h1 id="sliderName">Name</h1></label>
-                    <input type="text" class="form-control" id="addName" name="addName" placeholder="">
+                    <input type="text" class="form-control" id="addName" name="addName">
                     <button id="sliderAction" type="submit" class="btn btn-primary"></button>
+                    <div id = "optionList" name = "optionList"></div>
                 </div>
         </form>
       </div>

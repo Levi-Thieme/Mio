@@ -18,8 +18,8 @@
     /*
     Filters sql input strings
     */
-    function filter($sql) {
-        return mysql_real_escape_string($sql);
+    function filter($conn, $sql) {
+        return mysqli_real_escape_string($conn, $sql);
     }
     
     /*
@@ -81,9 +81,9 @@
     Inserts a new user with name, email, and password
     */
     function newUser($conn, $name, $email, $password) {
-        $name = filter($name);
-        $email = filter($email);
-        $password = filter($password);
+        $name = filter($conn, $name);
+        $email = filter($conn, $email);
+        $password = filter($conn, $password);
         $sql = "INSERT INTO user (name, email, password)
                 VALUES ('$name', '$email', '$password')";
         return execQuery($sql, $conn);
@@ -93,8 +93,8 @@
     Returns true if password is associated with the username for an account
     */
     function isPassword($conn, $username, $pass) {
-        $username = filter($username);
-        $pass = filter($pass);
+        $username = filter($conn, $username);
+        $pass = filter($conn, $pass);
         $sql = "SELECT * from user WHERE name = '$username' AND password = '$pass'";
         $result = execQuery($sql, $conn);
         return $result->num_rows === 1;
@@ -126,8 +126,8 @@
     Deletes a user's account.
     */
     function deleteUser($conn, $name, $password) {
-        $name = filter($name);
-        $password = filter($password);
+        $name = filter($conn, $name);
+        $password = filter($conn, $password);
         $sql = "DELETE FROM user WHERE name = '$name' AND password = '$password'";
         return execQuery($sql, $conn);
     }
@@ -221,6 +221,19 @@
         $requesterId = getUserId($conn, $requester);
         $recipientId = getUserId($conn, $recipient);
         $sql = "INSERT INTO friends('from_id', 'to_id') VALUES($requesterId, $recipientId)";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Creates a friend request from user to recipient, but makes it accepted by default
+    
+    $requester - username of the user requesting the friend request
+    $recipient - username of the recipient
+    */
+    function createFriendRequestNoConfirm($conn, $requester, $recipient) {
+        $requesterId = getUserId($conn, $requester);
+        $recipientId = getUserId($conn, $recipient);
+        $sql = "INSERT INTO friends(from_id, to_id, pending) VALUES($requesterId, $recipientId, false)";
         return execQuery($sql, $conn);
     }
     
