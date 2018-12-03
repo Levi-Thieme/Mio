@@ -93,6 +93,15 @@
     }
     
     
+    function testGetFriends($conn) {
+        $results = getFriends($conn, "Joe");
+        foreach($results as $r) {
+            echo getUsername($conn, implode($r)) . "<br>";
+        }
+        return true;
+    }
+    
+    
     /*
     Print text in a div with a break element afterwards
     */
@@ -110,14 +119,14 @@
     }
     
     //Connect
-    $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     if (!$conn) {
         p("Failed to connect.");
         exit;
     }
     
     //Create list of all test functions to run and call them
-    $functionsToTest = array(testIsPassword, testDeleteUser, testNoConfirm);
+    $functionsToTest = array(testIsPassword, testDeleteUser, testNoConfirm, testGetFriends);
     foreach ($functionsToTest as $function) {
         p("<div style='color: blue'>Running $function test...</div>");
         printTestResult($function, $function($conn));

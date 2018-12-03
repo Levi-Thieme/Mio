@@ -177,16 +177,9 @@
     */
     function getFriends($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE from_id = $userId";
-        $friendRecords = execQuery($sql, $conn)->fetch_all(MYSQLI_ASSOC);
-        //error_log($friendRecords, 3, "./error_log.txt");
-        $friends = array();
-        foreach($friendRecords as $friend) {
-            $name = getUsername($conn, $friend["to_id"]);
-            $friends[] = $name;
-        }
-        sort($friends);
-        return $friends;
+        $sql = "SELECT to_id FROM friends WHERE from_id = $userId";
+        $results = execQuery($sql, $conn);
+        return $results;
     }
     
     /*

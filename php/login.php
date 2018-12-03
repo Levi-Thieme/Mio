@@ -3,8 +3,8 @@
     // enable sessions
     session_start();
 
-    define("USER", "bradeberbach");
-    define("PASS", "CS372");
+    define("USER", "mio_db");
+    define("PASS", "pfw");
     define("DB", "mio_db");
 
     // connect to database

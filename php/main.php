@@ -1,7 +1,7 @@
 <?php
     session_start();
     require_once("./db.php");
-   $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     
     //TODO ADD AUTHENTICATION
     if($_SESSION["authenticated"]){

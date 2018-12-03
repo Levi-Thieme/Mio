@@ -64,7 +64,7 @@
     
     // Connect to a db using pre-existing credentials.
     function connectToDB() {
-        $conn = connect("127.0.0.1", "iharter", "phpuser43", "mio_DB");
+        $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
         return $conn;
     }
     

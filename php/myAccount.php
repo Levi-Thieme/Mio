@@ -6,7 +6,7 @@
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
-        $conn = connect("localhost", "bradeberbach", "CS372", "mio_db");
+        $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     }
     
     $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
