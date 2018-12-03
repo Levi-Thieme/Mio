@@ -59,13 +59,12 @@ function deleteFriend(friendName) {
     }
 
     
-    function displayMessage(message,classStyle,time,id) {
+    function displayMessage(message,classStyle,time,id,name) {
         if (message == "") {
             return;
         }
         else {
-                 //Create and append the message to the chat
-            var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p>'+message+'</p><time>'+time+'</time></div></li>';
+            var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
             $(".discussion").append(codeBlock);
             //set message input textarea to empty string to clear out the sent message
     
@@ -81,18 +80,18 @@ function deleteFriend(friendName) {
 function update() {  
        var roomId = $("#roomId").val();
        var userId = $("#userId").val();
-        $.post("../php/message.php", {roomId, roomId}, function(data){ 
+        $.post("../php/message/message.php", {roomId, roomId}, function(data){ 
                     if(data==""){
                         
                     }
                     else{
                         var string = data;
                         var allData = new Array();
-                        var allData = string.split(",");
+                        var allData = string.split(">>>");
                         for (var i=0; i<allData.length; i++) {
                             temp = new Array();
                             var classStyle = "other";
-                            var temp = allData[i].split("/");
+                            var temp = allData[i].split("//");
                             if(temp[1]==userId){
                                 classStyle="self";
                             }
@@ -100,7 +99,7 @@ function update() {
                             
                             }
                             else{
-                                displayMessage(temp[0],classStyle,temp[2],temp[3]);
+                                displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
                             }
                         };
                     }
@@ -157,6 +156,9 @@ $(document).ready(function() {
         
         if (name.trim() === "") {
             return false;
+        }
+        if (mode === "Create") {
+            
         }
         else if(mode === "Send Request") {
             console.log("Sending Request\n");
