@@ -2,7 +2,7 @@
     session_start();
     require_once("./db.php");
     require_once("./sidebar_library.php");
-   $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+   $conn = connect("localhost", "mio_db", "pfw", "mio_db");
     
     //TODO ADD AUTHENTICATION
     if($_SESSION["authenticated"]){
@@ -39,8 +39,7 @@
             die("Connection failed: " . $conn->connect_error . "\n");
         } 
         
-          $content = htmlspecialchars($_POST["message"]);
-       
+            $content = filter($conn,htmlspecialchars($_POST["message"]));
             $time = $_POST["time"];
             $nowRoomId= $_POST["nowRoomId"];
             $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
