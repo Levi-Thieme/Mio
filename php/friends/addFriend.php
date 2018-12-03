@@ -10,8 +10,8 @@ else {
     $conn = $_SESSION["connection"];
 }
 
-if (isset($_SESSION["username"]) && isset($_GET["receiver"])) {
-    if (createFriendRequestNoConfirm($conn, $_SESSION["username"], $_GET["receiver"])) {
+if (isset($_SESSION["username"]) && isset($_POST["receiver"])) {
+    if (createFriendRequestNoConfirm($conn, $_SESSION["username"], $_POST["receiver"])) {
         error_log("Created friend request.\n", 3, "error_log.txt");
     }
 }

@@ -118,7 +118,6 @@
     </div>
     
     
-    
     <div class="main">
       
       <div id="slider" class="slider">
@@ -133,31 +132,23 @@
         </form>
       </div>
       
-      
       <div id="searchContainer">
           <input type="text" class="form-control" placeholder="Search">
       </div>
-        
-      
-        
+    
       <div id="messageContainer">
         <ol class="discussion">
         </ol>
       </div>
-      
-      
-    
-
-            <div class="container" id="imControls">
-                        
-            <form id="messaging" class="poz" method="post">
-            <div class="form-group shadow-textarea">
-                <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
-             <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
-            </div>
-               </form>
-            </div>
-     
+  
+      <div class="container" id="imControls">
+      <form id="messaging" class="poz" method="post">
+      <div class="form-group shadow-textarea">
+          <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
+       <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
+      </div>
+         </form>
+      </div>
     </div>
 </body>
 

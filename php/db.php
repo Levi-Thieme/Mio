@@ -244,7 +244,15 @@
     }
     
     
-    
+    /*
+    Deletes a friend from the from_user
+    */
+    function deleteFriend($conn, $from_user, $to_user) {
+        $from_id = getUserId($conn, $from_user);
+        $to_id = getUserId($conn, $to_user);
+        $sql = "DELETE FROM friends WHERE from_id = $from_id AND to_id = $to_id";
+        return execQuery($sql, $conn);
+    }
     
     
     

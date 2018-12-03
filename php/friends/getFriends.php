@@ -1,3 +1,7 @@
+<head>
+    <script type="text/javascript" src="../scripts/main.js"></script> 
+</head>
+
 <?php
 include_once("../db.php");
 
@@ -17,8 +21,11 @@ $friends = getFriends($conn, $_SESSION["username"]);
         return "";
     }
     foreach ($friends as $friend) {
-        echo "<a class='list-group-item' href=''>" . getUsername($conn, implode($friend)) . "<i class='fa fa-comment fa-fw'
-        style='float:right' aria-hidden='true'></i>&nbsp;</a>";
+        $username = getUsername($conn, implode($friend));
+        echo "<div id=$username class='list-group-item'>" . $username . 
+                "<i class='fa fa-comment fa-fw' style='float:right' aria-hidden='true'></i>" .
+                "<i onclick='deleteFriend($username)' class='fa fa-trash fa-fw' style='float:right' aria-hidden='true'></i>
+            &nbsp</div>";
     }
 }
 ?>

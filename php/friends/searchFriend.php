@@ -13,9 +13,9 @@ else {
 }
 
 
-if (isset($_GET["friendName"])) {
+if (isset($_POST["friendName"])) {
     $sql = sprintf("select name from user where name like '%s%%'", 
-        $conn->real_escape_string($_GET["friendName"]));
+        $conn->real_escape_string($_POST["friendName"]));
     show_list($sql, $conn);
 }
 ?>

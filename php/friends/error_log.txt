@@ -1,3 +1,17 @@
 Error: INSERT INTO friends(from_id, to_id, pending) VALUES(17, , false) 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' false)' at line 1Created friend request.
 Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.
+Created friend request.

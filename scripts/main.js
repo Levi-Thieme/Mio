@@ -20,20 +20,36 @@ function setSliderMode(mode) {
 }
 
 function refreshFriendsList() {
-    console.log("refresh");
+    console.log("Refresh Friends");
+    $("#friendsCollapse").load("../php/friends/getFriends.php");
+    /*
     $.ajax({
         url: "../php/friends/getFriends.php",
         type: "POST",
         datatype: "html",
         async: true,
-        timeout: 2000,
         success: function(data) {
             $("#friendsCollapse").html(data);
         }
     });
+    */
 }
 
-var addCreate;
+
+function deleteFriend(friendName) {
+    let username = friendName.id
+    $.ajax({
+        url: "../php/friends/killFriend.php",
+        type: "POST",
+        async: true,
+        data: {friend: username},
+        datatype: "JSON",
+    });
+    refreshFriendsList();
+}
+
+
+    var addCreate;
 
 
     function insertData() {
@@ -101,7 +117,7 @@ function update() {
                     }
                   
         }); 
-      setTimeout('update()', 10);
+      setTimeout('update()', 500);
 }
     
 $(document).ready(function() {
@@ -132,13 +148,12 @@ $(document).ready(function() {
         else {
             $.ajax({
                 url: "../php/friends/searchFriend.php",
-                type: "GET",
-                datatype: "html",
+                type: "POST",
                 async: true,
-                timeout: 5000,
                 data: {
                     friendName: $("#addName").val()
                 },
+                datatype: "HTML",
                 success: function(data) {
                     $("#optionList").html(data);
                 }
@@ -159,15 +174,15 @@ $(document).ready(function() {
 
             $.ajax({
                 url: "../php/friends/addFriend.php", 
-                type: "GET",
+                type: "POST",
                 async: true,
-                timeout: 3000,
                 data: { 
                     receiver: ""+name+""
                 },
             });
             
             refreshFriendsList();
+            closeSlider();
         }
     }
     
