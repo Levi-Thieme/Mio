@@ -135,7 +135,7 @@ $(document).ready(function() {
                 type: "GET",
                 datatype: "html",
                 async: true,
-                timeout: 2000,
+                timeout: 5000,
                 data: {
                     friendName: $("#addName").val()
                 },
@@ -154,15 +154,12 @@ $(document).ready(function() {
         if (name.trim() === "") {
             return false;
         }
-        if (mode === "Create") {
-            
-        }
         else if(mode === "Send Request") {
             console.log("Sending Request\n");
 
             $.ajax({
                 url: "../php/friends/addFriend.php", 
-                type: "POST",
+                type: "GET",
                 async: true,
                 timeout: 3000,
                 data: { 

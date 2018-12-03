@@ -44,11 +44,11 @@ CREATE TABLE IF NOT EXISTS `file` (
 
 CREATE TABLE IF NOT EXISTS `friends` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from` int(11) NOT NULL,
-  `to` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`from`),
-  KEY `friends_user_id_to` (`to`),
-  KEY `friends_user_id_from` (`from`)
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`from_id`),
+  KEY `friends_user_id_to` (`to_id`),
+  KEY `friends_user_id_from` (`from_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -197,8 +197,8 @@ ALTER TABLE `file`
 -- Constraints for table `friends`
 --
 ALTER TABLE `friends`
-  ADD CONSTRAINT `fk_friends_user_from` FOREIGN KEY (`from`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `fk_friends_user_to` FOREIGN KEY (`to`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `fk_friends_user_from` FOREIGN KEY (`from_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `fk_friends_user_to` FOREIGN KEY (`to_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `message`

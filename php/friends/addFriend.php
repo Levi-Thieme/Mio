@@ -1,18 +1,19 @@
 <?php
 require_once("../db.php");
+session_start();
 
 $conn;
 if (!isset($_SESSION["connection"])) {
-    $conn = connect("127.0.0.1", "thielt01", "sharky21", "mio");
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
 }
 else {
     $conn = $_SESSION["connection"];
 }
 
-if (isset($_SESSION["username"]) && isset($_POST["receiver"])) {
-    //createFriendRequest($conn, $_POST["username"], $_POST["receiver"]);
-    createFriendRequestNoConfirm($conn, $_SESSION["username"], $_POST["receiver"]);
-    error_log("Created friend request.\n", 3, "error_log.txt");
+if (isset($_SESSION["username"]) && isset($_GET["receiver"])) {
+    if (createFriendRequestNoConfirm($conn, $_SESSION["username"], $_GET["receiver"])) {
+        error_log("Created friend request.\n", 3, "error_log.txt");
+    }
 }
 else {
     error_log("Failed to create friend request.\n" . $conn->error, 3, "error_log.txt");

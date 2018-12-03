@@ -58,3 +58,46 @@ Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1;
 Error: INSERT INTO room_message (room_id,message_id,user_id) values (,LAST_INSERT_ID(),100) 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LAST_INSERT_ID(),100)' at line 1Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
 Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: INSERT INTO room_message (room_id,message_id,user_id) values (,LAST_INSERT_ID(),100) 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LAST_INSERT_ID(),100)' at line 1Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=100 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: INSERT INTO message (user_id, content,time) VALUES (17 ,'How's it going?','2018-12-2 22:23:46') 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's it going?','2018-12-2 22:23:46')' at line 1Error: INSERT INTO room_message (room_id,message_id,user_id) values (4,LAST_INSERT_ID(),17) 
+Cannot add or update a child row: a foreign key constraint fails (`mio_db`.`room_message`, CONSTRAINT `fk_rm_message_user_id` FOREIGN KEY (`message_id`, `user_id`) REFERENCES `message` (`id`, `user_id`))Error: SELECT room FROM room_member WHERE usr=16 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
+Error: SELECT room FROM room_member WHERE usr=17 LIMIT 1; 
