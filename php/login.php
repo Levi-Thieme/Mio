@@ -70,7 +70,6 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Custom styling -->
-    <script type="text/javascript" src="../scripts/login.js"></script>
     <link rel="stylesheet" href="../styles/login.css">
 </head>
 <html lang="en">
