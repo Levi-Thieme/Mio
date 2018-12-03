@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2018 at 12:35 AM
+-- Generation Time: Dec 03, 2018 at 03:28 AM
 -- Server version: 5.5.57-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.22
 
@@ -46,10 +46,18 @@ CREATE TABLE IF NOT EXISTS `friends` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_id` int(11) NOT NULL,
   `to_id` int(11) NOT NULL,
+  `pending` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`,`from_id`),
   KEY `friends_user_id_to` (`to_id`),
   KEY `friends_user_id_from` (`from_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `friends`
+--
+
+INSERT INTO `friends` (`id`, `from_id`, `to_id`, `pending`) VALUES
+(1, 17, 16, 0);
 
 -- --------------------------------------------------------
 
@@ -64,14 +72,27 @@ CREATE TABLE IF NOT EXISTS `message` (
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`,`user_id`),
   KEY `message_user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `message`
 --
 
 INSERT INTO `message` (`id`, `user_id`, `content`, `time`) VALUES
-(7, 16, 'Welcome to my chatroom!', '2018-12-03 00:19:57');
+(7, 16, 'Welcome to my chatroom!', '2018-12-03 00:19:57'),
+(8, 17, 'YES!!!!!!', '2018-12-02 22:21:26'),
+(9, 16, 'Hey dude\n', '2018-12-02 22:22:13'),
+(10, 17, 'Connect to my thing!!', '2018-12-02 22:22:18'),
+(11, 16, 'OKie dokie', '2018-12-02 22:22:32'),
+(12, 17, 'ohhhhh yeah, I like that...', '2018-12-02 22:22:29'),
+(13, 16, 'lol', '2018-12-02 22:23:13'),
+(14, 17, 'oh', '2018-12-02 22:23:05'),
+(15, 16, 'fdsfdsa', '2018-12-02 22:23:19'),
+(16, 17, 'oh', '2018-12-02 22:23:07'),
+(17, 17, 'oh', '2018-12-02 22:23:09'),
+(18, 16, 'oh', '2018-12-02 22:23:29'),
+(19, 16, 'I lay claim to this', '2018-12-02 22:24:09'),
+(20, 17, 'Hello!!', '2018-12-02 22:24:23');
 
 -- --------------------------------------------------------
 
@@ -148,14 +169,27 @@ CREATE TABLE IF NOT EXISTS `room_message` (
   PRIMARY KEY (`id`,`room_id`),
   KEY `rm_message_room_id` (`room_id`),
   KEY `rm_message_message_id` (`message_id`,`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `room_message`
 --
 
 INSERT INTO `room_message` (`id`, `room_id`, `message_id`, `user_id`) VALUES
-(5, 4, 7, 16);
+(5, 4, 7, 16),
+(6, 4, 8, 17),
+(7, 4, 9, 16),
+(8, 4, 10, 17),
+(9, 4, 11, 16),
+(10, 4, 12, 17),
+(11, 4, 13, 16),
+(12, 4, 14, 17),
+(13, 4, 15, 16),
+(14, 4, 16, 17),
+(15, 4, 17, 17),
+(16, 4, 18, 16),
+(18, 5, 19, 16),
+(19, 4, 20, 17);
 
 -- --------------------------------------------------------
 
