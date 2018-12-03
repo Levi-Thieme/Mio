@@ -1,7 +1,8 @@
 <?php
     session_start();
     require_once("./db.php");
-   $conn = connect("127.0.0.1", "odonap01", "Zarchex1", "Mio");
+    require_once("./sidebar_library.php");
+   $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     
     //TODO ADD AUTHENTICATION
     if($_SESSION["authenticated"]){
@@ -50,12 +51,6 @@
        
             
    }
-  
-  function getRoomsFromUserId() {
-    return array(1=>"Boys Only", 2=>"Room2", 3=>"Room3"); 
-  }
-   
-  
 
 ?>
 
@@ -95,7 +90,7 @@
           </div>
           <div id="collapse1" class="panel-collapse collapse">
             <?php
-              $myChatRooms = getRoomsFromUserId();
+              $myChatRooms = getRoomsAssociativeArrayFromUserId(getUserId($conn, $_SESSION['username']));
               foreach($myChatRooms as $room_id => $room_name) {
                 echo "<a onclick = \"document.getElementById('chat" . $room_id . "').submit(); return false;\"><div style='cursor:pointer;' class='panel-body'> " . $room_id . ": " . $room_name . "</div>";
                 echo "<form id='chat" . $room_id . "' action=''> <input name='room_id' type='hidden' value='". $room_id . "'/></form>";

@@ -99,12 +99,14 @@
                     echo $_POST['profile'];
                 }
                 if($filled) {
+                    $name = $conn->real_escape_string($_POST['name']);
                     $sql = sprintf("INSERT INTO `user`( `name`, `email`, `password`, `image`) 
                     VALUES ('%s', '%s', PASSWORD('%s'), 'an Image')",
-                    $conn->real_escape_string($_POST['name']),
+                    $name,
                     $conn->real_escape_string($_POST['email']),
                     $conn->real_escape_string($_POST['password']));
                     if ($conn->query($sql) === true) {
+                        addNewRoom($conn, $name . "s Personal Room", $name);
                         reroute();
                     } else {
                         echo "<b style='color:red;'>FAILURE IN QUERY</b>";
