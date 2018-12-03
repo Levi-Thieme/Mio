@@ -22,17 +22,6 @@ function setSliderMode(mode) {
 function refreshFriendsList() {
     console.log("Refresh Friends");
     $("#friendsCollapse").load("../php/friends/getFriends.php");
-    /*
-    $.ajax({
-        url: "../php/friends/getFriends.php",
-        type: "POST",
-        datatype: "html",
-        async: true,
-        success: function(data) {
-            $("#friendsCollapse").html(data);
-        }
-    });
-    */
 }
 
 
