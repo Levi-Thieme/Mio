@@ -96,7 +96,12 @@
                 echo "</a>\n";
               }
             ?>
-            <div class="panel-footer"></div>
+            <div class="panel-footer">Add new Room
+              <form action='./roomBuilder.php' method='post'>
+                <input type="text" name="newRoomName" placeholder="Enter a room name"/>
+                <input type="submit" value="Add"/>
+              </form>
+            </div>
           </div>
         </div>
         
@@ -114,6 +119,7 @@
         </div>
       </div>
       <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+      <a href='javascript:void(0)'><div class = 'panel-body'> Add Friends to this Chat</div></a>
     </div>
     
     
