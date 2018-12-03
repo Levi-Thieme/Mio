@@ -143,6 +143,10 @@ body {
 .self .messages p{
      font-size: 1.2em;
 }
+.messages #username{
+  
+    font-size: .5rem;
+}
 
 .self .avatar {
     order: 2;
@@ -171,6 +175,10 @@ body {
 .messages p {
     font-size: 1.2rem;
     margin: 0 0 0.2rem 0;
+}
+.messages #username{
+       font-weight: bold;
+    font-size: .9rem;
 }
 
 .messages time {
