@@ -119,7 +119,7 @@
         </div>
       </div>
       <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
-      ><div class = 'panel-body'> </div>
+      <div class = 'panel-body'> </div>
         <form action='./addToRoom.php' method='get'>
           <?php error_log("Error: ".implode(" ", $_GET) . "////" . implode(" ", array_keys($_GET)) . " \n" . $conn->error, 3, "error_log.txt");?>
           <input type="hidden" name='thisRoom' value=<?php echo "'" . $_GET['room_id'] . "'"; ?>/>
