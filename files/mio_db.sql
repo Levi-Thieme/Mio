@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2018 at 07:01 PM
+-- Generation Time: Dec 03, 2018 at 12:35 AM
 -- Server version: 5.5.57-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.22
 
@@ -64,17 +64,14 @@ CREATE TABLE IF NOT EXISTS `message` (
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`,`user_id`),
   KEY `message_user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `message`
 --
 
 INSERT INTO `message` (`id`, `user_id`, `content`, `time`) VALUES
-(1, 13, 'Thanks for joining room 13!', '2018-12-02 00:50:05'),
-(2, 13, 'Hey there\n', '2018-12-01 19:51:44'),
-(3, 13, 'You  can stop that\n', '2018-12-01 19:51:52'),
-(4, 13, 'hello\n', '2018-12-01 21:05:23');
+(7, 16, 'Welcome to my chatroom!', '2018-12-03 00:19:57');
 
 -- --------------------------------------------------------
 
@@ -87,16 +84,18 @@ CREATE TABLE IF NOT EXISTS `room` (
   `user_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `room`
 --
 
 INSERT INTO `room` (`id`, `user_id`, `name`) VALUES
-(1, 13, 'Boys Only'),
-(2, 14, 'Room2'),
-(3, 15, 'Room3');
+(4, 16, 'Joe''s Room'),
+(5, 17, 'Levi''s Room'),
+(6, 18, 'Brad''s Room'),
+(7, 19, 'Isaac''s Room'),
+(8, 20, 'Aaron''s Room');
 
 -- --------------------------------------------------------
 
@@ -111,22 +110,29 @@ CREATE TABLE IF NOT EXISTS `room_member` (
   PRIMARY KEY (`id`,`room`),
   KEY `room_member_room_id` (`room`),
   KEY `room_member_user_id` (`usr`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `room_member`
 --
 
 INSERT INTO `room_member` (`id`, `room`, `usr`) VALUES
-(1, 2, 13),
-(5, 3, 13),
-(7, 1, 13),
-(3, 1, 14),
-(6, 3, 14),
-(8, 2, 14),
-(2, 2, 15),
-(4, 1, 15),
-(9, 3, 15);
+(10, 4, 16),
+(14, 5, 16),
+(20, 7, 16),
+(11, 4, 17),
+(13, 5, 17),
+(21, 7, 17),
+(12, 4, 18),
+(15, 5, 18),
+(19, 6, 18),
+(24, 8, 18),
+(16, 5, 19),
+(18, 6, 19),
+(22, 7, 19),
+(25, 8, 19),
+(17, 5, 20),
+(23, 8, 20);
 
 -- --------------------------------------------------------
 
@@ -142,15 +148,14 @@ CREATE TABLE IF NOT EXISTS `room_message` (
   PRIMARY KEY (`id`,`room_id`),
   KEY `rm_message_room_id` (`room_id`),
   KEY `rm_message_message_id` (`message_id`,`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `room_message`
 --
 
 INSERT INTO `room_message` (`id`, `room_id`, `message_id`, `user_id`) VALUES
-(1, 1, 1, 13),
-(2, 1, 2, 13);
+(5, 4, 7, 16);
 
 -- --------------------------------------------------------
 
@@ -165,16 +170,18 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(41) NOT NULL,
   `image` longblob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `image`) VALUES
-(13, 'joe', 'joe@pfw.edu', '*60D178145669A4D1569FE820852BB3425CB2D4A7', 0x616e20496d616765),
-(14, 'Joe2', 'crypt@pfw.edu', '*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7', 0x616e20496d616765),
-(15, 'joe3', 'pog@pfw.edu', '*56C8F0F483D3E0E5A5088938D5DE6CD90F825BD5', 0x616e20496d616765);
+(16, 'JosephShell', 'sheljl01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
+(17, 'LeviThieme', 'thielt01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
+(18, 'BradEberbach', 'eberbm01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
+(19, 'IsaacHarter', 'hartia01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
+(20, 'AaronODonnell', 'odonap01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765);
 
 --
 -- Constraints for dumped tables
