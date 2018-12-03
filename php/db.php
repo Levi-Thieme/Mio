@@ -333,4 +333,29 @@
         $sql = "SELECT * FROM room r WHERE r.id IN (SELECT rm.room FROM room_member rm where usr = $userId)";
         return execQuery($sql, $conn)->fetch_assoc();
     }
+    
+    function addNewRoom($conn, $roomName, $name) {
+        $idsql = "SELECT id FROM `user` WHERE name='" . $name . "';";
+        $idResult = $conn->query($idsql);
+        if($idResult === false) {
+            die("No user found with name ".$name);
+        } else {
+            $id = $idResult->fetch_assoc()['id'];
+        }
+        $myRoomsql = sprintf("INSERT INTO `room` (`user_id`, `name`)
+        VALUES (%s, %s)", $id, "'" . $roomName . "'");
+        if($conn->query($myRoomsql) === false) {
+            error_log("Error: $roomIdSql \n" . $conn->error, 3, "error_log.txt");
+            die("Failure creating room for new user");
+        }
+        $roomIdSql = "SELECT id FROM room WHERE name ='" . $roomName . "'";
+        $roomIdResult = $conn->query($roomIdSql);
+        if($roomIdResult === false){
+            error_log("Error: $roomIdSql \n" . $conn->error, 3, "error_log.txt");
+            die("Failure getting id from room I just created.");
+        }
+        $roomId = $roomIdResult->fetch_assoc()['id'];
+        $addUserToRoomSql = "INSERT INTO `room_member`(`room`, `usr`) VALUES (" . $roomId . "," . $id . ");";
+        $conn->query($addUserToRoomSql);
+    }
 ?>

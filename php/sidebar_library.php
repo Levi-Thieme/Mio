@@ -1,5 +1,5 @@
 <?php
-    require_once("./php/db.php");
+    require_once("./db.php");
     
     function getRoomsAssociativeArrayFromUserId($userId){
         $ids = getRoomsFromUserId($userId);
@@ -11,16 +11,6 @@
         }
         
         return $roomNames;
-    }
-    
-    // Query a user's id using their name.
-    function getUserId($username) {
-        // Setup connection and sql query.
-        $conn = connectToDB();
-        $sql = "SELECT id FROM user WHERE name = '" . $username . " ' ";
-        $result = getResult($sql, $conn);
-        $id = $result->fetch_assoc()["id"];
-        return $id;
     }
     
     // Get every room associated with id from room member table.
