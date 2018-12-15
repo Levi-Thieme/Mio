@@ -53,6 +53,7 @@
 }
 
 button: #logoutButton {
+    float: right;
     color: orange;
     background-color: orange;
     border-style: solid;

@@ -116,36 +116,14 @@
                 <div class="row" id="profileRowDiv">
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
                     <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <a href="./logout.php" id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit">Log out</a>
                     <div>
                         <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
                     </div>
                     <div>
-                        <form action = "./logout.php">
-                                <button id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit"> Log out </button>
-                        </form>
-                    
                 </div>
             </div>
         </div>
-        <form action="" method="get" id=changeEmailForm class="change-form col-md-4 col-md-offset-4">
-            <div class="well well-lg">
-                <div class="form-group">
-                    <label for="updateEmailEmailInput">Update Email address</label>
-                    <input type="email" class="form-control" id="updateEmailEmailInput" name="updateEmailEmailInput" aria-describedby="emailHelp" placeholder="Enter new email">
-                    <label for="updateEmailPasswordInput">Password</label>
-                    <input type="password" class="form-control" id="updateEmailPasswordInput" name="updateEmailPasswordInput" placeholder="Password">
-                    <button type="submit" id="updateEmailButtton" class="btn btn-primary">Update Email</button>
-                </div>
-            </div>
-        </form>
-        <form action="" method="get" id="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="well well-lg">
-                <div class="form-group">
-                    <label for="updatePasswordPasswordInput">Update Password</label>
-                    <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" aria-describedby="emailHelp" placeholder="Enter old password">
-                </div>
-            </div>
-        </form>
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg">
                 <div class="form-group">
@@ -173,14 +151,6 @@
                 </div>
             </div>
         </form>
-        <form action="" method="get" id="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="alert alert-danger">
-                <strong>Delete My Account</strong>
-                <div class="form-group">
-                    <button type="submit" id="updatePasswordBtn" name="updatePasswordSubmit" class="btn btn-primary">Update Password</button>
-                </div>
-            </div>
-        </form>
         <form onsubmit="return validateDeleteAccount()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
             <div class="alert alert-danger">
                 <div class="form-group">
@@ -191,7 +161,6 @@
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
                     <a href="./login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
-                    <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
         </form>
