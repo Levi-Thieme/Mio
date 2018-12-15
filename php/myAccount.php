@@ -104,8 +104,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- client side form validation for the myAccount page-->
     <script type="text/javascript" src="../scripts/myAccount.js"></script>
+     <!-- Custom styling -->
+    <link rel="stylesheet" href="../styles/common.css">
     <!-- Custom styling -->
     <link rel="stylesheet" href="../styles/myAccount.css">
+    
     
 </head>
 <html lang="en">

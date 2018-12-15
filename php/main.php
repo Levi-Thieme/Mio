@@ -70,6 +70,8 @@
     <link rel="stylesheet" href="../styles/main.css" type="text/css">
     <!-- Search area styling -->
     <link rel="stylesheet" href="../styles/search.css" type="text/css">
+    <!-- Common styling -->
+    <link rel="stylesheet" href="../styles/common.css" type="text/css">
 </head>
 
 <body>
@@ -82,7 +84,9 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a id = "createChatBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <form action="./roomBuilder.php" method="post">
+                <a id = "createChatBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              </form>
               <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
@@ -98,8 +102,9 @@
             ?>
             <div class="panel-footer">Add new Room
               <form action='./roomBuilder.php' method='post'>
+                
                 <input type="text" name="newRoomName" placeholder="Enter a room name"/>
-                <input type="submit" value="Add"/>
+                <a id="createRoom" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
               </form>
             </div>
           </div>
