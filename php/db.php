@@ -339,7 +339,7 @@
     function getParticipantRooms($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room r WHERE r.id IN (SELECT rm.room FROM room_member rm where usr = $userId)";
-        return execQuery($sql, $conn)->fetch_assoc();
+        return execQuery($sql, $conn);
     }
     
     function addNewRoom($conn, $roomName, $name) {

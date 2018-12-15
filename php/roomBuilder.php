@@ -7,7 +7,13 @@
         <?php
             session_start();
             require_once('./db.php');
-            $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+            $conn;
+            if (!$_SESSION["connection"]) {
+                $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+            }
+            else {
+                $conn = $_SESSION["connection"];
+            }
             $roomName = $_POST['newRoomName'];
             addNewRoom($conn, $roomName, $_SESSION['username']);
             $roomId = getRoomId($conn, $roomName);

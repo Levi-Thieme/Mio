@@ -20,10 +20,13 @@ function setSliderMode(mode) {
 }
 
 function refreshFriendsList() {
-    console.log("Refresh Friends");
     $("#friendsCollapse").load("../php/friends/getFriends.php");
 }
 
+function refreshRoomList() {
+    console.log("refresh room list");
+    $("#roomCollapse").load("../php/mainRequests/getRooms.php");
+}
 
 function deleteFriend(friendName) {
     let username = friendName.id
@@ -111,7 +114,7 @@ function update() {
 $(document).ready(function() {
     
     //Add handler for slider
-    $("#createChatBtn").on("click", function() {
+    $("#addRoomBtn").on("click", function() {
         setSliderMode("addChat");
         openSlider();
     });
@@ -158,18 +161,25 @@ $(document).ready(function() {
             return false;
         }
         if (mode === "Create") {
-            
+            $.ajax({
+                url: "../php/roomBuilder.php",
+                type: "POST",
+                async: true,
+                data: {
+                    newRoomName: ""+name+""
+                }
+            });
+            refreshRoomList();
+            closeSlider();
         }
         else if(mode === "Send Request") {
-            console.log("Sending Request\n");
-
             $.ajax({
                 url: "../php/friends/addFriend.php", 
                 type: "POST",
                 async: true,
                 data: { 
                     receiver: ""+name+""
-                },
+                }
             });
             
             refreshFriendsList();

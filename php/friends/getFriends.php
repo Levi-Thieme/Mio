@@ -9,11 +9,12 @@ session_start();
 $conn;
 if (!$_SESSION["connection"]) {
     $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+    $_SESSION["connection"] = $conn;
 }
 else {
     $conn = $_SESSION["connection"];
 }
-
+$conn = connect("localhost", "mio_db", "pfw", "mio_db");
 if (isset($_SESSION["username"])) {
 
 $friends = getFriends($conn, $_SESSION["username"]);

@@ -1,10 +1,8 @@
 <?php
     session_start();
     require_once("./db.php");
-    require_once("./sidebar_library.php");
-   $conn = connect("localhost", "mio_db", "pfw", "mio_db");
+    $conn = connect("localhost", "mio_db", "pfw", "mio_db");
     
-    //TODO ADD AUTHENTICATION
     if($_SESSION["authenticated"]){
       $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
       $result = execQuery($sql, $conn);
@@ -20,37 +18,28 @@
       $roomId = $_GET['room_id'];
     } else {
       $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
-      error_log("Error: $sql \n" . $conn->error, 3, "error_log.txt");
       $result = execQuery($sql, $conn);
       $roomId = $result->fetch_assoc()['room'];
     }
   
-        if(!empty($_POST["message"])){
-                 sendMessage($conn,$userId,$roomId);
-        }
+    if(!empty($_POST["message"])){
+      sendMessage($conn,$userId,$roomId);
+    }
                 
     
    function sendMessage($conn,$userId,$roomId) {
-        
-       
-        
-        // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error . "\n");
         } 
-        
-            $content = filter($conn,htmlspecialchars($_POST["message"]));
-            $time = $_POST["time"];
-            $nowRoomId= $_POST["nowRoomId"];
-            $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
-            $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($nowRoomId,LAST_INSERT_ID(),$userId)";
-            execQuery($sql,$conn);
-            execQuery($test,$conn);
-            $_POST["message"] = "";
-       
-            
+        $content = filter($conn,htmlspecialchars($_POST["message"]));
+        $time = $_POST["time"];
+        $nowRoomId= $_POST["nowRoomId"];
+        $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
+        $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($nowRoomId,LAST_INSERT_ID(),$userId)";
+        execQuery($sql,$conn);
+        execQuery($test,$conn);
+        $_POST["message"] = "";
    }
-
 ?>
 
 <!DOCTYPE html>
@@ -84,29 +73,12 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <form action="./roomBuilder.php" method="post">
-                <a id = "createChatBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              </form>
-              <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
+              <a id="addRoomBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
+              <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" onclick="refreshRoomList()">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
-          <div id="collapse1" class="panel-collapse collapse">
-            <?php
-              $myChatRooms = getRoomsAssociativeArrayFromUserId(getUserId($conn, $_SESSION['username']));
-              foreach($myChatRooms as $room_id => $room_name) {
-                echo "<a onclick = \"document.getElementById('chat" . $room_id . "').submit(); return false;\"><div style='cursor:pointer;' class='panel-body'> " . $room_id . ": " . $room_name . "</div>";
-                echo "<form id='chat" . $room_id . "' action=''> <input name='room_id' type='hidden' value='". $room_id . "'/></form>";
-                echo "</a>\n";
-              }
-            ?>
-            <div class="panel-footer">Add new Room
-              <form action='./roomBuilder.php' method='post'>
-                
-                <input type="text" name="newRoomName" placeholder="Enter a room name"/>
-                <a id="createRoom" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
-              </form>
-            </div>
+          <div id="roomCollapse" class="panel-collapse collapse">
           </div>
         </div>
         
@@ -114,9 +86,9 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a id = "addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a id="addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" onclick="refreshFriendsList()">Friends
-              <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
+              <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
           <div id="friendsCollapse" class="panel-collapse collapse">
@@ -124,12 +96,6 @@
         </div>
       </div>
       <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
-      <div class = 'panel-body'> </div>
-        <form action='./addToRoom.php' method='get'>
-          <?php error_log("Error: ".implode(" ", $_GET) . "////" . implode(" ", array_keys($_GET)) . " \n" . $conn->error, 3, "error_log.txt");?>
-          <input type="hidden" name='thisRoom' value=<?php echo "'" . $_GET['room_id'] . "'"; ?>/>
-          <input class = 'form-control' type="submit" value="Add Friends to this Chat"/>
-        </form>
     </div>
     
     

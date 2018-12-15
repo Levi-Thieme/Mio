@@ -101,6 +101,17 @@
         return true;
     }
     
+    /*
+    Not fully implemented yet...
+    */
+    function testGetRooms($conn) {
+        $username = "";
+        $rooms = getParticipantRooms($conn, $username);
+        while(($room = $rooms->fetch_assoc())) {
+            p($room['id'] . " " . $room['name']);
+        }
+        return false;
+    }
     
     /*
     Print text in a div with a break element afterwards
@@ -126,7 +137,7 @@
     }
     
     //Create list of all test functions to run and call them
-    $functionsToTest = array(testIsPassword, testDeleteUser, testNoConfirm, testGetFriends);
+    $functionsToTest = array(testIsPassword, testDeleteUser, testNoConfirm, testGetFriends, testGetRooms);
     foreach ($functionsToTest as $function) {
         p("<div style='color: blue'>Running $function test...</div>");
         printTestResult($function, $function($conn));
