@@ -3,7 +3,7 @@
     require_once("./db.php");
     $conn = connect("localhost", "mio_db", "pfw", "mio_db");
     
-    if($_SESSION["authenticated"]){
+    if ($_SESSION["authenticated"]) {
       $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
       $result = execQuery($sql, $conn);
       if ($result !== false) {
@@ -66,6 +66,7 @@
 <body>
   <input type='hidden' name="room_id" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
   <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
+  
   <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
       <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->

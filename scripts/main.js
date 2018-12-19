@@ -12,6 +12,7 @@ function setSliderMode(mode) {
     if (mode === "addFriend") {
         document.getElementById("sliderName").innerHTML = "Friend Name";
         document.getElementById("sliderAction").innerHTML = "Send Request";
+        
     }
     else if (mode === "addChat") {
         document.getElementById("sliderName").innerHTML = "Chat Name";
@@ -24,7 +25,6 @@ function refreshFriendsList() {
 }
 
 function refreshRoomList() {
-    console.log("refresh room list");
     $("#roomCollapse").load("../php/mainRequests/getRooms.php");
 }
 
@@ -41,74 +41,79 @@ function deleteFriend(friendName) {
 }
 
 
-    var addCreate;
+var addCreate;
 
 
-    function insertData() {
-        var message=$("#message").val();
-        var dt = new Date();
-        var roomId = $("#roomId").val();
-        var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
-        // AJAX code to send data to php file.
-        $.ajax({
-            type: "POST",
-            async: true,
-            url: "../php/main.php",
-            data: {message: message, nowRoomId:roomId, time: currentDate},
-            dataType: "JSON",
-      
-        });
-        clearMessage();
-    }
+function insertData() {
+    var message=$("#message").val();
+    var dt = new Date();
+    var roomId = $("#roomId").val();
+    var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
+    // AJAX code to send data to php file.
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "../php/main.php",
+        data: {message: message, nowRoomId:roomId, time: currentDate},
+        dataType: "JSON",
+  
+    });
+    clearMessage();
+}
 
-    
-    function displayMessage(message,classStyle,time,id,name) {
-        if (message == "") {
-            return;
-        }
-        else {
-            var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
-            $(".discussion").append(codeBlock);
-            //set message input textarea to empty string to clear out the sent message
-    
-         
-        }
+
+function displayMessage(message,classStyle,time,id,name) {
+    if (message == "") {
+        return;
     }
-   
-    function clearMessage(){
-        $("#message").val("");
+    else {
+        var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
+        $(".discussion").append(codeBlock);
+        //set message input textarea to empty string to clear out the sent message
+
+     
     }
+}
+
+function clearMessage(){
+    $("#message").val("");
+}
 
 
 function update() {  
-       var roomId = $("#roomId").val();
-       var userId = $("#userId").val();
-        $.post("../php/message/message.php", {roomId, roomId}, function(data){ 
-                    if(data==""){
+    var roomId = $("#roomId").val();
+    var userId = $("#userId").val();
+    $.post("../php/message/message.php", {roomId, roomId}, function(data){ 
+                if(data==""){
+                    
+                }
+                else{
+                    var string = data;
+                    var allData = new Array();
+                    var allData = string.split(">>>");
+                    for (var i=0; i<allData.length; i++) {
+                        temp = new Array();
+                        var classStyle = "other";
+                        var temp = allData[i].split("//");
+                        if(temp[1]==userId){
+                            classStyle="self";
+                        }
+                        if($('#'+temp[3]).length){
                         
-                    }
-                    else{
-                        var string = data;
-                        var allData = new Array();
-                        var allData = string.split(">>>");
-                        for (var i=0; i<allData.length; i++) {
-                            temp = new Array();
-                            var classStyle = "other";
-                            var temp = allData[i].split("//");
-                            if(temp[1]==userId){
-                                classStyle="self";
-                            }
-                            if($('#'+temp[3]).length){
-                            
-                            }
-                            else{
-                                displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
-                            }
-                        };
-                    }
-                  
-        }); 
-      setTimeout('update()', 500);
+                        }
+                        else{
+                            displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
+                        }
+                    };
+                }
+              
+    }); 
+    setTimeout('update()', 500);
+}
+
+function openAddToRoomSlider() {
+    setSliderMode("addFriend");
+    openSlider();
 }
     
 $(document).ready(function() {
@@ -128,6 +133,7 @@ $(document).ready(function() {
     
     
     //Get results for searching for friends when typing
+    
     $("#addName").keyup(function(event) {
         
         //don't send empty strings
@@ -136,7 +142,7 @@ $(document).ready(function() {
             $("#optionList").html("");
             return false;
         }
-        else {
+        else if ($("#sliderAction").html() === "Send Request"){
             $.ajax({
                 url: "../php/friends/searchFriend.php",
                 type: "POST",
@@ -154,15 +160,15 @@ $(document).ready(function() {
     
     
     addCreate = function() {
-        let mode = document.getElementById("sliderAction").innerHTML;
-        let name = document.getElementById("addName").value;
+        let mode = $("#sliderAction").html();
+        let name = $("#addName").val();
         
         if (name.trim() === "") {
             return false;
         }
         if (mode === "Create") {
             $.ajax({
-                url: "../php/roomBuilder.php",
+                url: "../php/rooms/roomBuilder.php",
                 type: "POST",
                 async: true,
                 data: {
@@ -170,6 +176,7 @@ $(document).ready(function() {
                 }
             });
             refreshRoomList();
+            $("#addname").val("");
             closeSlider();
         }
         else if(mode === "Send Request") {
@@ -181,11 +188,11 @@ $(document).ready(function() {
                     receiver: ""+name+""
                 }
             });
-            
             refreshFriendsList();
+            $("#addname").val("");
             closeSlider();
         }
-    }
+    };
     
     $("#sliderAction").attr("onclick", "addCreate()");
 

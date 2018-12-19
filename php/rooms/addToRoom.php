@@ -2,13 +2,8 @@
     
     // enable sessions
     session_start();
-
-    define("USER", "mio_db");
-    define("PASS", "pfw");
-    define("DB", "mio_db");
-
-    require_once("./db.php");
-    $conn = connect('localhost', 'mio_db', 'pfw', 'mio_db');
+    require_once("../db.php");
+    $conn = connect('127.0.0.1', 'mio_db', 'pfw', 'mio_db');
     
     if (isset($_GET['submit'])) {
         $sql = "INSERT INTO `room_member` (`room`, `usr`) VALUES ('" . $_GET['thisRoom'] . "', '" . getUserId($conn, $_GET['username']) . "')";
@@ -41,7 +36,7 @@
         <form class="change-form col-md-4 col-md-offset-4" action="" method="get">
             <div class="well well-lg">
                 <?php $room_id = $_GET['thisRoom']?>
-                <h2>Add User to room <?php echo execQuery("SELECT name FROM room WHERE id = $room_id;", $conn)->fetch_assoc()['name']; ?></h2><br>
+                <h2>Add User to room <?php echo getRoomName($room_id); ?></h2><br>
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type='hidden' name="thisRoom" value= <?php echo "'" . $room_id . "'"; ?>>

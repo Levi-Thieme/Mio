@@ -270,6 +270,11 @@
         return execQuery($sql, $conn)->fetch_assoc()["id"];
     }
     
+    function getRoomName($conn, $id) {
+        $sql = "SELECT name FROM room WHERE id = $id";
+        return execQuery($sql, $conn)[0];
+    }
+    
     /*
     Deletes a room
     

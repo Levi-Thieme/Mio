@@ -1,7 +1,7 @@
 <?php
     
-    // enable sessions
     session_start();
+    include_once("./db.php");
 
     define("USER", "mio_db");
     define("PASS", "pfw");
@@ -9,7 +9,7 @@
 
     // connect to database
     $connection;
-    if (!($connection = mysqli_connect('localhost', USER, PASS, DB))) {    
+    if (!($connection = connect("127.0.0.1", USER, PASS, DB))) {    
         die("Could not connect to database");
     }
     else {
