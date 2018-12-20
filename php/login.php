@@ -1,38 +1,39 @@
 <?php
     
-    // enable sessions
     session_start();
+    include_once("./db.php");
 
     define("USER", "mio_db");
     define("PASS", "pfw");
     define("DB", "mio_db");
 
     // connect to database
-    if (($connection = mysql_connect('localhost', USER, PASS)) === false)
-    {    die("Could not connect to database");
-        
+    $connection;
+    if (!($connection = connect("127.0.0.1", USER, PASS, DB))) {    
+        die("Could not connect to database");
     }
-    // select database
-    if (mysql_select_db(DB, $connection) === false)
-        die("Could not select database");
+    else {
+        $_SESSION["connection"] = $connection;
+    }
+    
 
     // if username and password were submitted, check them
     if (isset($_POST["username"]) && isset($_POST["password"]))
     {
         // prepare SQL
         $sql = sprintf("SELECT * FROM user WHERE name='%s' AND password=PASSWORD('%s')",
-                       mysql_real_escape_string($_POST["username"]),
-                       mysql_real_escape_string($_POST["password"]));
+                       mysqli_real_escape_string($connection, $_POST["username"]),
+                       mysqli_real_escape_string($connection, $_POST["password"]));
 
         
         // execute query
-        $result = mysql_query($sql);
-        echo $result;
-        if ($result === false)
+        $result = mysqli_query($connection, $sql);
+        if ($result === false) {
             die("Could not query database");
+        }
 
         // check whether we found a row
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_num_rows($result) == 1)
         {
             // fetch row
             $row = mysql_fetch_assoc($result);
