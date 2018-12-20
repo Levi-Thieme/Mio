@@ -12,7 +12,7 @@ function closeSlider() {
 }
 
 function setSliderAction(action) {
-    document.getElementById("sliderAction").innerHTML = "Send Request";
+    document.getElementById("sliderAction").innerHTML = action;
 }
 
 function setSliderMode(mode) {
@@ -62,7 +62,6 @@ document.addEventListener("click", function(event) {
             let name = src.parentElement.textContent;
             currentRoom = name;
             setSliderMode("addToRoom");
-            setSliderAction("Invite")
             openSlider();
         }
     }
@@ -193,7 +192,6 @@ function addToRoom(friendName) {
             roomName: "" + currentRoom + ""
         },
         complete: function(data) {
-            alert("Added " + friendName + " to " + currentRoom);
             closeSlider();
         },
         failure: function(data) {

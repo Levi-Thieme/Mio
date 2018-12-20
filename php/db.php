@@ -315,8 +315,9 @@
     $memberName - the username of the member to add
     */
     function addRoomMember($conn, $roomName, $memberName) {
+        $roomId = getRoomId($conn, $roomName);
         $memberId = getUserId($conn, $memberName);
-        $sql = "INSERT INTO room_member(room, usr) VALUES('$roomName', '$memberId')";
+        $sql = "INSERT INTO room_member(room, usr) VALUES($roomId, $memberId)";
         error_log($sql . "\n", 3, "error_log.txt");
         return execQuery($sql, $conn);
     }

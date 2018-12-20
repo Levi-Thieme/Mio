@@ -6,6 +6,7 @@
         $conn = connect('127.0.0.1', 'mio_db', 'pfw', 'mio_db');
         $username = filter($conn, $_POST["userToAdd"]);
         $roomName = filter($conn, $_POST["roomName"]);
+        error_log($roomName . "  " . $username . "\n", 3, "error_log.txt");
         $success = addRoomMember($conn, $roomName, $username);
         $conn->close();
     }
