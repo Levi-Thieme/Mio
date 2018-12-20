@@ -4,7 +4,6 @@
     Attempts to connect to the server specified by parameters.
     */
     function connect($servername, $username, $password, $dbName) {
-        
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbName);
         
@@ -29,7 +28,7 @@
     function execQuery($sql, $conn) {
         $result = $conn->query($sql);
         if ($result === false) {
-            error_log("Error: $sql \n" . $conn->error, 3, "error_log.txt");
+            error_log("Error: $sql \n" . $conn->error . "\n", 3, "error_log.txt");
         }
         return $result;
     }
@@ -281,9 +280,18 @@
     $ownerName - the username of the room's owner
     $roomName - the name of the room
     */
-    function deleteRoom($conn, $ownerName, $roomName) {
-        $ownerId = getUserId($conn, $ownerName);
-        $sql = "DROP FROM room WHERE user_id = $ownerId AND name = '$roomName'";
+    function deleteRoom($conn, $ownerId, $roomName) {
+        $sql = "DELETE FROM room WHERE user_id = $ownerId AND name = '$roomName'";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Deletes a room with the given room id
+    
+    $roomId - id of the room to delete
+    */
+    function deleteRoomById($conn, $roomId) {
+        $sql = "DELETE FROM room WHERE id = $roomId";
         return execQuery($sql, $conn);
     }
     
@@ -309,7 +317,20 @@
     function addRoomMember($conn, $roomName, $memberName) {
         $memberId = getUserId($conn, $memberName);
         $sql = "INSERT INTO room_member(room, usr) VALUES('$roomName', '$memberId')";
+        error_log($sql . "\n", 3, "error_log.txt");
         return execQuery($sql, $conn);
+    }
+        
+    /*
+    Checks if the username is the owner of room
+    
+    $username - id of the user
+    $roomName - name of the room
+    */
+    function isRoomOwner($conn, $userId, $roomId) {
+        $sql = "SELECT COUNT(*) from room where id = $roomId AND user_id = $userId";
+        $result = execQuery($sql, $conn)->fetch_array();
+        return ($result[0] > 0);
     }
     
     /*
@@ -320,8 +341,19 @@
     */
     function removeMember($conn, $username, $roomName) {
         $userId = getUserId($conn, $username);
-        
-        $sql = "DROP FROM room_member WHERE room = '$roomName' AND usr = $userId";
+        $roomId = getRoomId($conn, $roomName);
+        $sql = "DELETE FROM room_member WHERE room = $roomId AND usr = $userId";
+        $success = execQuery($sql, $conn);
+        return $success;
+    }
+    
+    /*
+    Removes all members from a given room.
+    
+    roomId - the id from which to remove all members.
+    */
+    function removeAllMembers($conn, $roomId) {
+        $sql = "DELETE FROM room_member WHERE room = $roomId";
         return execQuery($sql, $conn);
     }
     
@@ -347,28 +379,15 @@
         return execQuery($sql, $conn);
     }
     
-    function addNewRoom($conn, $roomName, $name) {
-        $idsql = "SELECT id FROM `user` WHERE name='" . $name . "';";
-        $idResult = $conn->query($idsql);
-        if($idResult === false) {
-            die("No user found with name ".$name);
-        } else {
-            $id = $idResult->fetch_assoc()['id'];
-        }
-        $myRoomsql = sprintf("INSERT INTO `room` (`user_id`, `name`)
-        VALUES (%s, %s)", $id, "'" . $roomName . "'");
-        if($conn->query($myRoomsql) === false) {
-            error_log("Error: $roomIdSql \n" . $conn->error, 3, "error_log.txt");
-            die("Failure creating room for new user");
-        }
-        $roomIdSql = "SELECT id FROM room WHERE name ='" . $roomName . "'";
-        $roomIdResult = $conn->query($roomIdSql);
-        if($roomIdResult === false){
-            error_log("Error: $roomIdSql \n" . $conn->error, 3, "error_log.txt");
-            die("Failure getting id from room I just created.");
-        }
-        $roomId = $roomIdResult->fetch_assoc()['id'];
-        $addUserToRoomSql = "INSERT INTO `room_member`(`room`, `usr`) VALUES (" . $roomId . "," . $id . ");";
-        $conn->query($addUserToRoomSql);
+    /*
+    Gets all rooms where user is a participant or owner.
+    
+    $username - the username of the owner or participant
+    */
+    function getParticipantOrOwnerRooms($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT * FROM room r where r.id IN" .
+            "(SELECT rm.room FROM room_member rm where usr = $userId) OR r.user_id = $userId";
+        return execQuery($sql, $conn);
     }
 ?>

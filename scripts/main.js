@@ -1,3 +1,6 @@
+
+var currentRoom = "";
+
 /* Open the sidenav */
 function openSlider() {
     document.getElementById("slider").style.width = "100%";
@@ -8,15 +11,22 @@ function closeSlider() {
     document.getElementById("slider").style.width = "0";
 }
 
+function setSliderAction(action) {
+    document.getElementById("sliderAction").innerHTML = "Send Request";
+}
+
 function setSliderMode(mode) {
     if (mode === "addFriend") {
         document.getElementById("sliderName").innerHTML = "Friend Name";
-        document.getElementById("sliderAction").innerHTML = "Send Request";
-        
+        setSliderAction("Send Request");
     }
     else if (mode === "addChat") {
         document.getElementById("sliderName").innerHTML = "Chat Name";
-        document.getElementById("sliderAction").innerHTML = "Create";
+        setSliderAction("Create");
+    }
+    else if (mode === "addToRoom") {
+        document.getElementById("sliderName").innerHTML = "Friend Name";
+        setSliderAction("Invite");
     }
 }
 
@@ -28,14 +38,45 @@ function refreshRoomList() {
     $("#roomCollapse").load("../php/mainRequests/getRooms.php");
 }
 
+//Event listener for leaving rooms
+document.addEventListener("click", function(event) {
+    let src = event.target;
+    if (src.classList[0] === "fa") {
+        if ("leaveRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            $.ajax({
+                url: "../php/rooms/leaveRoom.php",
+                type: "POST",
+                async: true,
+                data: {
+                    roomName: "" + name + "",
+                    success: false
+                },
+                datatype: "JSON",
+                complete: function(data) {
+                    refreshRoomList();
+                }
+            });
+        }
+        if ("addToRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            currentRoom = name;
+            setSliderMode("addToRoom");
+            setSliderAction("Invite")
+            openSlider();
+        }
+    }
+});
+
+
 function deleteFriend(friendName) {
-    let username = friendName.id
+    let username = friendName.id;
     $.ajax({
         url: "../php/friends/killFriend.php",
         type: "POST",
         async: true,
         data: {friend: username},
-        datatype: "JSON",
+        datatype: "JSON"
     });
     refreshFriendsList();
 }
@@ -111,9 +152,54 @@ function update() {
     setTimeout('update()', 500);
 }
 
-function openAddToRoomSlider() {
-    setSliderMode("addFriend");
-    openSlider();
+/*
+Creates a room with given name
+*/
+function createRoom(name) {
+    $.ajax({
+        url: "../php/roomBuilder.php",
+        type: "POST",
+        async: true,
+        data: { newRoomName: ""+name+"" },
+        complete: function(data) { refreshRoomList(); },
+        failure: function(data) {alert("Failed to create room.");}
+    });
+}
+
+/*
+Adds a friend with the given name
+*/
+function addFriend(name) {
+    $.ajax({
+        url: "../php/friends/addFriend.php", 
+        type: "POST",
+        async: true,
+        data: { receiver: ""+name+"" },
+        type: "JSON",
+        complete: function(data) { refreshFriendsList(); }
+    });
+}
+
+/*
+Invites a user to a room
+*/
+function addToRoom(friendName) {
+    $.ajax({
+        url: "../php/rooms/addToRoom.php",
+        type: "POST",
+        async: true,
+        data: {
+            userToAdd: "" + friendName + "",
+            roomName: "" + currentRoom + ""
+        },
+        complete: function(data) {
+            alert("Added " + friendName + " to " + currentRoom);
+            closeSlider();
+        },
+        failure: function(data) {
+            alert("Failed to invite " + friendName + " to " + currentRoom);
+        }
+    });
 }
     
 $(document).ready(function() {
@@ -133,7 +219,6 @@ $(document).ready(function() {
     
     
     //Get results for searching for friends when typing
-    
     $("#addName").keyup(function(event) {
         
         //don't send empty strings
@@ -142,7 +227,7 @@ $(document).ready(function() {
             $("#optionList").html("");
             return false;
         }
-        else if ($("#sliderAction").html() === "Send Request"){
+        else if ($("#sliderAction").html() === "Send Request" || $("#sliderAction").html() === "Invite") {
             $.ajax({
                 url: "../php/friends/searchFriend.php",
                 type: "POST",
@@ -167,29 +252,15 @@ $(document).ready(function() {
             return false;
         }
         if (mode === "Create") {
-            $.ajax({
-                url: "../php/rooms/roomBuilder.php",
-                type: "POST",
-                async: true,
-                data: {
-                    newRoomName: ""+name+""
-                }
-            });
-            refreshRoomList();
-            $("#addname").val("");
+            createRoom(name);
             closeSlider();
         }
         else if(mode === "Send Request") {
-            $.ajax({
-                url: "../php/friends/addFriend.php", 
-                type: "POST",
-                async: true,
-                data: { 
-                    receiver: ""+name+""
-                }
-            });
-            refreshFriendsList();
-            $("#addname").val("");
+            addFriend(name);
+            closeSlider();
+        }
+        else if (mode === "Invite") {
+            addToRoom(name);
             closeSlider();
         }
     };
