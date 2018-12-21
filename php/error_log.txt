@@ -2,5 +2,7 @@ roomBuilder called.
 Created new room.
 roomBuilder called.
 Created new room.
-roomBuilder called.
-Created new room.
+Error: INSERT INTO room_message (room_id,message_id,user_id) values (,LAST_INSERT_ID(),17) 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LAST_INSERT_ID(),17)' at line 1
+Error: INSERT INTO room_message (room_id,message_id,user_id) values (,LAST_INSERT_ID(),17) 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LAST_INSERT_ID(),17)' at line 1

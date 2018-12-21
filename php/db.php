@@ -177,8 +177,7 @@
     function getFriends($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT to_id FROM friends WHERE from_id = $userId";
-        $results = execQuery($sql, $conn);
-        return $results;
+        return execQuery($sql, $conn);
     }
     
     /*
