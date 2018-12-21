@@ -174,7 +174,8 @@ function addFriend(name) {
         type: "POST",
         async: true,
         data: { receiver: ""+name+"" },
-        type: "JSON",
+        dataType: "JSON",
+        failure: function(data) { alert("Failed to send friend request."); },
         complete: function(data) { refreshFriendsList(); }
     });
 }
@@ -261,6 +262,8 @@ $(document).ready(function() {
             addToRoom(name);
             closeSlider();
         }
+        $("#addName").val("");
+        $("#optionList").html("");
     };
     
     $("#sliderAction").attr("onclick", "addCreate()");
