@@ -176,30 +176,32 @@
     */
     function getFriends($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT to_id FROM friends WHERE from_id = $userId";
+        $sql = "SELECT to_id FROM friends WHERE from_id = $userId AND pending = false UNION DISTINCT " .
+            "SELECT from_id FROM friends WHERE to_id = $userId AND pending = false";
         return execQuery($sql, $conn);
     }
     
-    /*
-    Gets all friend requests for the user
-    
-    $username - username of the user for which to query friend requests where user is the recipient.
-    */
-    function getFriendRequests($conn, $username) {
-        $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE to_id = $userId AND pending";
-        return execQuery($sql, $conn)->fetch_assoc();
-    }
     
     /*
     Gets all pending requests sent from the user
     
-    $username - username of the user for which to query friend requests where user is the sender.
+    $username -  the username of user who is a sender of requests
     */
-    function getPendingFriendRequests($conn, $username) {
+    function getRequestsFromUser($conn, $username) {
         $userId = getUserId($conn, $username);
-        $sql = "SELECT * FROM friends WHERE from_id = $userId AND pending";
-        return execQuery($sql, $conn)->fetch_assoc();
+        $sql = "SELECT to_id FROM friends WHERE from_id = $userId AND pending";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Gets all pending request sent to this user
+    
+    $username - the username of user who is a recipient of requests
+    */
+    function getRequestsToUser($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "SELECT from_id FROM friends WHERE to_id = $userId AND pending";
+        return execQuery($sql, $conn);
     }
     
     /*
@@ -211,7 +213,7 @@
     function createFriendRequest($conn, $requester, $recipient) {
         $requesterId = getUserId($conn, $requester);
         $recipientId = getUserId($conn, $recipient);
-        $sql = "INSERT INTO friends('from_id', 'to_id') VALUES($requesterId, $recipientId)";
+        $sql = "INSERT INTO friends(from_id, to_id) VALUES($requesterId, $recipientId)";
         return execQuery($sql, $conn);
     }
     
@@ -236,8 +238,8 @@
     */
     function acceptFriendRequest($conn, $acceptor, $requester) {
         $acceptorId = getUserId($conn, $acceptor);
-        $requestorId = getUserId($conn, $requestor);
-        $sql = "UPDATE TABLE friends SET pending = false WHERE from_id = $requestorId AND to_id = $acceptorId";
+        $requestorId = getUserId($conn, $requester);
+        $sql = "UPDATE friends SET pending = false WHERE from_id = $requestorId AND to_id = $acceptorId";
         return execQuery($sql, $conn);
     }
     
@@ -248,7 +250,8 @@
     function deleteFriend($conn, $from_user, $to_user) {
         $from_id = getUserId($conn, $from_user);
         $to_id = getUserId($conn, $to_user);
-        $sql = "DELETE FROM friends WHERE from_id = $from_id AND to_id = $to_id";
+        $sql = "DELETE FROM friends WHERE (from_id = $from_id AND to_id = $to_id) OR".
+            " (from_id = $to_id AND to_id = $from_id)";
         return execQuery($sql, $conn);
     }
     
