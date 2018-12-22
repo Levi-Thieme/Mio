@@ -38,48 +38,6 @@ function refreshRoomList() {
     $("#roomCollapse").load("../php/mainRequests/getRooms.php");
 }
 
-//Event listener for leaving rooms
-document.addEventListener("click", function(event) {
-    let src = event.target;
-    if (src.classList[0] === "fa") {
-        if ("leaveRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
-            $.ajax({
-                url: "../php/rooms/leaveRoom.php",
-                type: "POST",
-                async: true,
-                data: {
-                    roomName: "" + name + "",
-                    success: false
-                },
-                datatype: "JSON",
-                complete: function(data) {
-                    refreshRoomList();
-                }
-            });
-        }
-        if ("addToRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
-            currentRoom = name;
-            setSliderMode("addToRoom");
-            openSlider();
-        }
-    }
-});
-
-
-function deleteFriend(friendName) {
-    let username = friendName.id;
-    $.ajax({
-        url: "../php/friends/killFriend.php",
-        type: "POST",
-        async: true,
-        data: {friend: username},
-        datatype: "JSON"
-    });
-    refreshFriendsList();
-}
-
 
 var addCreate;
 
@@ -168,15 +126,38 @@ function createRoom(name) {
 /*
 Adds a friend with the given name
 */
-function addFriend(name) {
+function sendFriendRequest(name) {
     $.ajax({
-        url: "../php/friends/addFriend.php", 
+        url: "../php/friends/sendRequest.php", 
         type: "POST",
         async: true,
         data: { receiver: ""+name+"" },
         dataType: "JSON",
         failure: function(data) { alert("Failed to send friend request."); },
         complete: function(data) { refreshFriendsList(); }
+    });
+}
+
+function deleteFriend(friendName) {
+    $.ajax({
+        url: "../php/friends/deleteFriend.php",
+        type: "POST",
+        async: true,
+        data: { friend: ""+friendName+"" },
+        datatype: "JSON",
+        complete: function(data) { refreshFriendsList(); }
+    });
+}
+
+function approveFriendRequest(requesterName) {
+    $.ajax({
+        url: "../php/friends/approveFriendRequest.php",
+        type: "POST",
+        async: true,
+        data: { requester: ""+requesterName+"" },
+        dataType: "JSON",
+        failure: function(data) { alert("Failed to approve friend request."); },
+        complete: function(data) { refreshFriendsList(); console.log("approve for " + requesterName); }
     });
 }
 
@@ -200,6 +181,43 @@ function addToRoom(friendName) {
         }
     });
 }
+
+//Event listener for the sidebars icons
+document.addEventListener("click", function(event) {
+    let src = event.target;
+    if (src.classList[0] === "fa") {
+        if ("leaveRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            $.ajax({
+                url: "../php/rooms/leaveRoom.php",
+                type: "POST",
+                async: true,
+                data: {
+                    roomName: "" + name + "",
+                    success: false
+                },
+                datatype: "JSON",
+                complete: function(data) {
+                    refreshRoomList();
+                }
+            });
+        }
+        else if ("addToRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            currentRoom = name;
+            setSliderMode("addToRoom");
+            openSlider();
+        }
+        else if ("deleteFriend" in src.dataset) {
+            let name = src.parentElement.textContent;
+            deleteFriend(name);
+        }
+        else if ("approveFriendRequest" in src.dataset) {
+            let name = src.parentElement.textContent;
+            approveFriendRequest(name);
+        }
+    }
+});
     
 $(document).ready(function() {
     
@@ -255,7 +273,7 @@ $(document).ready(function() {
             closeSlider();
         }
         else if(mode === "Send Request") {
-            addFriend(name);
+            sendFriendRequest(name);
             closeSlider();
         }
         else if (mode === "Invite") {
