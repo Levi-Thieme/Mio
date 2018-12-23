@@ -1,48 +1,8 @@
-levi and joe  JosephShell
-INSERT INTO room_member(room, usr) VALUES(22, 16)
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
+test  AaronODonnell
+INSERT INTO room_member(room, usr) VALUES(23, 20)
+Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
+Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) from room where id =  AND user_id = 17 
+Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND user_id = 17' at line 1

@@ -1,5 +1,6 @@
 
-var currentRoom = "";
+//Stores the name of the currently selected room
+var currentRoom;
 
 /* Open the sidenav */
 function openSlider() {
@@ -11,10 +12,16 @@ function closeSlider() {
     document.getElementById("slider").style.width = "0";
 }
 
+/*
+Set the text for the slider's button
+*/
 function setSliderAction(action) {
     document.getElementById("sliderAction").innerHTML = action;
 }
 
+/*
+Set the mode for the slider
+*/
 function setSliderMode(mode) {
     if (mode === "addFriend") {
         document.getElementById("sliderName").innerHTML = "Friend Name";
@@ -30,83 +37,103 @@ function setSliderMode(mode) {
     }
 }
 
+/*
+Refreshes the friend list
+*/
 function refreshFriendsList() {
-    $("#friendsCollapse").load("../php/friends/getFriends.php");
+    $.ajax({
+        type: "POST",
+        url: "../php/friends/getFriends.php",
+        async: true,
+        dataType: "HTML",
+        success: function(data) { $("#friendsCollapse").html(data); },
+        failure: function(data) { alert("Unable to load friend list."); }
+    });
 }
 
+/*
+Refreshes the room list
+*/
 function refreshRoomList() {
-    $("#roomCollapse").load("../php/mainRequests/getRooms.php");
+    $.ajax({
+        type: "POST",
+        url: "../php/mainRequests/getRooms.php",
+        async: true,
+        dataType: "HTML",
+        success: function(data) { $("#roomCollapse").html(data); },
+        failure: function(data) { alert("Unable to load room list."); }
+    });
 }
 
 
-var addCreate;
-
-
-function insertData() {
-    var message=$("#message").val();
-    var dt = new Date();
+/*
+Sends the user's message to main.php through AJAX
+*/
+function sendMessage() {
+    let message = $("#message").val();
+    if (message.trim() == "") {
+        return;
+    }
     var roomId = $("#roomId").val();
-    var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
-    // AJAX code to send data to php file.
+    var date = new Date();
+    var currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
+
     $.ajax({
         type: "POST",
         async: true,
         url: "../php/main.php",
-        data: {message: message, nowRoomId:roomId, time: currentDate},
+        data: {
+            message: message, 
+            currentRoom: roomId, 
+            time: currentDate
+        },
         dataType: "JSON",
-  
+        failure: function(data) { alert("Failed to send message: " + message); }
     });
-    clearMessage();
-}
-
-
-function displayMessage(message,classStyle,time,id,name) {
-    if (message == "") {
-        return;
-    }
-    else {
-        var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
-        $(".discussion").append(codeBlock);
-        //set message input textarea to empty string to clear out the sent message
-
-     
-    }
-}
-
-function clearMessage(){
     $("#message").val("");
 }
 
+/*
+Appends a message div into the chat
+*/
+function displayMessage(message,classStyle,time,id,name) {
+    if (message != "")  {
+        var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
+        $(".discussion").append(codeBlock);
+        $("#message").val("");
+    }
+}
 
-function update() {  
-    var roomId = $("#roomId").val();
+/*
+Retrieves messages for a given room and displays them in the chat
+*/
+function updateChat() {  
+    var room = $("#roomId").val();
     var userId = $("#userId").val();
-    $.post("../php/message/message.php", {roomId, roomId}, function(data){ 
-                if(data==""){
-                    
+    console.log("Room: " + room);
+    $.post("../php/message/getMessages.php", { roomId: room }, function(data) { 
+        if(data.trim() != "") {
+            let string = data;
+            let allData = new Array();
+            allData = string.split(">>>");
+            
+            for (let i = 0; i < allData.length; i++) {
+                temp = new Array();
+                var classStyle = "other";
+                var temp = allData[i].split("//");
+                if (temp[1]==userId) {
+                    classStyle="self";
                 }
-                else{
-                    var string = data;
-                    var allData = new Array();
-                    var allData = string.split(">>>");
-                    for (var i=0; i<allData.length; i++) {
-                        temp = new Array();
-                        var classStyle = "other";
-                        var temp = allData[i].split("//");
-                        if(temp[1]==userId){
-                            classStyle="self";
-                        }
-                        if($('#'+temp[3]).length){
-                        
-                        }
-                        else{
-                            displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
-                        }
-                    };
+                if ($('#'+temp[3]).length) {
+                
                 }
-              
+                else {
+                    displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
+                }
+            }
+        }
     }); 
-    setTimeout('update()', 500);
+    setTimeout("updateChat()", 500);
 }
 
 /*
@@ -118,8 +145,8 @@ function createRoom(name) {
         type: "POST",
         async: true,
         data: { newRoomName: ""+name+"" },
-        complete: function(data) { refreshRoomList(); },
-        failure: function(data) {alert("Failed to create room.");}
+        failure: function(data) {alert("Failed to create room: " + name);},
+        complete: function(data) { refreshRoomList(); }
     });
 }
 
@@ -133,11 +160,14 @@ function sendFriendRequest(name) {
         async: true,
         data: { receiver: ""+name+"" },
         dataType: "JSON",
-        failure: function(data) { alert("Failed to send friend request."); },
+        failure: function(data) { alert("Failed to send friend request to " + name); },
         complete: function(data) { refreshFriendsList(); }
     });
 }
 
+/*
+Deletes a friend
+*/
 function deleteFriend(friendName) {
     $.ajax({
         url: "../php/friends/deleteFriend.php",
@@ -145,10 +175,14 @@ function deleteFriend(friendName) {
         async: true,
         data: { friend: ""+friendName+"" },
         datatype: "JSON",
+        failure: function(data) { alert("Failed to delete friend: " + friendName); },
         complete: function(data) { refreshFriendsList(); }
     });
 }
 
+/*
+Approves a friend request
+*/
 function approveFriendRequest(requesterName) {
     $.ajax({
         url: "../php/friends/approveFriendRequest.php",
@@ -156,8 +190,8 @@ function approveFriendRequest(requesterName) {
         async: true,
         data: { requester: ""+requesterName+"" },
         dataType: "JSON",
-        failure: function(data) { alert("Failed to approve friend request."); },
-        complete: function(data) { refreshFriendsList(); console.log("approve for " + requesterName); }
+        failure: function(data) { alert("Failed to approve friend request from" + requesterName + "."); },
+        complete: function(data) { refreshFriendsList(); }
     });
 }
 
@@ -173,95 +207,16 @@ function addToRoom(friendName) {
             userToAdd: "" + friendName + "",
             roomName: "" + currentRoom + ""
         },
-        complete: function(data) {
-            closeSlider();
-        },
-        failure: function(data) {
-            alert("Failed to invite " + friendName + " to " + currentRoom);
-        }
+        complete: function(data) { closeSlider(); },
+        failure: function(data) { alert("Failed to invite " + friendName + " to " + currentRoom); }
     });
 }
 
-//Event listener for the sidebars icons
-document.addEventListener("click", function(event) {
-    let src = event.target;
-    if (src.classList[0] === "fa") {
-        if ("leaveRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
-            $.ajax({
-                url: "../php/rooms/leaveRoom.php",
-                type: "POST",
-                async: true,
-                data: {
-                    roomName: "" + name + "",
-                    success: false
-                },
-                datatype: "JSON",
-                complete: function(data) {
-                    refreshRoomList();
-                }
-            });
-        }
-        else if ("addToRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
-            currentRoom = name;
-            setSliderMode("addToRoom");
-            openSlider();
-        }
-        else if ("deleteFriend" in src.dataset) {
-            let name = src.parentElement.textContent;
-            deleteFriend(name);
-        }
-        else if ("approveFriendRequest" in src.dataset) {
-            let name = src.parentElement.textContent;
-            approveFriendRequest(name);
-        }
-    }
-});
-    
-$(document).ready(function() {
-    
-    //Add handler for slider
-    $("#addRoomBtn").on("click", function() {
-        setSliderMode("addChat");
-        openSlider();
-    });
-    
-    $("#addFriendBtn").on("click",  function() {
-        setSliderMode("addFriend");
-        openSlider();
-    });
-    
-    $("#closeBtn").attr("onclick", "closeSlider()");
-    
-    
-    //Get results for searching for friends when typing
-    $("#addName").keyup(function(event) {
-        
-        //don't send empty strings
-        if ($("#addName").val().trim().length == 0) {
-            //clear the suggestions
-            $("#optionList").html("");
-            return false;
-        }
-        else if ($("#sliderAction").html() === "Send Request" || $("#sliderAction").html() === "Invite") {
-            $.ajax({
-                url: "../php/friends/searchFriend.php",
-                type: "POST",
-                async: true,
-                data: {
-                    friendName: $("#addName").val()
-                },
-                datatype: "HTML",
-                success: function(data) {
-                    $("#optionList").html(data);
-                }
-            });
-        }
-    });
-    
-    
-    addCreate = function() {
+/*
+Event handler for the slider pane's button.
+Handles room creation, friend request sending, and room invitations.
+*/
+function addCreate() {
         let mode = $("#sliderAction").html();
         let name = $("#addName").val();
         
@@ -283,8 +238,79 @@ $(document).ready(function() {
         $("#addName").val("");
         $("#optionList").html("");
     };
-    
-    $("#sliderAction").attr("onclick", "addCreate()");
 
-    update();
+//Event listener for the sidebars icons
+document.addEventListener("click", function(event) {
+    let src = event.target;
+    if (src.classList[0] === "fa") {
+        if ("leaveRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            $.ajax({
+                url: "../php/rooms/leaveRoom.php",
+                type: "POST",
+                async: true,
+                data: { roomName: "" + name + "" },
+                datatype: "JSON",
+                complete: function(data) { refreshRoomList(); },
+                failure: function(data) { alert("Unable to leave room: " + name); }
+            });
+        }
+        else if ("addToRoom" in src.dataset) {
+            let name = src.parentElement.textContent;
+            currentRoom = name;
+            setSliderMode("addToRoom");
+            openSlider();
+        }
+        else if ("deleteFriend" in src.dataset) {
+            let name = src.parentElement.textContent;
+            deleteFriend(name);
+        }
+        else if ("approveFriendRequest" in src.dataset) {
+            let name = src.parentElement.textContent;
+            approveFriendRequest(name);
+        }
+    }
+});
+    
+$(document).ready(function() {
+    //Add handler for the slider pane's buttons
+    $("#sliderAction").attr("onclick", "addCreate()");
+    $("#closeBtn").attr("onclick", "closeSlider()");
+
+    $("#addRoomBtn").on("click", function() {
+        setSliderMode("addChat");
+        openSlider();
+    });
+    
+    $("#addFriendBtn").on("click",  function() {
+        setSliderMode("addFriend");
+        openSlider();
+    });
+    
+    //Lookup usernames based on #addName's value
+    $("#addName").keyup(function(event) {
+        
+        //don't send empty strings
+        if ($("#addName").val().trim().length == 0) {
+            //clear the suggestions
+            $("#optionList").html("");
+            return false;
+        }
+        else if ($("#sliderAction").html() === "Send Request" || $("#sliderAction").html() === "Invite") {
+            $.ajax({
+                url: "../php/friends/searchFriend.php",
+                type: "POST",
+                async: true,
+                data: { friendName: $("#addName").val() },
+                datatype: "HTML",
+                success: function(data) { $("#optionList").html(data); },
+                failure: function(data) { console.log("Failed to search for friend: " + $("#addName").val()); }
+            });
+        }
+    });
+    
+    $("#sendMessageButton").on("click", sendMessage());
+    
+    //Update the chat pane's content
+    updateChat();
 });

@@ -161,7 +161,7 @@
     Gets the username associated with the id
     */
     function getUsername($conn, $id) {
-        $sql = "SELECT name FROM user WHERE id = '$id'";
+        $sql = "SELECT name FROM user WHERE id = $id";
         return execQuery($sql, $conn)->fetch_assoc()["name"];
     }
     
@@ -331,7 +331,7 @@
     $roomName - name of the room
     */
     function isRoomOwner($conn, $userId, $roomId) {
-        $sql = "SELECT COUNT(*) from room where id = $roomId AND user_id = $userId";
+        $sql = "SELECT COUNT(*) FROM room WHERE id = $roomId AND user_id = $userId";
         $result = execQuery($sql, $conn)->fetch_array();
         return ($result[0] > 0);
     }
@@ -391,6 +391,44 @@
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room r where r.id IN" .
             "(SELECT rm.room FROM room_member rm where usr = $userId) OR r.user_id = $userId";
+        return execQuery($sql, $conn);
+    }
+    
+    
+    /*---------------------------------------
+    Functions handling messages
+    ----------------------------------------*/
+    
+    /*
+    Inserts a message
+    
+    $userId - id of sender
+    $content - the content of the message
+    $time - time the message was sent
+    */
+    function insertMessage($conn, $userId, $content, $time) {
+        $sql = "INSERT INTO message (user_id, content, time) VALUES ($userId , '$content', '$time')";
+        return execQuery($conn, $sql);
+    }
+    
+    /*
+    Inserts a message into a room.
+    
+    $roomId - id of the room
+    $usrId - id of the sender
+    */
+    function insertRoomMessage($conn, $roomId, $userId) {
+        $sql = "INSERT INTO room_message (room_id, message_id, user_id) VALUES ($roomId, LAST_INSERT_ID(), $userId)";
+        return execQuery($conn, $sql);
+    }
+    
+    /*
+    Gets all messages for a given room
+    
+    $roomId - the id of the room to retrieve messages from
+    */
+    function getRoomMessages($conn, $roomId) {
+        $sql = "SELECT * FROM message WHERE id IN (SELECT message_id FROM room_message WHERE room_id = $roomId)";
         return execQuery($sql, $conn);
     }
 ?>

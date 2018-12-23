@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once("../db.php");
-$_POST["success"] = false;
+
 if (isset($_SESSION["username"]) && isset($_POST["roomName"])) {
     $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     $success = false;
@@ -18,6 +18,5 @@ if (isset($_SESSION["username"]) && isset($_POST["roomName"])) {
         $success = removeMember($conn, $_SESSION["username"], $roomName);
     }
     $conn->close();
-    $_POST["success"] = $success;
 }
 ?>
