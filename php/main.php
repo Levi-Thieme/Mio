@@ -3,43 +3,43 @@
     require_once("./db.php");
     $conn = connect("localhost", "mio_db", "pfw", "mio_db");
     
-    if ($_SESSION["authenticated"]) {
-      $sql = "SELECT id FROM user WHERE name='" . $_SESSION['username'] . "';";
-      $result = execQuery($sql, $conn);
-      if ($result !== false) {
-        $userId = $result->fetch_assoc()['id'];
-      } else {
-        die("Could not get username");
-      }
-    }else {
-      die("Not Logged in");
+    if (!$_SESSION["authenticated"]) {
+        header("Location: ./login.php");
+        die();
     }
-    if(isset($_GET['room_id'])){
-      $roomId = $_GET['room_id'];
-    } else {
-      $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
-      $result = execQuery($sql, $conn);
-      $roomId = $result->fetch_assoc()['room'];
-    }
-  
-    if(!empty($_POST["message"])){
-      sendMessage($conn,$userId,$roomId);
-    }
-                
     
-   function sendMessage($conn,$userId,$roomId) {
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error . "\n");
-        } 
-        $content = filter($conn,htmlspecialchars($_POST["message"]));
-        $time = $_POST["time"];
-        $nowRoomId= $_POST["nowRoomId"];
-        $sql = "INSERT INTO message (user_id, content,time) VALUES ($userId ,'$content','$time')";
-        $test = "INSERT INTO room_message (room_id,message_id,user_id) values ($nowRoomId,LAST_INSERT_ID(),$userId)";
-        execQuery($sql,$conn);
-        execQuery($test,$conn);
-        $_POST["message"] = "";
-   }
+    $userId = getUserId($conn, $_SESSION["username"]);
+    
+    if (isset($_POST["currentRoom"])) {
+        $roomId = $_POST["currentRoom"];
+    } else {
+        $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
+        $result = execQuery($sql, $conn);
+        $roomId = $result->fetch_assoc()['room'];
+    }
+    
+    /*
+    Stores the message in a room.
+    
+    $userId - id of the sender
+    $roomId- id of the room to send to
+    $message - the message to store
+    $time - time the message was sent
+    Returns true if storing message in message and room_message was successful.
+    */
+    function sendMessage($conn, $userId, $roomId, $message, $time) {
+        $content = filter($conn, htmlspecialchars($message));
+        return (insertMessage($conn, $userId, $content, $time) && insertRoomMessage($conn, $roomId, $userId));
+    }
+    
+    if (!empty($_POST["message"]) && isset($_POST["currentRoom"]) && isset($_POST["time"])) {
+        if (sendMessage($conn, $userId, $_POST["currentRoom"], $_POST["message"], $_POST["time"])) {
+            $_POST["message"] = "";
+        }
+        else {
+            error_log("Failed to send message: " . $_POST["message"], 3, "error_log.txt");
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -104,13 +104,12 @@
       
       <div id="slider" class="slider">
         <a href="javascript:void(0)" id="closeBtn" class="closebtn">&times;</a>
-        
-                <div id="sliderFormDiv" class="form-group">
-                    <label for="search"><h1 id="sliderName">Name</h1></label>
-                    <input type="text" class="form-control" id="addName" name="addName">
-                    <button id="sliderAction" type="submit" class="btn btn-primary"></button>
-                    <div id = "optionList" name = "optionList"></div>
-                </div>
+            <div id="sliderFormDiv" class="form-group">
+                <label for="search"><h1 id="sliderName"></h1></label>
+                <input type="text" class="form-control" id="addName" name="addName">
+                <button id="sliderAction" type="submit" class="btn btn-primary"></button>
+                <div id = "optionList" name = "optionList"></div>
+            </div>
         </form>
       </div>
       
@@ -127,7 +126,7 @@
       <form id="messaging" class="poz" method="post">
       <div class="form-group shadow-textarea">
           <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
-       <a href="#" id="submitButton" class="w3-bar-item w3-button" onclick = "insertData()"><i class="fa fa-comment"></i>  Send</a>
+       <a href="#" id="sendMessageButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
       </div>
          </form>
       </div>

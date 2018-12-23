@@ -19,7 +19,6 @@ function setSliderAction(action) {
     document.getElementById("sliderAction").innerHTML = action;
 }
 
-
 /*
 Set the mode for the slider
 */
@@ -38,6 +37,9 @@ function setSliderMode(mode) {
     }
 }
 
+/*
+Refreshes the friend list
+*/
 function refreshFriendsList() {
     $.ajax({
         type: "POST",
@@ -46,38 +48,49 @@ function refreshFriendsList() {
         dataType: "HTML",
         success: function(data) { $("#friendsCollapse").html(data); },
         failure: function(data) { alert("Unable to load friend list."); }
-    })
+    });
 }
 
+/*
+Refreshes the room list
+*/
 function refreshRoomList() {
-    $("#roomCollapse").load("../php/mainRequests/getRooms.php");
+    $.ajax({
+        type: "POST",
+        url: "../php/mainRequests/getRooms.php",
+        async: true,
+        dataType: "HTML",
+        success: function(data) { $("#roomCollapse").html(data); },
+        failure: function(data) { alert("Unable to load room list."); }
+    });
 }
 
-/*
-Clears the message input box
-*/
-function clearMessage(){
-    $("#message").val("");
-}
 
 /*
-
+Sends the user's message to main.php through AJAX
 */
-function insertData() {
-    var message=$("#message").val();
-    var dt = new Date();
+function sendMessage() {
+    let message = $("#message").val();
+    if (message.trim() == "") {
+        return;
+    }
     var roomId = $("#roomId").val();
-    var currentDate= (dt.getFullYear())+"-"+(dt.getMonth()+1)+"-"+(dt.getDate())+" "+(dt.getHours())+":"+(dt.getMinutes())+":"+(dt.getSeconds());
-    // AJAX code to send data to php file.
+    var date = new Date();
+    var currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
+
     $.ajax({
         type: "POST",
         async: true,
         url: "../php/main.php",
-        data: {message: message, nowRoomId:roomId, time: currentDate},
+        data: {
+            message: message, 
+            currentRoom: roomId, 
+            time: currentDate
+        },
         dataType: "JSON",
-        failure: function(data) { alert("Failed to insert data: " + message); }
+        failure: function(data) { alert("Failed to send message: " + message); }
     });
-    clearMessage();
+    $("#message").val("");
 }
 
 /*
@@ -87,7 +100,7 @@ function displayMessage(message,classStyle,time,id,name) {
     if (message != "")  {
         var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
         $(".discussion").append(codeBlock);
-        //set message input textarea to empty string to clear out the sent message
+        $("#message").val("");
     }
 }
 
@@ -95,34 +108,32 @@ function displayMessage(message,classStyle,time,id,name) {
 Retrieves messages for a given room and displays them in the chat
 */
 function updateChat() {  
-    var roomId = $("#roomId").val();
+    var room = $("#roomId").val();
     var userId = $("#userId").val();
-    $.post("../php/message/message.php", {roomId, roomId}, function(data){ 
-                if(data==""){
-                    
+    console.log("Room: " + room);
+    $.post("../php/message/getMessages.php", { roomId: room }, function(data) { 
+        if(data.trim() != "") {
+            let string = data;
+            let allData = new Array();
+            allData = string.split(">>>");
+            
+            for (let i = 0; i < allData.length; i++) {
+                temp = new Array();
+                var classStyle = "other";
+                var temp = allData[i].split("//");
+                if (temp[1]==userId) {
+                    classStyle="self";
                 }
-                else{
-                    var string = data;
-                    var allData = new Array();
-                    allData = string.split(">>>");
-                    for (var i=0; i<allData.length; i++) {
-                        temp = new Array();
-                        var classStyle = "other";
-                        var temp = allData[i].split("//");
-                        if(temp[1]==userId){
-                            classStyle="self";
-                        }
-                        if($('#'+temp[3]).length){
-                        
-                        }
-                        else{
-                            displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
-                        }
-                    };
+                if ($('#'+temp[3]).length) {
+                
                 }
-              
+                else {
+                    displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
+                }
+            }
+        }
     }); 
-    setTimeout('updateChat()', 500);
+    setTimeout("updateChat()", 500);
 }
 
 /*
@@ -238,10 +249,7 @@ document.addEventListener("click", function(event) {
                 url: "../php/rooms/leaveRoom.php",
                 type: "POST",
                 async: true,
-                data: {
-                    roomName: "" + name + "",
-                    success: false
-                },
+                data: { roomName: "" + name + "" },
                 datatype: "JSON",
                 complete: function(data) { refreshRoomList(); },
                 failure: function(data) { alert("Unable to leave room: " + name); }
@@ -300,6 +308,8 @@ $(document).ready(function() {
             });
         }
     });
+    
+    $("#sendMessageButton").on("click", sendMessage());
     
     //Update the chat pane's content
     updateChat();
