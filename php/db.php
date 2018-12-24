@@ -368,8 +368,9 @@
     function getOwnedRooms($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room WHERE user_id = $userId";
-        return execQuery($sql, $conn)->fetch_assoc();
+        return execQuery($sql, $conn);
     }
+    
     
     /*
     Gets all rooms where user is a participant, but not the owner
@@ -379,6 +380,16 @@
     function getParticipantRooms($conn, $username) {
         $userId = getUserId($conn, $username);
         $sql = "SELECT * FROM room r WHERE r.id IN (SELECT rm.room FROM room_member rm where usr = $userId)";
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Gets the first room where the user is a participant
+    
+    $username - the username of the participant
+    */
+    function getParticipantFirstRoom($conn, $userId) {
+        $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
         return execQuery($sql, $conn);
     }
     
@@ -430,5 +441,15 @@
     function getRoomMessages($conn, $roomId) {
         $sql = "SELECT * FROM message WHERE id IN (SELECT message_id FROM room_message WHERE room_id = $roomId)";
         return execQuery($sql, $conn);
+    }
+    
+    /*
+    Gets all messages for a given room
+    
+    $roomName - name of room to retrieve messages from
+    */
+    function getMessagesByRoomName($conn, $roomName) {
+        $roomId = getRoomId($conn, $roomName);
+        return getRoomMessages($conn, $roomId);
     }
 ?>

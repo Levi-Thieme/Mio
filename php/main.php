@@ -4,6 +4,13 @@
     $conn = connect("localhost", "mio_db", "pfw", "mio_db");
     
     if (!$_SESSION["authenticated"]) {
+        error_log("User is not authenticated.", 3, "error_log.txt");
+        header("Location: ./login.php");
+        die();
+    }
+    
+    if (!isset($_SESSION["username"])) {
+        error_log("Username is not set in session variable.", 3, "error_log.txt");
         header("Location: ./login.php");
         die();
     }
@@ -11,11 +18,27 @@
     $userId = getUserId($conn, $_SESSION["username"]);
     
     if (isset($_POST["currentRoom"])) {
-        $roomId = $_POST["currentRoom"];
+        $roomName = $_POST["currentRoom"];
+        $roomId = getRoomId($conn, $roomName);
     } else {
-        $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
-        $result = execQuery($sql, $conn);
-        $roomId = $result->fetch_assoc()['room'];
+        $result = getParticipantFirstRoom($conn, $userId);
+        if ($result->num_rows != 0) {
+            $result = $result->fetch_assoc();
+            $roomId = $result["id"];
+            $roomName = $result["name"];
+        }
+        else {
+            $result = getOwnedRooms($conn, $_SESSION["username"]);
+            if ($result->num_rows != 0) {
+                $result = $result->fetch_assoc();
+                $roomId = $result["id"];
+                $roomName = $result["name"];
+            }
+            else { //user has no rooms
+                $roomId = -1;
+                $roomName = "";
+            }
+        }
     }
     
     /*
@@ -64,8 +87,9 @@
 </head>
 
 <body>
-  <input type='hidden' name="room_id" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
-  <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
+    <input type='hidden' name="roomName" id="roomName" value=<?php echo "'" . $roomName . "'";?>/>
+    <input type='hidden' name="roomId" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
+    <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
   
   <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
       <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>

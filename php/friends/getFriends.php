@@ -1,5 +1,6 @@
 <head>
     <script type="text/javascript" src="../scripts/main.js"></script> 
+    <link rel="stylesheet" href="../../styles/common.css" type="text/css">
 </head>
 
 <?php
@@ -9,8 +10,8 @@ session_start();
 
 function createFriendDiv($username) {
     $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
-                "<i class='fa fa-comment fa-fw' style='float:right' aria-hidden='true'></i>" .
-                "<i data-delete-friend class='fa fa-trash fa-fw' style='float:right' aria-hidden='true'></i>" .
+                "<i class='fa fa-comment fa-fw' aria-hidden='true'></i>" .
+                "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
               "</div>";
     return $htmlContent;
 }
@@ -18,15 +19,15 @@ function createFriendDiv($username) {
 function createFriendRequestToDiv($username) {
     $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
                 "<i class='fa fa-comment fa-fw' style='float:right' aria-hidden='true'></i>" .
-                "<i data-delete-friend class='fa fa-trash fa-fw' style='float:right' aria-hidden='true'></i>" .
-                "<i data-approve-friend-request class='fa fa-plus fa-fw' style='float:right' aria-hidden='true'></i>" .
+                "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
+                "<i data-approve-friend-request class='fa fa-plus fa-fw' aria-hidden='true'></i>" .
               "</div>";
     return $htmlContent;
 }
 
 function createFriendRequestFromDiv($username) {
     $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
-                "<i data-delete-friend class='fa fa-trash fa-fw' style='float:right' aria-hidden='true'></i>" .
+                "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
               "</div>";
     return $htmlContent;
 }

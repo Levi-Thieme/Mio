@@ -8,9 +8,9 @@
     
     while ($room = $rooms->fetch_assoc()){
         $roomName = htmlspecialchars($room["name"]);
-        echo("<div class='panel-body'>" . $roomName .  
-        "<i data-leave-room class='fa fa-trash fa-fw' style='float:right' aria-hidden='true'></i>" .
-        "<i data-add-to-room class='fa fa-plus fa-fw' style='float:right' aria-hidden='true'></i></div>");
+        echo("<div class='panel-body'><a data-to-room>$roomName</a>" .
+        "<i data-leave-room class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
+        "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>");
     }
     $conn->close();
 ?>

@@ -1,2 +1,0 @@
-roomBuilder called.
-Created new room.
