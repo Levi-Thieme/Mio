@@ -442,4 +442,14 @@
         $sql = "SELECT * FROM message WHERE id IN (SELECT message_id FROM room_message WHERE room_id = $roomId)";
         return execQuery($sql, $conn);
     }
+    
+    /*
+    Gets all messages for a given room
+    
+    $roomName - name of room to retrieve messages from
+    */
+    function getMessagesByRoomName($conn, $roomName) {
+        $roomId = getRoomId($conn, $roomName);
+        return getRoomMessages($conn, $roomId);
+    }
 ?>

@@ -1,5 +1,4 @@
-//Stores the name of the currently selected room
-var currentRoom;
+var roomInvite = "";
 
 /* Open the sidenav */
 function openSlider() {
@@ -73,8 +72,8 @@ function sendMessage() {
     if (message.trim() == "") {
         return;
     }
-    var roomId = $("#roomId").val();
-    var date = new Date();
+    let roomName = $("#roomName").val();
+    let date = new Date();
     var currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
 
     $.ajax({
@@ -83,7 +82,7 @@ function sendMessage() {
         url: "../php/main.php",
         data: {
             message: message, 
-            currentRoom: roomId, 
+            currentRoom: roomName, 
             time: currentDate
         },
         dataType: "JSON",
@@ -104,12 +103,22 @@ function displayMessage(message, classStyle, time, id, name) {
 }
 
 /*
+Clears the chat's messages
+*/
+function clearMessages() {
+    $(".discussion").html("");
+}
+
+/*
 Retrieves messages for a given room and displays them in the chat
 */
 function updateChat() {  
-    var room = $("#roomId").val();
-    var userId = $("#userId").val();
-    $.post("../php/message/getMessages.php", { roomId: room }, function(data) { 
+    let roomName = $("#roomName").val();
+    let userId = $("#userId").val();
+    
+    clearMessages();
+    
+    $.post("../php/message/getMessages.php", { currentRoom: "" + roomName + "" }, function(data) { 
         if(data.trim() != "") {
             let string = data;
             let allData = new Array();
@@ -203,10 +212,10 @@ function addToRoom(friendName) {
         async: true,
         data: {
             userToAdd: "" + friendName + "",
-            roomName: "" + currentRoom + ""
+            roomName: "" + $("#roomName").val() + ""
         },
         complete: function(data) { closeSlider(); },
-        failure: function(data) { alert("Failed to invite " + friendName + " to " + currentRoom); }
+        failure: function(data) { alert("Failed to invite " + friendName + " to " + $("$currentRoom")); }
     });
 }
 
@@ -235,7 +244,7 @@ function addCreate() {
         }
         $("#addName").val("");
         $("#optionList").html("");
-    };
+}
 
 //Event listener for the sidebars icons and rooms
 document.addEventListener("click", function(event) {
@@ -254,8 +263,8 @@ document.addEventListener("click", function(event) {
             });
         }
         else if ("addToRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
-            currentRoom = name;
+            //TODO update this to use a function in setSliderMode instead of using a global variable for saving state
+            roomInvite = src.parentElement.textContent;
             setSliderMode("addToRoom");
             openSlider();
         }
@@ -270,7 +279,8 @@ document.addEventListener("click", function(event) {
     }
     else if ("toRoom" in src.dataset) {
         let name = src.parentElement.textContent;
-        currentRoom = name;
+        $("#roomName").val(name);
+        console.log("Current Room: " + $("#roomName").val());
     }
 });
     
