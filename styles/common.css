@@ -1,8 +1,16 @@
 
-.btn-primary{
+.btn-primary {
     margin: 1%;
     margin-left: auto;
     margin-right: auto;
     background-color: #f79824;
     color: black;
+}
+
+.fa.hover {
+    cursor: hover;
+}
+
+.fa-fw {
+    float: right;
 }

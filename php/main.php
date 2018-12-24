@@ -13,9 +13,19 @@
     if (isset($_POST["currentRoom"])) {
         $roomId = $_POST["currentRoom"];
     } else {
-        $sql = "SELECT room FROM room_member WHERE usr=" . $userId . " LIMIT 1;";
-        $result = execQuery($sql, $conn);
-        $roomId = $result->fetch_assoc()['room'];
+        $result = getParticipantFirstRoom($conn, $userId);
+        if ($result->num_rows != 0) {
+            $roomId = $result->fetch_assoc()["room"];
+        }
+        else {
+            $result = getOwnedRooms($conn, $_SESSION["username"]);
+            if ($result->num_rows != 0) {
+                $roomId = $result->fetch_assoc()["id"];
+            }
+            else { //user has no rooms
+                $roomId = -1;
+            }
+        }
     }
     
     /*

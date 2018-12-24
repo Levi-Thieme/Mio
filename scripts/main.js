@@ -1,4 +1,3 @@
-
 //Stores the name of the currently selected room
 var currentRoom;
 
@@ -96,7 +95,7 @@ function sendMessage() {
 /*
 Appends a message div into the chat
 */
-function displayMessage(message,classStyle,time,id,name) {
+function displayMessage(message, classStyle, time, id, name) {
     if (message != "")  {
         var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
         $(".discussion").append(codeBlock);
@@ -110,7 +109,6 @@ Retrieves messages for a given room and displays them in the chat
 function updateChat() {  
     var room = $("#roomId").val();
     var userId = $("#userId").val();
-    console.log("Room: " + room);
     $.post("../php/message/getMessages.php", { roomId: room }, function(data) { 
         if(data.trim() != "") {
             let string = data;
@@ -239,7 +237,7 @@ function addCreate() {
         $("#optionList").html("");
     };
 
-//Event listener for the sidebars icons
+//Event listener for the sidebars icons and rooms
 document.addEventListener("click", function(event) {
     let src = event.target;
     if (src.classList[0] === "fa") {
@@ -269,6 +267,10 @@ document.addEventListener("click", function(event) {
             let name = src.parentElement.textContent;
             approveFriendRequest(name);
         }
+    }
+    else if ("toRoom" in src.dataset) {
+        let name = src.parentElement.textContent;
+        currentRoom = name;
     }
 });
     
