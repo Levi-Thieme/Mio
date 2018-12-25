@@ -1,5 +1,6 @@
 var roomInvite;
 var updateChatTimeoutId;
+var messagesReceived = 0;
 
 /* Open the sidenav */
 function openSlider() {
@@ -74,8 +75,6 @@ function sendMessage() {
         return;
     }
     let roomName = $("#roomName").val();
-    let currentDate = Date();
-    
     $.ajax({
         type: "POST",
         async: true,
@@ -84,12 +83,8 @@ function sendMessage() {
         data: {
             message: "" + message + "", 
             currentRoom: "" + roomName + "", 
-            time: currentDate
         },
-        failure: function(data) { console.log("Failed to send message: " + message); },
-        complete: function(data) { 
-            console.log("Message sent.");
-            displayMessage(message, "self", currentDate, 0, $("#username").val());}
+        failure: function(data) { console.log("Failed to send message: " + message); }
     });
     $("#message").val("");
 }
@@ -119,28 +114,40 @@ function clearMessages() {
 /*
 Retrieves messages for a given room and displays them in the chat
 */
-function updateChat() {  
+function getNewMessages() {  
     let roomName = $("#roomName").val();
+    console.log("Current Room: " + roomName);
     let userId = $("#userId").val();
     
     $.ajax({
         type: "POST",
         url: "../php/message/getMessages.php", 
-        data: { currentRoom: "" + roomName + "" }, 
+        data: { 
+            currentRoom: "" + roomName + "",
+            messageCount: messagesReceived
+        }, 
         complete: function(data) {
-            let response = JSON.parse(data.responseText);
-            response.map(function(currentElement) {
-                let senderId = currentElement["userId"];
-                if (senderId == userId) {
-                    displayMessage(currentElement["content"], "self", currentElement["time"], currentElement["messageId"], currentElement["username"]);
-                }
-                else {
-                    displayMessage(currentElement["content"], "other", currentElement["time"], currentElement["messageId"], currentElement["username"]);
-                }
-            })
+            let response = data.responseText;
+            if (response.trim() != "") {
+                let responseJSON = JSON.parse(response);
+                /*
+                Messages are retrieved in Descending order by Timestamp, so reversal 
+                of the array shows them in the correct Ascending order.
+                */
+                responseJSON.reverse().map(function(currentElement) {
+                    messagesReceived += 1;
+                    let senderId = currentElement["userId"];
+                    if (senderId == userId) {
+                        displayMessage(currentElement["content"], "self", currentElement["time"], currentElement["messageId"], currentElement["username"]);
+                    }
+                    else {
+                        displayMessage(currentElement["content"], "other", currentElement["time"], currentElement["messageId"], currentElement["username"]);
+                    }
+                });
+            }
         }
     }); 
-    //updateChatTimeoutId = setTimeout("updateChat()", 500);
+    updateChatTimeoutId = setTimeout("getNewMessages()", 500);
 }
 
 /*
@@ -280,14 +287,11 @@ document.addEventListener("click", function(event) {
     else if ("toRoom" in src.dataset) {
         let name = src.parentElement.childNodes[0].innerText;
         if (name !== $("#roomName").val()) {
-            clearMessages();
             clearTimeout(updateChatTimeoutId);
             clearMessages();
-            console.log("Cleared chat for: " + $("#roomName").val());
             $("#roomName").val(name);
-            
-            console.log("Switching to room: " + $("#roomName").val());
-            updateChat();
+            messagesReceived = 0;
+            getNewMessages();
         }
     }
 });
@@ -332,5 +336,5 @@ $(document).ready(function() {
     $("#sendMessageButton").on("click", sendMessage);
     
     //Update the chat pane's content
-    updateChat();
+    getNewMessages();
 });

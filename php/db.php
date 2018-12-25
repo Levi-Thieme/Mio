@@ -274,7 +274,7 @@
     
     function getRoomName($conn, $id) {
         $sql = "SELECT name FROM room WHERE id = $id";
-        return execQuery($sql, $conn)[0];
+        return execQuery($sql, $conn)->fetch_array()[0];
     }
     
     /*
@@ -321,7 +321,6 @@
         $roomId = getRoomId($conn, $roomName);
         $memberId = getUserId($conn, $memberName);
         $sql = "INSERT INTO room_member(room, usr) VALUES($roomId, $memberId)";
-        error_log($sql . "\n", 3, "error_log.txt");
         return execQuery($sql, $conn);
     }
         
@@ -418,8 +417,8 @@
     $content - the content of the message
     $time - time the message was sent
     */
-    function insertMessage($conn, $userId, $content, $time) {
-        $sql = "INSERT INTO message (user_id, content, time) VALUES ($userId , '$content', '$time')";
+    function insertMessage($conn, $userId, $content) {
+        $sql = "INSERT INTO message (user_id, content, time) VALUES ($userId , '$content', CURRENT_TIMESTAMP())";
         return execQuery($sql, $conn);
     }
     
@@ -442,8 +441,8 @@
     $time - time message was sent
     $roomId - id of room message belongs to
     */
-    function insertMessageWithRoom($conn, $userId, $content, $time, $roomId) {
-        return insertMessage($conn, $userId, $content, $time) && insertRoomMessage($conn, $roomId, $userId);
+    function insertMessageWithRoom($conn, $userId, $content, $roomId) {
+        return insertMessage($conn, $userId, $content) && insertRoomMessage($conn, $roomId, $userId);
     }
     
     /*
@@ -464,5 +463,28 @@
     function getMessagesByRoomName($conn, $roomName) {
         $roomId = getRoomId($conn, $roomName);
         return getRoomMessages($conn, $roomId);
+    }
+    
+    /*
+    Returns the number of messags in a room
+    
+    $roomName - the name of the room
+    */
+    function getRoomMessageCount($conn, $roomName) {
+        $roomId = getRoomId($conn, $roomName);
+        $sql = "SELECT COUNT(*) FROM room_message where room_id = $roomId";
+        return execQuery($sql, $conn)->fetch_array()[0];
+    }
+    
+    /*
+    Gets a specified number of messages ordered by date
+    
+    $roomName - the name of the room
+    $limit - the number of messages to retrieve
+    */
+    function getNewMessages($conn, $roomName, $limit) {
+        $roomId = getRoomId($conn, $roomName);
+        $sql = "SELECT * FROM message WHERE id IN (SELECT message_id FROM room_message WHERE room_id = $roomId) ORDER BY time DESC limit $limit";
+        return execQuery($sql, $conn);
     }
 ?>

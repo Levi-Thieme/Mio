@@ -23,21 +23,23 @@
         $roomId = getRoomId($conn, $roomName);
     } else {
         $result = getParticipantFirstRoom($conn, $userId);
-        if ($result->num_rows != 0) {
-            $result = $result->fetch_assoc();
-            $roomId = $result["id"];
-            $roomName = $result["name"];
+        if ($result->num_rows > 0) {
+            $roomId = $result->fetch_array()[0];
+            $roomName = getRoomName($conn, $roomId);
+            error_log("Participant first room: " . $roomName, 3, "error_log.txt");
         }
         else {
             $result = getOwnedRooms($conn, $username);
-            if ($result->num_rows != 0) {
+            if ($result->num_rows > 0) {
                 $result = $result->fetch_assoc();
                 $roomId = $result["id"];
                 $roomName = $result["name"];
+                error_log("Owned room: " . $roomName, 3, "error_log.txt");
             }
             else { //user has no rooms
                 $roomId = -1;
                 $roomName = "";
+                error_log("No rooms...: " . $roomName, 3, "error_log.txt");
             }
         }
     }
@@ -65,7 +67,7 @@
 </head>
 
 <body>
-    <input type='hidden' name="roomName" id="roomName" value=<?php echo "'" . $roomName . "'";?>/>
+    <input type='hidden' name="roomName" id="roomName" value=<?php echo "\"$roomName\"";?>/>
     <input type='hidden' name="roomId" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
