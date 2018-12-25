@@ -40,29 +40,6 @@
             }
         }
     }
-    
-    /*
-    Stores the message in a room.
-    
-    $userId - id of the sender
-    $roomId- id of the room to send to
-    $message - the message to store
-    $time - time the message was sent
-    Returns true if storing message in message and room_message was successful.
-    */
-    function sendMessage($conn, $userId, $roomId, $message, $time) {
-        $content = filter($conn, htmlspecialchars($message));
-        return (insertMessage($conn, $userId, $content, $time) && insertRoomMessage($conn, $roomId, $userId));
-    }
-    
-    if (!empty($_POST["message"]) && isset($_POST["currentRoom"]) && isset($_POST["time"])) {
-        if (sendMessage($conn, $userId, $_POST["currentRoom"], $_POST["message"], $_POST["time"])) {
-            $_POST["message"] = "";
-        }
-        else {
-            error_log("Failed to send message: " . $_POST["message"], 3, "error_log.txt");
-        }
-    }
 ?>
 
 <!DOCTYPE html>
@@ -142,7 +119,7 @@
       </div>
     
       <div id="messageContainer">
-        <ol class="discussion">
+        <ol id="messageList" class="discussion">
         </ol>
       </div>
   

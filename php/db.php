@@ -23,11 +23,11 @@
     
     /*
     Executes a query. Returns false if error, else returns results of query.
-    The $sql parameter should be filtered before passing to this function.
+    The $sql string should be sanitized before passing to this function.
     */
     function execQuery($sql, $conn) {
         $result = $conn->query($sql);
-        if ($result === false) {
+        if ($result == false) {
             error_log("Error: $sql \n" . $conn->error . "\n", 3, "error_log.txt");
         }
         return $result;
@@ -267,8 +267,9 @@
     $roomName - the name of the room
     */
     function getRoomId($conn, $roomName) {
+        $roomName = filter($conn, $roomName);
         $sql = "SELECT id FROM room WHERE name = '$roomName'";
-        return execQuery($sql, $conn)->fetch_assoc()["id"];
+        return execQuery($sql, $conn)->fetch_array()[0];
     }
     
     function getRoomName($conn, $id) {
@@ -419,7 +420,7 @@
     */
     function insertMessage($conn, $userId, $content, $time) {
         $sql = "INSERT INTO message (user_id, content, time) VALUES ($userId , '$content', '$time')";
-        return execQuery($conn, $sql);
+        return execQuery($sql, $conn);
     }
     
     /*
@@ -430,7 +431,19 @@
     */
     function insertRoomMessage($conn, $roomId, $userId) {
         $sql = "INSERT INTO room_message (room_id, message_id, user_id) VALUES ($roomId, LAST_INSERT_ID(), $userId)";
-        return execQuery($conn, $sql);
+        return execQuery($sql, $conn);
+    }
+    
+    /*
+    Inserts a message into messages and room_message
+    
+    $userId - id of the sender
+    $content - content of the message
+    $time - time message was sent
+    $roomId - id of room message belongs to
+    */
+    function insertMessageWithRoom($conn, $userId, $content, $time, $roomId) {
+        return insertMessage($conn, $userId, $content, $time) && insertRoomMessage($conn, $roomId, $userId);
     }
     
     /*

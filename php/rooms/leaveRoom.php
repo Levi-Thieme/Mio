@@ -5,7 +5,7 @@ require_once("../db.php");
 if (isset($_SESSION["username"]) && isset($_POST["roomName"])) {
     $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     $success = false;
-    $roomName = mysqli_real_escape_string($conn, $_POST["roomName"]);
+    $roomName = $_POST["roomName"];
     $userId = getUserId($conn, $_SESSION["username"]);
     $roomId = getRoomId($conn, $roomName);
     $isOwner = isRoomOwner($conn, $userId, $roomId);
