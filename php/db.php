@@ -94,9 +94,9 @@
     function isPassword($conn, $username, $pass) {
         $username = filter($conn, $username);
         $pass = filter($conn, $pass);
-        $sql = "SELECT * from user WHERE name = '$username' AND password = '$pass'";
+        $sql = "SELECT * from user WHERE name = '$username' AND password = PASSWORD('$pass')";
         $result = execQuery($sql, $conn);
-        return $result->num_rows === 1;
+        return $result->num_rows == 1;
     }
     
     /*
