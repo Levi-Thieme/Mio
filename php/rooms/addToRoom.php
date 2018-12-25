@@ -4,10 +4,7 @@
     
     if (isset($_SESSION["username"]) && isset($_POST["userToAdd"]) && isset($_POST["roomName"])) {
         $conn = connect('127.0.0.1', 'mio_db', 'pfw', 'mio_db');
-        $username = filter($conn, $_POST["userToAdd"]);
-        $roomName = filter($conn, $_POST["roomName"]);
-        error_log($roomName . "  " . $username . "\n", 3, "error_log.txt");
-        $success = addRoomMember($conn, $roomName, $username);
+        $success = addRoomMember($conn, $_POST["roomName"], $_POST["userToAdd"]);
         $conn->close();
     }
 ?>
