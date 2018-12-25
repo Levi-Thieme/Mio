@@ -74,9 +74,8 @@ function sendMessage() {
         return;
     }
     let roomName = $("#roomName").val();
-    let date = new Date();
-    let currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
-
+    let currentDate = Date();
+    
     $.ajax({
         type: "POST",
         async: true,
@@ -88,7 +87,9 @@ function sendMessage() {
             time: currentDate
         },
         failure: function(data) { console.log("Failed to send message: " + message); },
-        success: function(data) { console.log("Message sent.") }
+        complete: function(data) { 
+            console.log("Message sent.");
+            displayMessage(message, "self", currentDate, 0, $("#username").val());}
     });
     $("#message").val("");
 }
@@ -127,10 +128,8 @@ function updateChat() {
         url: "../php/message/getMessages.php", 
         data: { currentRoom: "" + roomName + "" }, 
         complete: function(data) {
-            console.log(data.responseText);
             let response = JSON.parse(data.responseText);
             response.map(function(currentElement) {
-                console.log(currentElement);
                 let senderId = currentElement["userId"];
                 if (senderId == userId) {
                     displayMessage(currentElement["content"], "self", currentElement["time"], currentElement["messageId"], currentElement["username"]);
@@ -141,7 +140,7 @@ function updateChat() {
             })
         }
     }); 
-    updateChatTimeoutId = setTimeout("updateChat()", 500);
+    //updateChatTimeoutId = setTimeout("updateChat()", 500);
 }
 
 /*
