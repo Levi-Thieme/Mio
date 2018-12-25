@@ -7,12 +7,14 @@
         $messages = getMessagesByRoomName($conn, $roomName);
         
         if ($messages->num_rows > 0) {
+            $messageDataArray = array();
             while ($message = $messages->fetch_assoc()){
                 $userId = str_replace("\\", "", $message["user_id"]);
                 $username = getUsername($conn, $userId);
-                error_log("User id: " . $userId . "\n", 3, "error_log.txt");
-                echo $message["content"]."//".$message["user_id"]."//".$message["time"]."//".$message["id"]."//".$username.">>>";
+                $messageData = array("userId"=>$userId, "username"=>$username, "messageId"=>$message["id"], "content"=>$message["content"], "time"=>$message["time"]);
+                $messageDataArray[] = $messageData;
             }
+            echo json_encode($messageDataArray, JSON_PRETTY_PRINT);
         }
     }
     $conn->close();

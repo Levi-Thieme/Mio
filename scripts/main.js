@@ -1,4 +1,5 @@
-var roomInvite = "";
+var roomInvite;
+var updateChatTimeoutId;
 
 /* Open the sidenav */
 function openSlider() {
@@ -74,19 +75,20 @@ function sendMessage() {
     }
     let roomName = $("#roomName").val();
     let date = new Date();
-    var currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
+    let currentDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+(date.getDate())+" "+(date.getHours())+":"+(date.getMinutes())+":"+(date.getSeconds());
 
     $.ajax({
         type: "POST",
         async: true,
-        url: "../php/main.php",
+        url: "../php/message/storeMessage.php",
+        dataType: "JSON",
         data: {
-            message: message, 
-            currentRoom: roomName, 
+            message: "" + message + "", 
+            currentRoom: "" + roomName + "", 
             time: currentDate
         },
-        dataType: "JSON",
-        failure: function(data) { alert("Failed to send message: " + message); }
+        failure: function(data) { console.log("Failed to send message: " + message); },
+        success: function(data) { console.log("Message sent.") }
     });
     $("#message").val("");
 }
@@ -96,8 +98,12 @@ Appends a message div into the chat
 */
 function displayMessage(message, classStyle, time, id, name) {
     if (message != "")  {
-        var codeBlock ='<li id ="'+id+'" class="'+classStyle+'"><div class="avatar"><img src="../imgs/user.png" /></div><div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div></li>';
-        $(".discussion").append(codeBlock);
+        let messageItem =
+        '<li id ="'+id+'" class="'+classStyle+'">'+
+            '<div class="avatar"><img src="../imgs/user.png" /></div>'+
+            '<div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
+        '</li>';
+        $("#messageList").append(messageItem);
         $("#message").val("");
     }
 }
@@ -106,7 +112,7 @@ function displayMessage(message, classStyle, time, id, name) {
 Clears the chat's messages
 */
 function clearMessages() {
-    $(".discussion").html("");
+    $("#messageList").html("");
 }
 
 /*
@@ -116,31 +122,26 @@ function updateChat() {
     let roomName = $("#roomName").val();
     let userId = $("#userId").val();
     
-    clearMessages();
-    
-    $.post("../php/message/getMessages.php", { currentRoom: "" + roomName + "" }, function(data) { 
-        if(data.trim() != "") {
-            let string = data;
-            let allData = new Array();
-            allData = string.split(">>>");
-            
-            for (let i = 0; i < allData.length; i++) {
-                temp = new Array();
-                var classStyle = "other";
-                var temp = allData[i].split("//");
-                if (temp[1]==userId) {
-                    classStyle="self";
-                }
-                if ($('#'+temp[3]).length) {
-                
+    $.ajax({
+        type: "POST",
+        url: "../php/message/getMessages.php", 
+        data: { currentRoom: "" + roomName + "" }, 
+        complete: function(data) {
+            console.log(data.responseText);
+            let response = JSON.parse(data.responseText);
+            response.map(function(currentElement) {
+                console.log(currentElement);
+                let senderId = currentElement["userId"];
+                if (senderId == userId) {
+                    displayMessage(currentElement["content"], "self", currentElement["time"], currentElement["messageId"], currentElement["username"]);
                 }
                 else {
-                    displayMessage(temp[0],classStyle,temp[2],temp[3],temp[4]);
+                    displayMessage(currentElement["content"], "other", currentElement["time"], currentElement["messageId"], currentElement["username"]);
                 }
-            }
+            })
         }
     }); 
-    setTimeout("updateChat()", 500);
+    updateChatTimeoutId = setTimeout("updateChat()", 500);
 }
 
 /*
@@ -212,7 +213,7 @@ function addToRoom(friendName) {
         async: true,
         data: {
             userToAdd: "" + friendName + "",
-            roomName: "" + $("#roomName").val() + ""
+            roomName: "" + roomInvite + ""
         },
         complete: function(data) { closeSlider(); },
         failure: function(data) { alert("Failed to invite " + friendName + " to " + $("$currentRoom")); }
@@ -251,7 +252,7 @@ document.addEventListener("click", function(event) {
     let src = event.target;
     if (src.classList[0] === "fa") {
         if ("leaveRoom" in src.dataset) {
-            let name = src.parentElement.textContent;
+            let name = src.parentElement.childNodes[0].innerText;
             $.ajax({
                 url: "../php/rooms/leaveRoom.php",
                 type: "POST",
@@ -264,23 +265,31 @@ document.addEventListener("click", function(event) {
         }
         else if ("addToRoom" in src.dataset) {
             //TODO update this to use a function in setSliderMode instead of using a global variable for saving state
-            roomInvite = src.parentElement.textContent;
+            roomInvite = src.parentElement.childNodes[0].innerText;
             setSliderMode("addToRoom");
             openSlider();
         }
         else if ("deleteFriend" in src.dataset) {
-            let name = src.parentElement.textContent;
+            let name = src.parentElement.childNodes[0].innerText;
             deleteFriend(name);
         }
         else if ("approveFriendRequest" in src.dataset) {
-            let name = src.parentElement.textContent;
+            let name = src.parentElement.childNodes[0].innerText;
             approveFriendRequest(name);
         }
     }
     else if ("toRoom" in src.dataset) {
-        let name = src.parentElement.textContent;
-        $("#roomName").val(name);
-        console.log("Current Room: " + $("#roomName").val());
+        let name = src.parentElement.childNodes[0].innerText;
+        if (name !== $("#roomName").val()) {
+            clearMessages();
+            clearTimeout(updateChatTimeoutId);
+            clearMessages();
+            console.log("Cleared chat for: " + $("#roomName").val());
+            $("#roomName").val(name);
+            
+            console.log("Switching to room: " + $("#roomName").val());
+            updateChat();
+        }
     }
 });
     
@@ -321,7 +330,7 @@ $(document).ready(function() {
         }
     });
     
-    $("#sendMessageButton").on("click", sendMessage());
+    $("#sendMessageButton").on("click", sendMessage);
     
     //Update the chat pane's content
     updateChat();
