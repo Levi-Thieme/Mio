@@ -26,7 +26,6 @@
         if ($result->num_rows > 0) {
             $roomId = $result->fetch_array()[0];
             $roomName = getRoomName($conn, $roomId);
-            error_log("Participant first room: " . $roomName, 3, "error_log.txt");
         }
         else {
             $result = getOwnedRooms($conn, $username);
@@ -34,12 +33,10 @@
                 $result = $result->fetch_assoc();
                 $roomId = $result["id"];
                 $roomName = $result["name"];
-                error_log("Owned room: " . $roomName, 3, "error_log.txt");
             }
             else { //user has no rooms
                 $roomId = -1;
                 $roomName = "";
-                error_log("No rooms...: " . $roomName, 3, "error_log.txt");
             }
         }
     }
@@ -72,7 +69,7 @@
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
   
-  <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
+  <div id="sidebar" class="w3-sidebar w3-light-grey w3-card">
       <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->
       <div class="panel-group">
@@ -105,9 +102,9 @@
     </div>
     
     
-    <div class="main">
+    <div id="mainPanel" class="main">
       
-      <div id="slider" class="slider">
+        <div id="slider" class="slider">
         <a href="javascript:void(0)" id="closeBtn" class="closebtn">&times;</a>
             <div id="sliderFormDiv" class="form-group">
                 <label for="search"><h1 id="sliderName"></h1></label>
@@ -115,26 +112,17 @@
                 <button id="sliderAction" type="submit" class="btn btn-primary"></button>
                 <div id = "optionList" name = "optionList"></div>
             </div>
-        </form>
-      </div>
+        </div>
       
-      <div id="searchContainer">
-          <input type="text" class="form-control" placeholder="Search">
-      </div>
     
-      <div id="messageContainer">
-        <ol id="messageList" class="discussion">
-        </ol>
-      </div>
+        <div id="messageContainer">
+            <ol id="messageList" class="discussion"></ol>
+        </div>
   
-      <div class="container" id="imControls">
-      <form id="messaging" class="poz" method="post">
-      <div class="form-group shadow-textarea">
-          <textarea class="form-control z-depth-1" id="message" name ="message" rows="3" placeholder="Write something here..."></textarea>
-       <a href="#" id="sendMessageButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
-      </div>
-         </form>
-      </div>
+        <div id="imControls" class="input-group">
+            <input type="text" class="form-control z-depth-1" id="message" name ="message" placeholder="Write something here..."></textarea>
+            <button id="sendMessageButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>Send</button>
+        </div>
     </div>
 </body>
 

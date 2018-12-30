@@ -3,35 +3,41 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <!-- Scripts -->
+    <script type="text/javascript" src="../scripts/main.js"></script> 
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="../scripts/main.js"></script>
+    <!-- This page's custom styling -->
+    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <!-- Search area styling -->
+    <link rel="stylesheet" href="../styles/search.css" type="text/css">
+    <!-- Common styling -->
+    <link rel="stylesheet" href="../styles/common.css" type="text/css">
 </head>
 
 <body>
-    <div class="w3-sidebar w3-light-grey w3-card" style="width:200px">
-      
-      
-      <a class="list-group-item" href="myAccount.html"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
-    
+    <!--
+    <input type='hidden' name="roomName" id="roomName" value=<?php echo "\"$roomName\"";?>/>
+    <input type='hidden' name="roomId" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
+    <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
+    <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
+    -->
+  
+  <div id="sidebar" class="w3-sidebar w3-light-grey w3-card">
+      <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->
       <div class="panel-group">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
-              <a data-toggle="collapse" class="list-group-item" href="#collapse1">My Chats
+              <a id="addRoomBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
+              <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" onclick="refreshRoomList()">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
-          <div id="collapse1" class="panel-collapse collapse">
-            <div class="panel-body">Chat 1</div>
-            <div class="panel-footer">Chat 2</div>
+          <div id="roomCollapse" class="panel-collapse collapse">
           </div>
         </div>
         
@@ -39,43 +45,59 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a href="#" class="w3-bar-item w3-button"><i class="fa fa-search"></i></a> 
-              <a data-toggle="collapse" class="list-group-item" href="#collapse2">Friends
-              <i class="fa fa-angle-double-down" style="float:right"></i></a></a>
+              <a id="addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
+              <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" onclick="refreshFriendsList()">Friends
+              <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
-          <div id="collapse2" class="panel-collapse collapse">
-            <div class="panel-body">Bob</div>
-            <div class="panel-footer">Joe</div>
+          <div id="friendsCollapse" class="panel-collapse collapse">
           </div>
         </div>
       </div>
-      
-      <a id="signout" class="list-group-item" href="#"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
-
-      
-  
+      <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
     </div>
     
-    
-
-    <div class="main">
-        <div id="searchContainer">
-            <input type="text" class="form-control" placeholder="Search">
+    <div id="slider" class="slider">
+        <a href="javascript:void(0)" id="closeBtn" class="closebtn">&times;</a>
+            <div id="sliderFormDiv" class="form-group">
+                <label for="search"><h1 id="sliderName"></h1></label>
+                <input type="text" class="form-control" id="addName" name="addName">
+                <button id="sliderAction" type="submit" class="btn btn-primary"></button>
+                <div id = "optionList" name = "optionList"></div>
+            </div>
+    </div>
+      
+    <div id="mainPanel">
+        <div id="messageContainer">
+            <ol id="messageList" class="discussion">
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+                <li>message</li>
+     
+            </ol>
         </div>
-        
-      <div id="messageContainer">
-        <ol class="discussion">
-        </ol>
-      </div>
-        <div class="container" id="imControls">
+      
+        <div id="imControls">
             <div class="form-group shadow-textarea">
-                <textarea class="form-control z-depth-1" id="message" rows="3" placeholder="Write something here..."></textarea>
-                <a href="#" id="submitButton" class="w3-bar-item w3-button"><i class="fa fa-comment"></i>  Send</a>
+                <textarea class="form-control z-depth-1" id="message" name ="message" rows="2" placeholder="Write something here..."></textarea>
+                <button id="sendMessageButton" class="w3-bar-item">Send</a></button>
             </div>
         </div>
     </div>
+    
+    <!-- JQuery, popper, bootstrap javascript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>
