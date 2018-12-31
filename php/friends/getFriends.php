@@ -9,7 +9,7 @@ require_once("../db.php");
 session_start();
 
 function createFriendDiv($username) {
-    $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
+    $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222'>" . $username . 
                 "<i class='fa fa-comment fa-fw' aria-hidden='true'></i>" .
                 "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
               "</div>";
@@ -17,7 +17,7 @@ function createFriendDiv($username) {
 }
 
 function createFriendRequestToDiv($username) {
-    $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
+    $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222'>" . $username . 
                 "<i class='fa fa-comment fa-fw' style='float:right' aria-hidden='true'></i>" .
                 "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
                 "<i data-approve-friend-request class='fa fa-plus fa-fw' aria-hidden='true'></i>" .
@@ -26,7 +26,7 @@ function createFriendRequestToDiv($username) {
 }
 
 function createFriendRequestFromDiv($username) {
-    $htmlContent = "<div id=$username class='list-group-item'>" . $username . 
+    $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222'>" . $username . 
                 "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
               "</div>";
     return $htmlContent;

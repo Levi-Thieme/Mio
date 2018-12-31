@@ -97,7 +97,7 @@ function displayMessage(message, classStyle, time, id, name) {
         let messageItem = 
         '<li id ="'+id+'" class="'+classStyle+'">'+
             '<div class="avatar"><img src="../imgs/user.png" /></div>'+
-            '<div class="messages"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
+            '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
         '</li>';
         
         $("#messageList").append(messageItem);
