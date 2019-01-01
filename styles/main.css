@@ -13,45 +13,6 @@ body {
     background-color: #222;
 }
 
-.dark {
-    background-color: #222;
-    color: white;
-}
-
-.panel-group {
-    background-color: #222;
-    color: white;
-}
-
-.panel-title {
-    background-color: #222;
-    color: white;
-}
-
-.panel-heading {
-    background-color: #222;
-    color: white;
-}
-
-.panel-default {
-    background-color: #222;
-    color: white;
-}
-
-.panel {
-    background-color: #222;
-    color: white;
-}
-
-.panel-body {
-    background-color: #222;
-    color: white;
-}
-.list-group-item {
-    background-color: #222;
-    color: white;
-}
-
 @media (max-width: 768px) {
     #sidebar {
         display: none;
@@ -91,16 +52,6 @@ body {
     border-color: #e68a00;
 }
 
-.div-dark {
-    background-color: #333;
-    color: white;
-}
-
-.input-dark {
-    background: #222;
-    color: white;
-}
-
 input:focus { 
     outline: none !important;
     border-color: #e68a00;
@@ -138,6 +89,37 @@ input:focus {
 #myAccountSettings {
     float: right;
     width: 20%;
+}
+
+#submitButton {
+    display: block;
+    padding-top: 25px ;
+    
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link{
+    color: #e68a00;
+}
+
+a:visited{
+    color: #e68a00;
+}
+
+a:hover{
+    color: #e68a00;
+}
+
+a:active{
+    color: white;
+}
+
+.dark {
+    background-color: #222;
+    color: white;
 }
 
 .conversation {
@@ -275,12 +257,6 @@ input:focus {
 .shadow-textarea textarea.form-control {
     padding-left: 0.8rem;
     float: left;
-}
-
-#submitButton {
-    display: block;
-    padding-top: 25px ;
-    
 }
 
 .fa {

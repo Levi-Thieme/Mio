@@ -1,9 +1,8 @@
 <?php
     session_start();
     require_once("./db.php");
-    $conn = connect("localhost", "mio_db", "pfw", "mio_db");
+    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     
-    /*
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
         header("Location: ./login.php");
@@ -15,9 +14,6 @@
         header("Location: ./login.php");
         die();
     }
-    */
-    $_SESSION["authenticated"] = true;
-    $_SESSION["username"] = "LeviThieme";
     
     $username = $_SESSION["username"];
     $userId = getUserId($conn, $username);
@@ -74,11 +70,11 @@
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
   
   <div id="sidebar" class="w3-sidebar w3-card">
-      <a class="list-group-item" href="myAccount.php"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
+      <a class="list-group-item" href="myAccount.php" style="color:white"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->
-      <div class="panel-group" style="background-color: #222">
+      <div class="panel-group">
         <div class="panel panel-default">
-          <div class="panel-heading">
+          <div class="panel-heading" style="background-color: #222">
             <h4 class="panel-title dark">
               <a id="addRoomBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
               <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" onclick="refreshRoomList()">My Chats
@@ -91,7 +87,7 @@
         
         <!-- Panel for Friends accordion -->
         <div class="panel panel-default">
-          <div class="panel-heading">
+          <div class="panel-heading" style="background-color: #222">
             <h4 class="panel-title">
               <a id="addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
               <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" onclick="refreshFriendsList()">Friends
@@ -102,7 +98,7 @@
           </div>
         </div>
       </div>
-      <a id="signout" class="list-group-item" href="./logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+      <a id="signout" class="list-group-item" href="./logout.php" style="color: white"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
     </div>
     
     
