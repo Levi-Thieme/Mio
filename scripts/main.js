@@ -94,13 +94,15 @@ Appends a message div into the chat
 */
 function displayMessage(message, classStyle, time, id, name) {
     if (message != "")  {
-        let messageItem =
+        let messageItem = 
         '<li id ="'+id+'" class="'+classStyle+'">'+
             '<div class="avatar"><img src="../imgs/user.png" /></div>'+
-            '<div class="messages"><p id = "username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
+            '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
         '</li>';
+        
         $("#messageList").append(messageItem);
         $("#message").val("");
+        $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
     }
 }
 
@@ -144,6 +146,7 @@ function getNewMessages() {
                         displayMessage(currentElement["content"], "other", currentElement["time"], currentElement["messageId"], currentElement["username"]);
                     }
                 });
+                window.scrollTo(0, window.innerHeight);
             }
         }
     }); 

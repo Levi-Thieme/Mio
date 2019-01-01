@@ -2,11 +2,74 @@ body {
     margin: 0;
     height: 100%;
     background-color: #FFE;
+    overflow-y: scroll;
+    background: #222;
 }
 
-.main {
-    margin-left: 205px;
+#sidebar {
+    min-width: 15%;
+    max-width: 15%;
+    height: 100%;
+    background-color: #222;
 }
+
+@media (max-width: 768px) {
+    #sidebar {
+        display: none;
+    }
+    
+    #mainPanel {
+        margin-left: 0%;
+        width: 100%;
+        max-height: 100%;
+    }
+}
+
+#mainPanel {
+    margin-left: 15%;
+    width: 85%;
+    height: 100%;
+}
+
+#messageContainer {
+    width: 100%;
+    max-height: 700px;
+    overflow-y: scroll;
+}
+
+#imControls {
+    width: 80%;
+    height: 5%;
+    bottom: 0;
+    position: absolute;
+}
+
+#message {
+    width: 85%;
+    margin: 10px;
+    border: solid;
+    border-radius: 30px;
+    border-color: #e68a00;
+}
+
+input:focus { 
+    outline: none !important;
+    border-color: #e68a00;
+    box-shadow: 5px 5px 5px #000;
+}
+
+
+#sendMessageButton {
+    width: 10%;
+    margin: 10px;
+    float: right;
+    border: solid;
+    border-radius: 30px;
+    border-color: #e68a00;
+    background: #222;
+    color: white;
+}
+
 
 #myAccount {
     padding: 5px;
@@ -28,18 +91,36 @@ body {
     width: 20%;
 }
 
-#sidebarData {
-    position: absolute;
-    max-height: 70%;
-    width: 183px;
-    overflow-y: auto;
+#submitButton {
+    display: block;
+    padding-top: 25px ;
+    
 }
 
-#sidebar-subaccount {
-    height: 70vh;
-    bottom: 0;
+a {
+    text-decoration: none;
 }
 
+a:link{
+    color: #e68a00;
+}
+
+a:visited{
+    color: #e68a00;
+}
+
+a:hover{
+    color: #e68a00;
+}
+
+a:active{
+    color: white;
+}
+
+.dark {
+    background-color: #222;
+    color: white;
+}
 
 .conversation {
     background: transparent;
@@ -82,21 +163,6 @@ body {
     border-bottom: solid white 1px;
 }
 
-#message {
-    width: 75%;
-}
-
-#searchContainer {
-    float: right;
-
-}
-
-#messageContainer {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
-
 .discussion {
     list-style: none;
     margin: 0;
@@ -120,6 +186,7 @@ body {
 }
 
 .other .avatar:after {
+    font-size: 1.2em;
     content: "";
     position: absolute;
     top: 0;
@@ -143,8 +210,7 @@ body {
 .self .messages p{
      font-size: 1.2em;
 }
-.messages #username{
-  
+.username {
     font-size: .5rem;
 }
 
@@ -166,25 +232,22 @@ body {
 }
 
 .messages {
-    background: white;
+    background: #333;
+    color: white;
     padding: 10px;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 1px;
+    border-color: #e68a00;
 }
 
 .messages p {
     font-size: 2.0rem;
-    font-weight: bold;
     margin: 0 0 0.2rem 0;
-}
-.messages #username{
-    font-weight: bold;
-    font-size: .9rem;
 }
 
 .messages time {
-    font-size: 0.7rem;
-    color: #ccc;
+    font-size: 1.0rem;
+    color: #000;
 }
 
 .shadow-textarea textarea.form-control::placeholder {
@@ -194,17 +257,6 @@ body {
 .shadow-textarea textarea.form-control {
     padding-left: 0.8rem;
     float: left;
-}
-
-#submitButton {
-    display: block;
-    padding-top: 25px ;
-    
-}
-
-#imControls {
-    position: fixed;
-    bottom: 5px;
 }
 
 .fa {
