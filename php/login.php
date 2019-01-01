@@ -42,11 +42,12 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!-- Custom styling -->
+        <link rel="stylesheet" href="../styles/common.css">
         <link rel="stylesheet" href="../styles/login.css">
     </head>
-    <body>
+    <body style="background-color: #222;">
         <form id=loginform name="loginForm" class="change-form col-md-4 col-md-offset-4" action="login.php" method="post">
-            <div class="well well-lg">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <h2>Mio Login Page</h2><br>
                 <div id="errorMessage" style="color: red"> <?php if($_SESSION["wrongCredentials"]) { echo("Your username or password is incorrect."); } ?> </div>
                 <div class="form-group">

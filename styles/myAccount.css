@@ -1,5 +1,6 @@
 .body {
-    background-color: #feebb9;
+    background-color: #222;
+    color: white;
 }
 
 .container {
@@ -16,6 +17,7 @@
     margin-right: auto;
     width: 50%;
     min-width: 400px;
+    background-color: #333;
 }
 
 .form-group {
