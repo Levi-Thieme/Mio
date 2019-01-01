@@ -1,0 +1,6 @@
+Error: SELECT * FROM room r where r.id IN(SELECT rm.room FROM room_member rm where usr = ) OR r.user_id =  
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') OR r.user_id =' at line 1
+Error: SELECT * FROM room r where r.id IN(SELECT rm.room FROM room_member rm where usr = ) OR r.user_id =  
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') OR r.user_id =' at line 1
+Error: SELECT * FROM room r where r.id IN(SELECT rm.room FROM room_member rm where usr = ) OR r.user_id =  
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') OR r.user_id =' at line 1

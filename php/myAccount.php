@@ -112,10 +112,10 @@
     
 </head>
 <html lang="en">
-    <body>
+    <body style="background-color: #222;">
         
         <div id="profileContainer" class="fluid-container">
-            <div class="well well-sm">
+            <div class="well well-sm" style="background-color: #333; color: white; border: none;">
                 <div class="row" id="profileRowDiv">
                     <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
                     <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
@@ -128,7 +128,7 @@
             </div>
         </div>
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="well well-lg">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <?php if (isset($_POST["updateEmailSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <label for="updateEmailEmailInput">Update Email address</label>
@@ -140,7 +140,7 @@
             </div>
         </form>
         <form onsubmit="return validateUpdatePassword()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="well well-lg">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <?php if (isset($_POST["updatePasswordSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <label for="updatePasswordPasswordInput">Update Password</label>
@@ -155,7 +155,7 @@
             </div>
         </form>
         <form onsubmit="return validateDeleteAccount()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="alert alert-danger">
+            <div class="well" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <strong>Delete My Account</strong>
                     <?php if (isset($_POST["deleteAccountSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>

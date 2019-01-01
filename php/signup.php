@@ -43,9 +43,6 @@
             $sql = "SELECT * FROM user WHERE name='" . filter($conn, $_POST['name']) . "';";
             $result = execQuery($sql, $conn);
             if($result !== false) {
-                $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-                fwrite($myfile, $result->num_rows != 0);
-                fclose($myfile);
                 return $result->num_rows != 0;
             }else {
                 return true;
@@ -66,10 +63,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Custom styling -->
     <link rel="stylesheet" href="../styles/myAccount.css">
+    <link rel="stylesheet" href="../styles/common.css">
     
 </head>
 <html lang="en">
-    <body>
+    <body style="background-color: #222; color: white;">
         <?php
            $conn = connect("localhost", USER, PASS, DB);
             if(isset($_POST["submit"])) {
@@ -99,14 +97,13 @@
                     echo $_POST['profile'];
                 }
                 if($filled) {
-                    $name = $conn->real_escape_string($_POST['name']);
+                    $name = $_POST['name'];
                     $sql = sprintf("INSERT INTO `user`( `name`, `email`, `password`, `image`) 
                     VALUES ('%s', '%s', PASSWORD('%s'), 'an Image')",
                     $name,
                     $conn->real_escape_string($_POST['email']),
                     $conn->real_escape_string($_POST['password']));
                     if ($conn->query($sql) === true) {
-                        addNewRoom($conn, $name . "s Personal Room", $name);
                         reroute();
                     } else {
                         echo "<b style='color:red;'>FAILURE IN QUERY</b>";
@@ -117,7 +114,7 @@
         <br>
         <br>
         <form action="" method="post" id="signup" class="change-form col-md-4 col-md-offset-4">
-            <div class="well well-lg" align = "center">
+            <div class="well well-lg" align = "center" style="background-color: #333; color: white; border: none;">
                 <div class="form-group" align = "center">
                     <h2> Sign Up </h2>
                     <br>
