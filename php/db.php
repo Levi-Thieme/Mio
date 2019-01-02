@@ -1,4 +1,9 @@
 <?php
+    //Development DB login credentials
+    define("LOCALHOST", "127.0.0.1");
+    define("USER", "mio_db");
+    define("PASS", "pfw");
+    define("DB", "mio_db");
     
     /*
     Attempts to connect to the server specified by parameters.
@@ -79,12 +84,12 @@
     /*
     Inserts a new user with name, email, and password
     */
-    function newUser($conn, $name, $email, $password) {
+    function insertUser($conn, $name, $email, $password) {
         $name = filter($conn, $name);
         $email = filter($conn, $email);
         $password = filter($conn, $password);
         $sql = "INSERT INTO user (name, email, password)
-                VALUES ('$name', '$email', '$password')";
+                VALUES ('$name', '$email', PASSWORD('$password'))";
         return execQuery($sql, $conn);
     }
     
