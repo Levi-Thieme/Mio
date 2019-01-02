@@ -1,28 +1,36 @@
-function validate() {
-    
-    $("#signupBtn").click(function validate() {
+    /*
+    Validates the user's username, email, and password.
+    Returns true if all are valid.
+    */
+    function validateSignup() {
         let usernameValid = validUsername($("#username").val());
         let emailValid = validEmail($("#email").val());
-        let passwordValid = validPassword("username", $("#password").val());
+        let passwordValid = validPassword($("#password").val());
 
         if(!usernameValid) { //invalid username
-            alert("Please enter a valid username.");
             $("#username").val("");
             $("#password").val("");
+            $("#confirmPassword").val("");
             return false;
         }
         else if(!emailValid) { //invalid email
-            alert("Please enter a valid email address.");
             $("#password").val("");
+            $("#confirmPassword").val("");
             return false;
         }
         else if (!passwordValid) { //invalid password
-            alert("Please enter a valid password.");
             $("#password").val("");
+            $("#confirmPassword").val("");
+            return false;
+        }
+        else if ($("#password").val() !== $("#confirmPassword").val()) {
+            $("#password").val("");
+            $("#confirmPassword").val("");
             return false;
         }
         return true;
-    });
+    }
+    
     /*
     Returns true if email is a valid email address.
     */
@@ -32,18 +40,15 @@ function validate() {
     }
     
     /*
-    Returns true if username and password match.
-    This will be properly implemented in the future when accounts are
-    properly stored in a database with their passwords' salts and hashes.
+    Returns true if the password meets the password requirements for length
     */
-    function validPassword(username, password) {
-        return password != "";
+    function validPassword(password) {
+        return password.trim().length > 6;
     }
     
     /*
-    Verifies username is associated with the currently logged in account
+    Returns true if the username meets the username requirements for length
     */
     function validUsername(username) {
-        return username != "";
+        return username.trim().length > 2;
     }
-});
