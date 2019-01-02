@@ -70,14 +70,14 @@
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
   
   <div id="sidebar" class="w3-sidebar w3-card">
-      <a class="list-group-item" href="myAccount.php" style="color:white"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
+      <a class="list-group-item" href="myAccount.php" style="background-color:#222"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
       <!-- Panel for My Chats accordion -->
       <div class="panel-group">
         <div class="panel panel-default">
           <div class="panel-heading" style="background-color: #222">
             <h4 class="panel-title dark">
               <a id="addRoomBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
-              <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" onclick="refreshRoomList()">My Chats
+              <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" style="background-color:#222;" onclick="refreshRoomList()">My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
@@ -87,10 +87,10 @@
         
         <!-- Panel for Friends accordion -->
         <div class="panel panel-default">
-          <div class="panel-heading" style="background-color: #222">
+          <div class="panel-heading" style="background-color: #222;">
             <h4 class="panel-title">
               <a id="addFriendBtn" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a> 
-              <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" onclick="refreshFriendsList()">Friends
+              <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" style="background-color: #222" onclick="refreshFriendsList()">Friends
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
           </div>
@@ -98,7 +98,7 @@
           </div>
         </div>
       </div>
-      <a id="signout" class="list-group-item" href="./logout.php" style="color: white"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+      <a id="signout" class="list-group-item" href="./logout.php" style="background-color:#222;"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
     </div>
     
     

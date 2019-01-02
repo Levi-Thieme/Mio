@@ -118,7 +118,6 @@ Retrieves messages for a given room and displays them in the chat
 */
 function getNewMessages() {  
     let roomName = $("#roomName").val();
-    console.log("Current Room: " + roomName);
     let userId = $("#userId").val();
     
     $.ajax({
@@ -337,6 +336,15 @@ $(document).ready(function() {
     });
     
     $("#sendMessageButton").on("click", sendMessage);
+    
+    //Add enter button listener for message input
+    $("#message").on("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            sendMessage();
+            console.log("send");
+        }
+    });
     
     //Update the chat pane's content
     getNewMessages();
