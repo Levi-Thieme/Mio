@@ -8,24 +8,19 @@
         let passwordValid = validPassword($("#password").val());
 
         if(!usernameValid) { //invalid username
-            $("#username").val("");
-            $("#password").val("");
-            $("#confirmPassword").val("");
+            displayError("Invalid username. Your username must be at least 2 characters long.");
             return false;
         }
         else if(!emailValid) { //invalid email
-            $("#password").val("");
-            $("#confirmPassword").val("");
+            displayError("Invalid email address.");
             return false;
         }
         else if (!passwordValid) { //invalid password
-            $("#password").val("");
-            $("#confirmPassword").val("");
+            displayError("Invalid password. Your password must be at least 7 characters long.");
             return false;
         }
         else if ($("#password").val() !== $("#confirmPassword").val()) {
-            $("#password").val("");
-            $("#confirmPassword").val("");
+            displayError("Invalid passwords. Your passwords must match.");
             return false;
         }
         return true;
@@ -51,4 +46,15 @@
     */
     function validUsername(username) {
         return username.trim().length > 2;
+    }
+    
+    /*
+    Clears input fields and displays an error message
+    */
+    function displayError(errorMessage) {
+        $("#password").val("");
+        $("#confirmPassword").val("");
+        $("#errorMessage").text(errorMessage);
+        $("#agree").prop("checked", false);
+        $("#signupBtn").prop("disabled", true);
     }
