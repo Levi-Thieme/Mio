@@ -75,18 +75,20 @@ function sendMessage() {
         return;
     }
     let roomName = $("#roomName").val();
-    $.ajax({
-        type: "POST",
-        async: true,
-        url: "../php/message/storeMessage.php",
-        dataType: "JSON",
-        data: {
-            message: "" + message + "", 
-            currentRoom: "" + roomName + "", 
-        },
-        failure: function(data) { console.log("Failed to send message: " + message); }
-    });
-    $("#message").val("");
+    if (roomName !== "") {
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: "../php/message/storeMessage.php",
+            dataType: "JSON",
+            data: {
+                message: "" + message + "", 
+                currentRoom: "" + roomName + "", 
+            },
+            failure: function(data) { console.log("Failed to send message: " + message); }
+        });
+        $("#message").val("");
+    }
 }
 
 /*
@@ -342,7 +344,6 @@ $(document).ready(function() {
         event.preventDefault();
         if (event.keyCode === 13) {
             sendMessage();
-            console.log("send");
         }
     });
     

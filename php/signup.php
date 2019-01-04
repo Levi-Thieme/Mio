@@ -42,6 +42,7 @@
                 <div class="form-group" align = "center">
                     <h2> Sign Up </h2>
                     <br>
+                    <div id="errorMessage" name="errorMessage" style="color: red;"></div>
                     <label for="name">Name</label>
                     <input id="username" name="name" type="text" class="form-control" aria-describedby="enter name" placeholder="Enter your name">
                     
@@ -60,7 +61,7 @@
                     
                     <br>
                     <label for="terms">I agree to the terms and conditions</label>
-                    <input name="agree" type="checkbox" onclick="document.forms.signup.signupBtn.disabled = !document.forms.signup.signupBtn.disabled">
+                    <input id="agree" name="agree" type="checkbox" onclick="document.forms.signup.signupBtn.disabled = !document.forms.signup.signupBtn.disabled">
                     <br>
                     
                     <input name="submit" disabled="disabled" type="submit" id="signupBtn" class="btn btn-primary" value="submit">
