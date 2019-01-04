@@ -116,6 +116,14 @@ function clearMessages() {
 }
 
 /*
+Clears the inputs for room name and id
+*/
+function clearRoom() {
+    $("#roomName").val("");
+    $("#roomId").val("");
+}
+
+/*
 Retrieves messages for a given room and displays them in the chat
 */
 function getNewMessages() {  
@@ -269,7 +277,11 @@ document.addEventListener("click", function(event) {
                 async: true,
                 data: { roomName: "" + name + "" },
                 datatype: "JSON",
-                complete: function(data) { refreshRoomList(); },
+                complete: function(data) { 
+                    refreshRoomList();
+                    clearMessages();
+                    clearRoom();
+                },
                 failure: function(data) { alert("Unable to leave room: " + name); }
             });
         }
