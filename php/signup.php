@@ -7,7 +7,7 @@
         if (isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirmPassword"])) {
             $conn = connect(LOCALHOST, USER, PASS, DB);
             if ($conn) {
-                insertUser($conn, $_POST["name"], $_POST["email"], $_POST["password"], $_POST["confirmPassword"]);
+                insertUser($conn, $_POST["name"], $_POST["email"], $_POST["password"]);
                 $conn->close();
                 redirect("login.php");
             }
@@ -37,7 +37,7 @@
 </head>
 <html lang="en">
     <body style="background-color: #222; color: white;">
-        <form action=' <?php echo($_SERVER['SELF']); ?> ' onsubmit="return validateSignup()" method="POST" id="signup" name="signup" class="change-form col-md-4 col-md-offset-4">
+        <form action='<?php echo($_SERVER['SELF']); ?>' onsubmit="return validateSignup()" method="POST" id="signup" name="signup" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg" align = "center" style="background-color: #333; color: white; border: none;">
                 <div class="form-group" align = "center">
                     <h2> Sign Up </h2>

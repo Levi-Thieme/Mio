@@ -1,7 +1,7 @@
 <?php
     session_start();
     require_once("./db.php");
-    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+    $conn = connect(LOCALHOST, USER, PASS, DB);
     
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
@@ -56,11 +56,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- This page's custom styling -->
-    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+    <link rel="stylesheet" href="../styles/main.css">
     <!-- Search area styling -->
-    <link rel="stylesheet" href="../styles/search.css" type="text/css">
+    <link rel="stylesheet" href="../styles/search.css">
     <!-- Common styling -->
-    <link rel="stylesheet" href="../styles/common.css" type="text/css">
+    <link rel="stylesheet" href="../styles/common.css">
 </head>
 
 <body>

@@ -1,6 +1,6 @@
 <?php 
     require_once("../db.php");
-    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+    $conn = connect(LOCALHOST, USER, PASS, DB);
     
     if ($conn && isset($_POST["currentRoom"]) && !empty($_POST["currentRoom"]) && isset($_POST["messageCount"])) {
         $roomName = $_POST["currentRoom"];
@@ -16,7 +16,9 @@
                     $messageData = array("userId"=>$userId, "username"=>$username, "messageId"=>$message["id"], "content"=>$message["content"], "time"=>$message["time"]);
                     $messageDataArray[] = $messageData;
                 }
-                echo json_encode($messageDataArray, JSON_PRETTY_PRINT);
+                $encodedJson = json_encode($messageDataArray, JSON_PRETTY_PRINT);
+                error_log($encodedJson, 3, "error_log.txt");
+                echo $encodedJson;
             }
         }
     }

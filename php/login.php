@@ -4,13 +4,9 @@
     include_once("./db.php");
     include_once("./errors.php");
 
-    define("USER", "mio_db");
-    define("PASS", "pfw");
-    define("DB", "mio_db");
-
     // connect to database
-    $connection;
-    if (!($connection = connect("127.0.0.1", USER, PASS, DB))) {    
+    $connection = connect(LOCALHOST, USER, PASS, DB);
+    if (!$connection) {
         die("Cannot connect to database.");
     }
     else {
