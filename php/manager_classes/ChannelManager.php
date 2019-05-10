@@ -48,7 +48,7 @@ class ChannelManager {
             }
         }
         else {
-            error_log($channel . " does not exist\n", 3, "../logs/error_log.txt");
+            //error_log($channel . " does not exist\n", 3, "../logs/error_log.txt");
             $status = false;
         }
 		return $status;
