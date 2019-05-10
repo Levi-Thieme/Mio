@@ -71,7 +71,7 @@ Sends the user's message to main.php through AJAX
 */
 function sendMessage() {
     let message = $("#message").val();
-    if (message.trim() == "") {
+    if (message.trim() === "") {
         return;
     }
     let roomName = $("#roomName").val();
@@ -79,7 +79,7 @@ function sendMessage() {
         $.ajax({
             type: "POST",
             async: true,
-            url: "../php/message/storeMessage.php",
+            url: "../message/storeMessage.php",
             dataType: "JSON",
             data: {
                 message: "" + message + "", 
@@ -95,10 +95,10 @@ function sendMessage() {
 Appends a message div into the chat
 */
 function displayMessage(message, classStyle, time, id, name) {
-    if (message != "")  {
+    if (message !== "")  {
         let messageItem = 
         '<li id ="'+id+'" class="'+classStyle+'">'+
-            '<div class="avatar"><img src="../imgs/user.png" /></div>'+
+            '<div class="avatar"><img src="../../imgs/user.png" /></div>'+
             '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
         '</li>';
         
@@ -139,7 +139,7 @@ function getNewMessages() {
         }, 
         complete: function(data) {
             let response = data.responseText;
-            if (response.trim() != "") {
+            if (response.trim() !== "") {
                 let responseJSON = JSON.parse(response);
                 /*
                 Messages are retrieved in Descending order by Timestamp, so reversal 
@@ -148,7 +148,7 @@ function getNewMessages() {
                 responseJSON.reverse().map(function(currentElement) {
                     messagesReceived += 1;
                     let senderId = currentElement["userId"];
-                    if (senderId == userId) {
+                    if (senderId === userId) {
                         displayMessage(currentElement["content"], "self", currentElement["time"], currentElement["messageId"], currentElement["username"]);
                     }
                     else {
@@ -313,6 +313,38 @@ document.addEventListener("click", function(event) {
 });
     
 $(document).ready(function() {
+    var websocket = new WebSocket("ws://localhost:80/Mio/php/manager_classes/php-socket.php");
+
+    websocket.onopen = function(event) {
+        let userInfo = {
+            username: $("#username").val(),
+            channel: $("#roomName").val()
+        };
+        //send the username and channel, so that server can store accordingly
+        websocket.send(JSON.stringify(userInfo));
+    };
+
+    websocket.onmessage = function(event) {
+        let data = JSON.parse(event.data);
+        let username = $("#username").val();
+        let senderId = data["username"];
+        if (senderId === username) {
+            displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
+        }
+        else {
+            displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
+        }
+    };
+
+    websocket.onerror = function(event){
+        console.log("An error has occurred.");
+    };
+
+    websocket.onclose = function(event){
+        console.log($("#username").val() + "'s connection has been closed.");
+    };
+
+
     //Add handler for the slider pane's buttons
     $("#sliderAction").attr("onclick", "addCreate()");
     $("#closeBtn").attr("onclick", "closeSlider()");
@@ -331,7 +363,7 @@ $(document).ready(function() {
     $("#addName").keyup(function(event) {
         
         //don't send empty strings
-        if ($("#addName").val().trim().length == 0) {
+        if ($("#addName").val().trim().length === 0) {
             //clear the suggestions
             $("#optionList").html("");
             return false;
@@ -349,16 +381,29 @@ $(document).ready(function() {
         }
     });
     
-    $("#sendMessageButton").on("click", sendMessage);
+    $("#sendMessageButton").on("click", function() {
+        let userInfo = {
+            username: $("#username").val(),
+            channel: $("#roomName").val(),
+            message: $("#message").val()
+        };
+        //send the username and channel, so that server can store accordingly
+        websocket.send(JSON.stringify(userInfo));
+        sendMessage();
+    });
     
     //Add enter button listener for message input
     $("#message").on("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
+            let userInfo = {
+                username: $("#username").val(),
+                channel: $("#roomName").val(),
+                message: $("#message").val()
+            };
+            //send the username and channel, so that server can store accordingly
+            websocket.send(JSON.stringify(userInfo));
             sendMessage();
         }
     });
-    
-    //Update the chat pane's content
-    getNewMessages();
 });

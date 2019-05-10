@@ -1,5 +1,5 @@
 <?php 
-    require_once("../db.php");
+    require_once("../database_interface/db.php");
     $conn = connect(LOCALHOST, USER, PASS, DB);
     
     if ($conn && isset($_POST["currentRoom"]) && !empty($_POST["currentRoom"]) && isset($_POST["messageCount"])) {

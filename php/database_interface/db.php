@@ -15,7 +15,7 @@
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error . "\n");
-        } 
+        }
         return $conn;
     }
     
@@ -185,7 +185,12 @@
             "SELECT from_id FROM friends WHERE to_id = $userId AND pending = false";
         return execQuery($sql, $conn);
     }
-    
+
+    function searchFriends($conn, $username) {
+        $sql = sprintf("SELECT name FROM user WHERE name LIKE '%s%%'",
+            mysqli_real_escape_string($conn, $_POST["friendName"]));
+        return execQuery($sql, $conn);
+    }
     
     /*
     Gets all pending requests sent from the user

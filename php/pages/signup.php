@@ -1,6 +1,6 @@
 <?php
-    require_once("db.php");
-    require_once("errors.php");
+    require_once("../database_interface/db.php");
+    require_once("../errors.php");
     
     //signup form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -29,10 +29,10 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Custom styling -->
-    <link rel="stylesheet" href="../styles/myAccount.css">
-    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../../styles/myAccount.css">
+    <link rel="stylesheet" href="../../styles/common.css">
     <!-- Javascript -->
-    <script src="../scripts/signup.js" type="text/javascript"></script>
+    <script src="../../scripts/signup.js" type="text/javascript"></script>
     
 </head>
 <html lang="en">
