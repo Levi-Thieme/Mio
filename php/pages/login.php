@@ -1,8 +1,8 @@
 <?php
-    
     session_start();
-    include_once("./db.php");
-    include_once("./errors.php");
+    require_once("../database_interface/db.php");
+    require_once("../errors.php");
+    require_once("../manager_classes/AccountManager.php");
 
     // connect to database
     $connection = connect(LOCALHOST, USER, PASS, DB);
@@ -20,6 +20,7 @@
             $_SESSION["wrongCredentials"] = false;
             $_SESSION["authenticated"] = true;
             $_SESSION["username"] = $_POST["username"];
+            $_SESSION["accountManager"] = new AccountManager($connection, $_SESSION["username"]);
             redirect("main.php");
         }
     }
@@ -38,8 +39,8 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!-- Custom styling -->
-        <link rel="stylesheet" href="../styles/common.css">
-        <link rel="stylesheet" href="../styles/login.css">
+        <link rel="stylesheet" href="../../styles/common.css">
+        <link rel="stylesheet" href="../../styles/login.css">
     </head>
     <body style="background-color: #222;">
         <form id=loginform name="loginForm" class="change-form col-md-4 col-md-offset-4" action="login.php" method="post">

@@ -1,6 +1,6 @@
 <?php
-    include './db.php';
-    include './errors.php';
+    require_once("../database_interface/db.php");
+    require_once("../errors.php");
     
     session_start();
     $conn;
@@ -103,11 +103,11 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- client side form validation for the myAccount page-->
-    <script type="text/javascript" src="../scripts/myAccount.js"></script>
+    <script type="text/javascript" src="../../scripts/myAccount.js"></script>
      <!-- Custom styling -->
-    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../../styles/common.css">
     <!-- Custom styling -->
-    <link rel="stylesheet" href="../styles/myAccount.css">
+    <link rel="stylesheet" href="../../styles/myAccount.css">
     
     
 </head>
@@ -117,9 +117,9 @@
         <div id="profileContainer" class="fluid-container">
             <div class="well well-sm" style="background-color: #333; color: white; border: none;">
                 <div class="row" id="profileRowDiv">
-                    <img class="img-fluid" alt="The user's profile image" src="../imgs/user.png">
-                    <a href="./main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
-                    <a href="./logout.php" id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit">Log out</a>
+                    <img class="img-fluid" alt="The user's profile image" src="../../imgs/user.png">
+                    <a href="main.php" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <a href="logout.php" id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit">Log out</a>
                     <div>
                         <?php echo $_SESSION['username'] . " <br> " . $_SESSION['email']; ?>
                     </div>
@@ -163,7 +163,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="./login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <a href="login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
                 </div>
             </div>
         </form>

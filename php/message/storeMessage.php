@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    require_once("../db.php");
+    require_once("../database_interface/db.php");
     if (isset($_POST["message"]) && isset($_POST["currentRoom"])) {
         $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
         $userId = getUserId($conn, $_SESSION["username"]);

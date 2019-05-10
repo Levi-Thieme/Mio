@@ -1,5 +1,5 @@
 <?php
-require_once("../db.php");
+require_once("../database_interface/db.php");
 session_start();
 
 $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
