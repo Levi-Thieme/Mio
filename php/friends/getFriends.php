@@ -4,7 +4,7 @@
 </head>
 
 <?php
-require_once("../db.php");
+require_once("../database_interface/db.php");
 
 session_start();
 
@@ -33,7 +33,6 @@ function createFriendRequestFromDiv($username) {
 }
 
 if (isset($_SESSION["username"])) {
-    $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
     $friends = getFriends($conn, $_SESSION["username"]);
     $requestsFrom = getRequestsFromUser($conn, $_SESSION["username"]);
     $requestsTo = getRequestsToUser($conn, $_SESSION["username"]);

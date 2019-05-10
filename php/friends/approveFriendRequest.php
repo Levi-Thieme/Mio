@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once("../db.php");
+require_once("../database_interface/db.php");
 
 if (isset($_POST["requester"]) && isset($_SESSION["username"])) {
     $requester = $_POST["requester"];

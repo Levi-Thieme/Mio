@@ -1,5 +1,5 @@
 <?php
-    include_once("../db.php");
+    require_once("../database_interface/db.php");
     session_start();
     $success = false;
     if (isset($_SESSION["username"]) && isset($_POST["friend"])) {

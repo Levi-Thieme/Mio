@@ -1,5 +1,5 @@
 <?php
-    include '../db.php';
+    include '../database_interface/db.php';
     
     /*
     Tests the isPassword function
