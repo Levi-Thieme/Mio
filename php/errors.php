@@ -20,7 +20,9 @@ function myAccountErrorHandler($errorToDisplay) {
         "confirmNotChecked" => "You must check the confirm checkbox.",
         "tryAgain" => "Please try again."
         );
-    
+    if ($errorToDisplay === "") {
+        return;
+    }
     $errorMessage = $errorMessages[$errorToDisplay];
     if ($errorMessage) {
         printError($errorMessage, "red");

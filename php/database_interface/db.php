@@ -8,7 +8,7 @@
     /*
     Attempts to connect to the server specified by parameters.
     */
-    function connect($servername, $username, $password, $dbName) {
+    function connectTo($servername, $username, $password, $dbName) {
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbName);
         
@@ -17,6 +17,10 @@
             die("Connection failed: " . $conn->connect_error . "\n");
         }
         return $conn;
+    }
+
+    function connect() {
+        return connectTo(LOCALHOST, USER, PASS, DB);
     }
     
     /*

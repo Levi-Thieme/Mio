@@ -2,6 +2,9 @@ var roomInvite;
 var updateChatTimeoutId;
 var messagesReceived = 0;
 
+//Relative root from main.php to project directory(Mio)
+var relativeRoot = "../../";
+
 /* Open the sidenav */
 function openSlider() {
     document.getElementById("slider").style.width = "100%";
@@ -42,10 +45,13 @@ Refreshes the friend list
 */
 function refreshFriendsList() {
     $.ajax({
-        type: "POST",
-        url: "../php/friends/getFriends.php",
+        type: "GET",
+        url: "../request_handlers/friendHandler.php",
         async: true,
         dataType: "HTML",
+        data: {
+            request: "getFriendDivs"
+        },
         success: function(data) { $("#friendsCollapse").html(data); },
         failure: function(data) { alert("Unable to load friend list."); }
     });
@@ -56,10 +62,13 @@ Refreshes the room list
 */
 function refreshRoomList() {
     $.ajax({
-        type: "POST",
-        url: "../php/mainRequests/getRooms.php",
+        type: "GET",
+        url: "../request_handlers/roomHandler.php",
         async: true,
         dataType: "HTML",
+        data: {
+            request: "getRooms"
+        },
         success: function(data) { $("#roomCollapse").html(data); },
         failure: function(data) { alert("Unable to load room list."); }
     });
@@ -313,7 +322,7 @@ document.addEventListener("click", function(event) {
 });
     
 $(document).ready(function() {
-    var websocket = new WebSocket("ws://localhost:80/Mio/php/manager_classes/php-socket.php");
+    var websocket = new WebSocket("ws://localhost:8080/php/manager_classes/php-socket.php");
 
     websocket.onopen = function(event) {
         let userInfo = {

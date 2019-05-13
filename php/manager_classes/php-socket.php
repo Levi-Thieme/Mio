@@ -1,6 +1,6 @@
 <?php
 define('HOST_NAME', "localhost");
-define('PORT', "80");
+define('PORT', "8080");
 $null = NULL;
 
 require_once("ChannelManager.php");
@@ -12,7 +12,7 @@ $chatHandler = new ChannelManager();
  */
 $serverSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($serverSocket, SOL_SOCKET, SO_REUSEADDR, 1);
-socket_bind($serverSocket, 0, PORT);
+socket_bind($serverSocket, HOST_NAME, PORT);
 socket_listen($serverSocket);
 
 $clientSocketArray = array($serverSocket);
@@ -47,10 +47,10 @@ while (true) {
                 if (!$chatHandler->hasChannel($channelName)) {
                     $clientNameSocketAssoc = array($clientUsername => $clientSocket);
                     $chatHandler->addChannel($channelName, $clientNameSocketAssoc);
-                    error_log("Adding " . $channelName . " with " . $clientUsername . "\n", 3, "../logs/error_log.txt");
+                    //error_log("Adding " . $channelName . " with " . $clientUsername . "\n", 3, "../logs/error_log.txt");
                 } else {
                     $chatHandler->addUserToChannel($channelName, $clientUsername, $clientSocket);
-                    error_log("Adding " . $clientUsername . " to " . $channelName . "\n", 3, "../logs/error_log.txt");
+                    //error_log("Adding " . $clientUsername . " to " . $channelName . "\n", 3, "../logs/error_log.txt");
                 }
                 $message = $chatHandler->formatMessage($clientUsername . " has joined " . $channelName, $clientUsername, $channelName);
                 $chatHandler->broadcast($message, $channelName);

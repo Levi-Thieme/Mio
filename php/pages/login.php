@@ -1,11 +1,13 @@
 <?php
+
     session_start();
     require_once("../database_interface/db.php");
     require_once("../errors.php");
     require_once("../manager_classes/AccountManager.php");
 
+
     // connect to database
-    $connection = connect(LOCALHOST, USER, PASS, DB);
+    $connection = connect();
     if (!$connection) {
         die("Cannot connect to database.");
     }
@@ -15,19 +17,18 @@
     $_SESSION["wrongCredentials"] = false;
     // if username and password were submitted, check them
     if (isset($_POST["username"]) && isset($_POST["password"])) {
-        $_SESSION["wrongCredentials"] = true;
         if (isPassword($connection, $_POST["username"], $_POST["password"])) {
             $_SESSION["wrongCredentials"] = false;
             $_SESSION["authenticated"] = true;
             $_SESSION["username"] = $_POST["username"];
-            $_SESSION["accountManager"] = new AccountManager($connection, $_SESSION["username"]);
-            redirect("main.php");
+            header("Location: ./main.php");
+            die();
         }
     }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang = "en">
     <head>
         <title>Login Page</title>
         <meta charset="utf-8">

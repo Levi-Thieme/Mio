@@ -18,3 +18,7 @@ Succesfully delete IsaacHarter
 Succesfully delete IsaacHarter
 Succesfully delete IsaacHarter
 Created friend request.
+Error: SELECT id FROM user WHERE name = 'LeviThieme' 
+
+Error: SELECT id FROM user WHERE name = 'LeviThieme' 
+
