@@ -34,3 +34,38 @@ function getFriendDivs() {
         echo Renderer::createFriendRequestFromDiv($friendName);
     }
 }
+
+function searchFriend() {
+    if(isset($_GET["friendName"])) {
+        $conn = connect();
+        $namesLike = searchFriends($conn, $_GET["friendName"]);
+        while($name = $namesLike->fetch()) {
+            echo Renderer::divWrap($name);
+        }
+        $conn->close();
+    }
+}
+
+function sendFriendRequest() {
+    if (isset($_POST["receiver"])) {
+        $conn = connect();
+        createFriendRequest($conn, $_SESSION["username"], $_POST["receiver"]);
+        $conn->close();
+    }
+}
+
+function acceptFriendRequest() {
+    if (isset($_GET["requester"])) {
+        $conn = connect();
+        updateFriendRequest($conn, $_SESSION["username"], $_GET["requester"]);
+        $conn->close();
+    }
+}
+
+function deleteFriend() {
+    if (isset($_GET["friendName"])) {
+        $conn = connnect();
+        deleteFriendByName($conn, $_SESSION["username"], $_GET["friendName"]);
+        $conn->close();
+    }
+}

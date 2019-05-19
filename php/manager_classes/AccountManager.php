@@ -38,7 +38,7 @@ class AccountManager {
     }
 
     public function deleteFriend($userFrom, $userTo) {
-        $success = deleteFriend($this->conn, $userFrom, $userTo);
+        $success = deleteFriendByName($this->conn, $userFrom, $userTo);
         return $success;
     }
 }

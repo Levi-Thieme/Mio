@@ -3,7 +3,7 @@ var updateChatTimeoutId;
 var messagesReceived = 0;
 
 //Relative root from main.php to project directory(Mio)
-var relativeRoot = "../../";
+var relativeRoot = "../request_handlers/";
 
 /* Open the sidenav */
 function openSlider() {
@@ -46,7 +46,7 @@ Refreshes the friend list
 function refreshFriendsList() {
     $.ajax({
         type: "GET",
-        url: "../request_handlers/friendHandler.php",
+        url: relativeRoot + "friendHandler.php",
         async: true,
         dataType: "HTML",
         data: {
@@ -63,7 +63,7 @@ Refreshes the room list
 function refreshRoomList() {
     $.ajax({
         type: "GET",
-        url: "../request_handlers/roomHandler.php",
+        url: relativeRoot + "/roomHandler.php",
         async: true,
         dataType: "HTML",
         data: {
@@ -176,10 +176,13 @@ Creates a room with given name
 */
 function createRoom(name) {
     $.ajax({
-        url: "../php/roomBuilder.php",
-        type: "POST",
+        url: relativeRoot + "roomHandler.php",
+        type: "GET",
         async: true,
-        data: { newRoomName: ""+name+"" },
+        data: {
+            request: "createRoom",
+            roomName: ""+name+""
+        },
         failure: function(data) {alert("Failed to create room: " + name);},
         complete: function(data) { refreshRoomList(); }
     });
@@ -190,10 +193,13 @@ Adds a friend with the given name
 */
 function sendFriendRequest(name) {
     $.ajax({
-        url: "../php/friends/sendRequest.php", 
+        url: relativeRoot + "friendHandler.php",
         type: "POST",
         async: true,
-        data: { receiver: ""+name+"" },
+        data: {
+            request: "createRoom",
+            receiver: ""+name+""
+        },
         dataType: "JSON",
         failure: function(data) { alert("Failed to send friend request to " + name); },
         complete: function(data) { refreshFriendsList(); }
@@ -205,10 +211,13 @@ Deletes a friend
 */
 function deleteFriend(friendName) {
     $.ajax({
-        url: "../php/friends/deleteFriend.php",
-        type: "POST",
+        url: relativeRoot + "friendHandler.php",
+        type: "GET",
         async: true,
-        data: { friend: ""+friendName+"" },
+        data: {
+            request: "deleteFriend",
+            friendName: ""+friendName+""
+        },
         datatype: "JSON",
         failure: function(data) { alert("Failed to delete friend: " + friendName); },
         complete: function(data) { refreshFriendsList(); }
@@ -220,10 +229,13 @@ Approves a friend request
 */
 function approveFriendRequest(requesterName) {
     $.ajax({
-        url: "../php/friends/approveFriendRequest.php",
-        type: "POST",
+        url: relativeRoot + "friendHandler.php",
+        type: "GET",
         async: true,
-        data: { requester: ""+requesterName+"" },
+        data: {
+            request: "acceptFriendRequest",
+            requester: ""+requesterName+""
+        },
         dataType: "JSON",
         failure: function(data) { alert("Failed to approve friend request from" + requesterName + "."); },
         complete: function(data) { refreshFriendsList(); }
@@ -235,10 +247,11 @@ Invites a user to a room
 */
 function addToRoom(friendName) {
     $.ajax({
-        url: "../php/rooms/addToRoom.php",
-        type: "POST",
+        url: relativeRoot + "roomHandler.php",
+        type: "GET",
         async: true,
         data: {
+            request: "addToRoom",
             userToAdd: "" + friendName + "",
             roomName: "" + roomInvite + ""
         },
@@ -281,10 +294,13 @@ document.addEventListener("click", function(event) {
         if ("leaveRoom" in src.dataset) {
             let name = src.parentElement.childNodes[0].innerText;
             $.ajax({
-                url: "../php/rooms/leaveRoom.php",
-                type: "POST",
+                url: "roomHandler.php",
+                type: "GET",
                 async: true,
-                data: { roomName: "" + name + "" },
+                data: {
+                    request: "leaveRoom",
+                    roomName: "" + name + ""
+                },
                 datatype: "JSON",
                 complete: function(data) { 
                     refreshRoomList();
@@ -379,10 +395,13 @@ $(document).ready(function() {
         }
         else if ($("#sliderAction").html() === "Send Request" || $("#sliderAction").html() === "Invite") {
             $.ajax({
-                url: "../php/friends/searchFriend.php",
-                type: "POST",
+                url: relativeRoot + "friendHandler.php",
+                type: "GET",
                 async: true,
-                data: { friendName: $("#addName").val() },
+                data: {
+                    request: "searchFriend",
+                    friendName: $("#addName").val()
+                },
                 datatype: "HTML",
                 success: function(data) { $("#optionList").html(data); },
                 failure: function(data) { console.log("Failed to search for friend: " + $("#addName").val()); }
