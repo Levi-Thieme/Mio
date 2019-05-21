@@ -6,7 +6,7 @@
     $conn;
     //Connect to DB if not already connected
     if (!isset($_SERVER["connection"])) {
-        $conn = connect("127.0.0.1", "mio_db", "pfw", "mio_db");
+        $conn = connect();
     }
     
     $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
@@ -61,7 +61,7 @@
                     if (isPassword($conn, $username, $dPassword)) {
                         $_SESSION["credentialsError"] = "";
                         if (!deleteUser($conn, $username, $dPassword)) {
-                            error_log("Error: $sql \n" . $conn->error, 3, "./logs/error_log.txt");
+                            error_log("Error:  \n" . $conn->error, 3, "./logs/error_log.txt");
                         }
                         else {
                             error_log("Successfully deleted user. $username\n", 3, "./logs/error_log.txt");

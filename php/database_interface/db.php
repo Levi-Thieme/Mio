@@ -8,7 +8,7 @@
     /*
     Attempts to connect to the server specified by parameters.
     */
-    function connect($servername, $username, $password, $dbName) {
+    function connectTo($servername, $username, $password, $dbName) {
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbName);
         
@@ -17,6 +17,10 @@
             die("Connection failed: " . $conn->connect_error . "\n");
         }
         return $conn;
+    }
+
+    function connect() {
+        return connectTo(LOCALHOST, USER, PASS, DB);
     }
     
     /*
@@ -188,7 +192,7 @@
 
     function searchFriends($conn, $username) {
         $sql = sprintf("SELECT name FROM user WHERE name LIKE '%s%%'",
-            mysqli_real_escape_string($conn, $_POST["friendName"]));
+            mysqli_real_escape_string($conn, $username));
         return execQuery($sql, $conn);
     }
     
@@ -246,10 +250,10 @@
     $acceptor - username of the person accepting the request
     $requester - username of the person who sent the request
     */
-    function acceptFriendRequest($conn, $acceptor, $requester) {
+    function updateFriendRequest($conn, $acceptor, $requester) {
         $acceptorId = getUserId($conn, $acceptor);
-        $requestorId = getUserId($conn, $requester);
-        $sql = "UPDATE friends SET pending = false WHERE from_id = $requestorId AND to_id = $acceptorId";
+        $requesterId = getUserId($conn, $requester);
+        $sql = "UPDATE friends SET pending = false WHERE from_id = $requesterId AND to_id = $acceptorId";
         return execQuery($sql, $conn);
     }
     
@@ -257,7 +261,7 @@
     /*
     Deletes a friend from the from_user
     */
-    function deleteFriend($conn, $from_user, $to_user) {
+    function deleteFriendByName($conn, $from_user, $to_user) {
         $from_id = getUserId($conn, $from_user);
         $to_id = getUserId($conn, $to_user);
         $sql = "DELETE FROM friends WHERE (from_id = $from_id AND to_id = $to_id) OR".
@@ -265,7 +269,11 @@
         return execQuery($sql, $conn);
     }
     
-    
+    function friendsLike($conn, $username) {
+        $sql = sprintf("select name from user where name like '%s%%'",
+            mysqli_real_escape_string($conn, $_POST["friendName"]));
+        return execQuery($sql, $conn);
+    }
     
     /*-------------------------------
     Functions for the room table.
@@ -315,7 +323,7 @@
     $username - the owner of the room
     $roomName - the name of the room
     */
-    function createRoom($conn, $username, $roomName) {
+    function insertRoom($conn, $username, $roomName) {
         $userId = getUserId($conn, $username);
         $sql = "INSERT INTO room(user_id, name) VALUES($userId, '$roomName')";
         return execQuery($sql, $conn);

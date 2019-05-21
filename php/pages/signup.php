@@ -5,7 +5,7 @@
     //signup form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirmPassword"])) {
-            $conn = connect(LOCALHOST, USER, PASS, DB);
+            $conn = connect();
             if ($conn) {
                 insertUser($conn, $_POST["name"], $_POST["email"], $_POST["password"]);
                 $conn->close();

@@ -1,9 +1,8 @@
 <?php
     session_start();
     require_once("../database_interface/db.php");
-    require_once("../manager_classes/AccountManager.php");
 
-    $conn = connect(LOCALHOST, USER, PASS, DB);
+    $conn = connect();
 
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");

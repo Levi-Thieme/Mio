@@ -2,6 +2,9 @@ var roomInvite;
 var updateChatTimeoutId;
 var messagesReceived = 0;
 
+//Relative root from main.php to project directory(Mio)
+var relativeRoot = "../request_handlers/";
+
 /* Open the sidenav */
 function openSlider() {
     document.getElementById("slider").style.width = "100%";
@@ -42,10 +45,13 @@ Refreshes the friend list
 */
 function refreshFriendsList() {
     $.ajax({
-        type: "POST",
-        url: "../php/friends/getFriends.php",
+        type: "GET",
+        url: relativeRoot + "friendHandler.php",
         async: true,
         dataType: "HTML",
+        data: {
+            request: "getFriendDivs"
+        },
         success: function(data) { $("#friendsCollapse").html(data); },
         failure: function(data) { alert("Unable to load friend list."); }
     });
@@ -56,10 +62,13 @@ Refreshes the room list
 */
 function refreshRoomList() {
     $.ajax({
-        type: "POST",
-        url: "../php/mainRequests/getRooms.php",
+        type: "GET",
+        url: relativeRoot + "/roomHandler.php",
         async: true,
         dataType: "HTML",
+        data: {
+            request: "getRooms"
+        },
         success: function(data) { $("#roomCollapse").html(data); },
         failure: function(data) { alert("Unable to load room list."); }
     });
@@ -167,10 +176,13 @@ Creates a room with given name
 */
 function createRoom(name) {
     $.ajax({
-        url: "../php/roomBuilder.php",
-        type: "POST",
+        url: relativeRoot + "roomHandler.php",
+        type: "GET",
         async: true,
-        data: { newRoomName: ""+name+"" },
+        data: {
+            request: "createRoom",
+            roomName: ""+name+""
+        },
         failure: function(data) {alert("Failed to create room: " + name);},
         complete: function(data) { refreshRoomList(); }
     });
@@ -180,11 +192,15 @@ function createRoom(name) {
 Adds a friend with the given name
 */
 function sendFriendRequest(name) {
+    console.log("sending friend request to " + name);
     $.ajax({
-        url: "../php/friends/sendRequest.php", 
-        type: "POST",
+        url: relativeRoot + "friendHandler.php",
+        type: "GET",
         async: true,
-        data: { receiver: ""+name+"" },
+        data: {
+            request: "sendFriendRequest",
+            receiver: ""+name+""
+        },
         dataType: "JSON",
         failure: function(data) { alert("Failed to send friend request to " + name); },
         complete: function(data) { refreshFriendsList(); }
@@ -195,11 +211,15 @@ function sendFriendRequest(name) {
 Deletes a friend
 */
 function deleteFriend(friendName) {
+    console.log("Delete " + friendName);
     $.ajax({
-        url: "../php/friends/deleteFriend.php",
-        type: "POST",
+        url: relativeRoot + "friendHandler.php",
+        type: "GET",
         async: true,
-        data: { friend: ""+friendName+"" },
+        data: {
+            request: "deleteFriend",
+            friendName: ""+friendName+""
+        },
         datatype: "JSON",
         failure: function(data) { alert("Failed to delete friend: " + friendName); },
         complete: function(data) { refreshFriendsList(); }
@@ -211,10 +231,13 @@ Approves a friend request
 */
 function approveFriendRequest(requesterName) {
     $.ajax({
-        url: "../php/friends/approveFriendRequest.php",
-        type: "POST",
+        url: relativeRoot + "friendHandler.php",
+        type: "GET",
         async: true,
-        data: { requester: ""+requesterName+"" },
+        data: {
+            request: "acceptFriendRequest",
+            requester: ""+requesterName+""
+        },
         dataType: "JSON",
         failure: function(data) { alert("Failed to approve friend request from" + requesterName + "."); },
         complete: function(data) { refreshFriendsList(); }
@@ -226,10 +249,11 @@ Invites a user to a room
 */
 function addToRoom(friendName) {
     $.ajax({
-        url: "../php/rooms/addToRoom.php",
-        type: "POST",
+        url: relativeRoot + "roomHandler.php",
+        type: "GET",
         async: true,
         data: {
+            request: "addToRoom",
             userToAdd: "" + friendName + "",
             roomName: "" + roomInvite + ""
         },
@@ -254,6 +278,7 @@ function addCreate() {
             closeSlider();
         }
         else if(mode === "Send Request") {
+            console.log("Calling sendFriendRequest function.");
             sendFriendRequest(name);
             closeSlider();
         }
@@ -272,10 +297,13 @@ document.addEventListener("click", function(event) {
         if ("leaveRoom" in src.dataset) {
             let name = src.parentElement.childNodes[0].innerText;
             $.ajax({
-                url: "../php/rooms/leaveRoom.php",
-                type: "POST",
+                url: relativeRoot + "roomHandler.php",
+                type: "GET",
                 async: true,
-                data: { roomName: "" + name + "" },
+                data: {
+                    request: "leaveRoom",
+                    roomName: "" + name + ""
+                },
                 datatype: "JSON",
                 complete: function(data) { 
                     refreshRoomList();
@@ -286,34 +314,31 @@ document.addEventListener("click", function(event) {
             });
         }
         else if ("addToRoom" in src.dataset) {
-            //TODO update this to use a function in setSliderMode instead of using a global variable for saving state
             roomInvite = src.parentElement.childNodes[0].innerText;
             setSliderMode("addToRoom");
             openSlider();
         }
         else if ("deleteFriend" in src.dataset) {
-            let name = src.parentElement.childNodes[0].innerText;
+            let name = src.parentElement.id;
             deleteFriend(name);
         }
         else if ("approveFriendRequest" in src.dataset) {
-            let name = src.parentElement.childNodes[0].innerText;
+            let name = src.parentElement.id;
+            console.log("Accept request from " + name);
             approveFriendRequest(name);
         }
     }
     else if ("toRoom" in src.dataset) {
         let name = src.parentElement.childNodes[0].innerText;
         if (name !== $("#roomName").val()) {
-            clearTimeout(updateChatTimeoutId);
             clearMessages();
             $("#roomName").val(name);
-            messagesReceived = 0;
-            getNewMessages();
         }
     }
 });
     
 $(document).ready(function() {
-    var websocket = new WebSocket("ws://localhost:80/Mio/php/manager_classes/php-socket.php");
+    var websocket = new WebSocket("ws://localhost:8080/php/manager_classes/php-socket.php");
 
     websocket.onopen = function(event) {
         let userInfo = {
@@ -355,6 +380,7 @@ $(document).ready(function() {
     });
     
     $("#addFriendBtn").on("click",  function() {
+        console.log("add friend btn clicked.");
         setSliderMode("addFriend");
         openSlider();
     });
@@ -370,10 +396,13 @@ $(document).ready(function() {
         }
         else if ($("#sliderAction").html() === "Send Request" || $("#sliderAction").html() === "Invite") {
             $.ajax({
-                url: "../php/friends/searchFriend.php",
-                type: "POST",
+                url: relativeRoot + "friendHandler.php",
+                type: "GET",
                 async: true,
-                data: { friendName: $("#addName").val() },
+                data: {
+                    request: "searchFriend",
+                    friendName: $("#addName").val()
+                },
                 datatype: "HTML",
                 success: function(data) { $("#optionList").html(data); },
                 failure: function(data) { console.log("Failed to search for friend: " + $("#addName").val()); }
