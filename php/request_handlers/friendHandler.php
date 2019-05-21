@@ -38,18 +38,18 @@ function getFriendDivs() {
 function searchFriend() {
     if(isset($_GET["friendName"])) {
         $conn = connect();
-        $namesLike = searchFriends($conn, $_GET["friendName"]);
-        while($name = $namesLike->fetch()) {
-            echo Renderer::divWrap($name);
+        $namesLike = searchFriends($conn, $_GET["friendName"])->fetch_all();
+        foreach($namesLike as $name) {
+            echo Renderer::divWrap($name[0]);
         }
         $conn->close();
     }
 }
 
 function sendFriendRequest() {
-    if (isset($_POST["receiver"])) {
+    if (isset($_GET["receiver"])) {
         $conn = connect();
-        createFriendRequest($conn, $_SESSION["username"], $_POST["receiver"]);
+        createFriendRequest($conn, $_SESSION["username"], $_GET["receiver"]);
         $conn->close();
     }
 }
@@ -64,7 +64,7 @@ function acceptFriendRequest() {
 
 function deleteFriend() {
     if (isset($_GET["friendName"])) {
-        $conn = connnect();
+        $conn = connect();
         deleteFriendByName($conn, $_SESSION["username"], $_GET["friendName"]);
         $conn->close();
     }

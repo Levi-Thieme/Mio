@@ -192,7 +192,7 @@
 
     function searchFriends($conn, $username) {
         $sql = sprintf("SELECT name FROM user WHERE name LIKE '%s%%'",
-            mysqli_real_escape_string($conn, $_POST["friendName"]));
+            mysqli_real_escape_string($conn, $username));
         return execQuery($sql, $conn);
     }
     

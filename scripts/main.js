@@ -192,12 +192,13 @@ function createRoom(name) {
 Adds a friend with the given name
 */
 function sendFriendRequest(name) {
+    console.log("sending friend request to " + name);
     $.ajax({
         url: relativeRoot + "friendHandler.php",
-        type: "POST",
+        type: "GET",
         async: true,
         data: {
-            request: "createRoom",
+            request: "sendFriendRequest",
             receiver: ""+name+""
         },
         dataType: "JSON",
@@ -210,6 +211,7 @@ function sendFriendRequest(name) {
 Deletes a friend
 */
 function deleteFriend(friendName) {
+    console.log("Delete " + friendName);
     $.ajax({
         url: relativeRoot + "friendHandler.php",
         type: "GET",
@@ -276,6 +278,7 @@ function addCreate() {
             closeSlider();
         }
         else if(mode === "Send Request") {
+            console.log("Calling sendFriendRequest function.");
             sendFriendRequest(name);
             closeSlider();
         }
@@ -294,7 +297,7 @@ document.addEventListener("click", function(event) {
         if ("leaveRoom" in src.dataset) {
             let name = src.parentElement.childNodes[0].innerText;
             $.ajax({
-                url: "roomHandler.php",
+                url: relativeRoot + "roomHandler.php",
                 type: "GET",
                 async: true,
                 data: {
@@ -311,28 +314,25 @@ document.addEventListener("click", function(event) {
             });
         }
         else if ("addToRoom" in src.dataset) {
-            //TODO update this to use a function in setSliderMode instead of using a global variable for saving state
             roomInvite = src.parentElement.childNodes[0].innerText;
             setSliderMode("addToRoom");
             openSlider();
         }
         else if ("deleteFriend" in src.dataset) {
-            let name = src.parentElement.childNodes[0].innerText;
+            let name = src.parentElement.id;
             deleteFriend(name);
         }
         else if ("approveFriendRequest" in src.dataset) {
-            let name = src.parentElement.childNodes[0].innerText;
+            let name = src.parentElement.id;
+            console.log("Accept request from " + name);
             approveFriendRequest(name);
         }
     }
     else if ("toRoom" in src.dataset) {
         let name = src.parentElement.childNodes[0].innerText;
         if (name !== $("#roomName").val()) {
-            clearTimeout(updateChatTimeoutId);
             clearMessages();
             $("#roomName").val(name);
-            messagesReceived = 0;
-            getNewMessages();
         }
     }
 });
@@ -380,6 +380,7 @@ $(document).ready(function() {
     });
     
     $("#addFriendBtn").on("click",  function() {
+        console.log("add friend btn clicked.");
         setSliderMode("addFriend");
         openSlider();
     });
