@@ -1,3 +1,3 @@
 # Mio
 
-This is an instant messaging web application that uses sockets for messaging.
+This is an instant messaging web application with the following features: user accounts, user friends, chat rooms.
