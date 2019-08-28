@@ -1,9 +1,12 @@
+var websocket;
 var roomInvite;
 var updateChatTimeoutId;
 var messagesReceived = 0;
 
 //Relative root from main.php to project directory(Mio)
 var relativeRoot = "../request_handlers/";
+//Relative path to the controllers directory
+var controllersPath = "../controllers/";
 
 /* Open the sidenav */
 function openSlider() {
@@ -329,46 +332,66 @@ document.addEventListener("click", function(event) {
         }
     }
     else if ("toRoom" in src.dataset) {
-        let name = src.parentElement.childNodes[0].innerText;
-        if (name !== $("#roomName").val()) {
+        let toRoomName = src.parentElement.childNodes[0].innerText;
+        let currentRoom = $("#roomName").val();
+        if (toRoomName !== currentRoom) {
+            let message = {
+                username: $("#username").val(),
+                channel: currentRoom,
+                message: "",
+                action: "MoveToChannel",
+                channelTo: toRoomName
+            };
+            websocket.send(JSON.stringify(message));
             clearMessages();
-            $("#roomName").val(name);
+            $("#roomName").val(toRoomName);
         }
     }
 });
-    
+
+function createSocket() {
+    let socket = new WebSocket("ws://localhost:8080/php/manager_classes/php-socket.php");
+    initializeSocketEventHandlers(socket);
+    return socket;
+}
+
+function onOpen() {
+    let userInfo = {
+        username: $("#username").val(),
+        channel: $("#roomName").val()
+    };
+    //send the username and channel, so that server can store accordingly
+    websocket.send(JSON.stringify(userInfo));
+};
+
+function onMessage(event) {
+    let data = JSON.parse(event.data);
+    let username = $("#username").val();
+    let senderId = data["username"];
+    if (senderId === username) {
+        displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
+    }
+    else {
+        displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
+    }
+};
+
+function onError() {
+    alert("An error has occurred with your socket connection to the server.");
+}
+
+function onClose() {
+    console.log($("#username").val() + "'s connection has been closed.");
+}
+
+function initializeSocketEventHandlers(socket) {
+    socket.onopen = onOpen;
+    socket.onmessage = onMessage;
+    socket.onerror = onError;
+    socket.onclose = onClose;
+}
 $(document).ready(function() {
-    var websocket = new WebSocket("ws://localhost:8080/php/manager_classes/php-socket.php");
-
-    websocket.onopen = function(event) {
-        let userInfo = {
-            username: $("#username").val(),
-            channel: $("#roomName").val()
-        };
-        //send the username and channel, so that server can store accordingly
-        websocket.send(JSON.stringify(userInfo));
-    };
-
-    websocket.onmessage = function(event) {
-        let data = JSON.parse(event.data);
-        let username = $("#username").val();
-        let senderId = data["username"];
-        if (senderId === username) {
-            displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
-        }
-        else {
-            displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
-        }
-    };
-
-    websocket.onerror = function(event){
-        console.log("An error has occurred.");
-    };
-
-    websocket.onclose = function(event){
-        console.log($("#username").val() + "'s connection has been closed.");
-    };
-
+    websocket = createSocket();
 
     //Add handler for the slider pane's buttons
     $("#sliderAction").attr("onclick", "addCreate()");

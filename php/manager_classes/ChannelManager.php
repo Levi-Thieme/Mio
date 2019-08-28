@@ -1,9 +1,84 @@
 <?php
+
+/*
+ * The Client class is used to wrap a username and socket resource in an object, so that
+ * the $channels array doesn't have nested arrays.
+ */
+class Client {
+    public $username;
+    public $socket;
+
+    function __construct($username, $socketResource)
+    {
+        $this->username = $username;
+        $this->socket = $socketResource;
+    }
+}
+
+class Channel {
+    public $name;
+    public $clients;
+
+    function __construct($name, $clients) {
+        $this->name = $name;
+        $this->clients = $clients;
+    }
+
+    public function addClient($client) {
+        array_push($this->clients, $client);
+    }
+
+    public function removeClient($client) {
+        unset($this->clients[array_search($client, $this->clients)]);
+    }
+
+    public function getClientByUsername($username) {
+        foreach ($this->clients as $client) {
+            if ($client->username === $username) {
+                return $client;
+            }
+        }
+        return NULL;
+    }
+}
+
 class ChannelManager {
     private $channels;
 
     function __construct() {
         $this->channels = array();
+    }
+
+    function getChannels() {
+        return $this->channels;
+    }
+
+    function setChannels($channels) {
+        $this->channels = $channels;
+    }
+
+    function getChannel($channelName) {
+        foreach(array_values($this->channels) as $channel) {
+            if ($channel->name === $channelName)
+                return $channel;
+        }
+        return NULL;
+    }
+
+    /*
+     * Prepends a header onto $socketData to describe the contents.
+     */
+    function seal($socketData) {
+        $b1 = 0x80 | (0x1 & 0x0f);
+        $length = strlen($socketData);
+        $header = "";
+        if($length <= 125)
+            $header = pack('CC', $b1, $length);
+        elseif($length > 125 && $length < 65536)
+            $header = pack('CCn', $b1, 126, $length);
+        elseif($length >= 65536)
+            $header = pack('CCNN', $b1, 127, $length);
+        return $header.$socketData;
     }
 
     /**
@@ -37,111 +112,115 @@ class ChannelManager {
      * Broadcasts a message to all users of the specified channel.
      * This function requires $message to be encoded by the seal function.
      * @param $message String message
-     * @param $channel String The name of the channel to send message to.
+     * @param $channelName String The name of the channel to send message to.
      * @return int The number of bytes successfully written to the socket or False on failure.
      */
-	function broadcast($message, $channel) {
+	function broadcast($message, $channelName) {
 	    $status = true;
-        if ($this->hasChannel($channel)) {
-            foreach ($this->channels[$channel] as $username => $socket) {
-                @socket_write($socket, $message, strlen($message));
+	    $channel = $this->getChannel($channelName);
+        if ($channel != NULL) {
+            foreach ($channel->clients as $client) {
+                $this->send($message, $client->socket);
             }
         }
         else {
-            //error_log($channel . " does not exist\n", 3, "../logs/error_log.txt");
+            error_log($channel . " does not exist\n", 3, "../logs/error_log.txt");
             $status = false;
         }
 		return $status;
 	}
 
-	function unseal($socketData) {
-		$length = ord($socketData[1]) & 127;
-		if($length == 126) {
-			$masks = substr($socketData, 4, 4);
-			$data = substr($socketData, 8);
-		}
-		elseif($length == 127) {
-			$masks = substr($socketData, 10, 4);
-			$data = substr($socketData, 14);
-		}
-		else {
-			$masks = substr($socketData, 2, 4);
-			$data = substr($socketData, 6);
-		}
-		$socketData = "";
-		for ($i = 0; $i < strlen($data); ++$i) {
-			$socketData .= $data[$i] ^ $masks[$i%4];
-		}
-		return $socketData;
+	/*
+	 * Broadcasts a message to the specified channel that a new user has joined.
+	 */
+	function broadcastClientJoined($username, $channel) {
+		$message = "{$username} has joined the chat.";
+		$formattedMessage = $this->formatMessage($message, $username, $channel);
+		$this->broadcast($formattedMessage, $channel);
 	}
 
-	function seal($socketData) {
-		$b1 = 0x80 | (0x1 & 0x0f);
-		$length = strlen($socketData);
-		
-		if($length <= 125)
-			$header = pack('CC', $b1, $length);
-		elseif($length > 125 && $length < 65536)
-			$header = pack('CCn', $b1, 126, $length);
-		elseif($length >= 65536)
-			$header = pack('CCNN', $b1, 127, $length);
-		return $header.$socketData;
+    /*
+     * Broadcast a message to the specified channel that a user has left.
+     */
+	function broadcastClientLeft($username, $channel) {
+		$message = "{$username} has left the chat.";
+		$formattedMessage = $this->formatMessage($message, $username, $channel);
+		$this->broadcast($formattedMessage, $channel);
 	}
 
-	function doHandshake($received_header,$client_socket_resource, $host_name, $port) {
-		$headers = array();
-		$lines = preg_split("/\r\n/", $received_header);
-		foreach($lines as $line)
-		{
-			$line = chop($line);
-			if(preg_match('/\A(\S+): (.*)\z/', $line, $matches))
-			{
-				$headers[$matches[1]] = $matches[2];
-			}
-		}
-
-		$secKey = $headers['Sec-WebSocket-Key'];
-		$secAccept = base64_encode(pack('H*', sha1($secKey . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')));
-		$buffer  = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n" .
-		"Upgrade: websocket\r\n" .
-		"Connection: Upgrade\r\n" .
-		"WebSocket-Origin: $host_name\r\n" .
-		"WebSocket-Location: ws://$host_name:$port/demo/shout.php\r\n".
-		"Sec-WebSocket-Accept:$secAccept\r\n\r\n";
-		socket_write($client_socket_resource,$buffer,strlen($buffer));
-	}
-	
-	function newConnectionACK($username, $channel) {
-		$message = 'New client ' . $username.' has joined.';
-		$ACK = $this->formatMessage($message, $username, $channel);
-		return $ACK;
-	}
-	
-	function connectionDisconnectACK($client_ip_address) {
-		$message = 'Client ' . $client_ip_address.' disconnected';
-
-		$ACK = $this->formatMessage($message, $client_ip_address, "Joe's Room");
-		return $ACK;
-	}
-
-	function addChannel($channelName, $channelUsersAssoc) {
-	    $this->channels[$channelName] = $channelUsersAssoc;
-	    print_r($this->channels);
+	/*
+	 * Adds a channel to $channels.
+	 */
+	function addChannel($channelToAdd) {
+	    array_push($this->channels, new Channel($channelToAdd, array()));
     }
 
-	function addUserToChannel($channelName, $username, $socketResource) {
-        array_push($this->channels[$channelName], array($username => $socketResource));
-        print_r($this->channels[$channelName]);
+    /*
+     * Adds a Client object to the specified channel.
+     */
+	function addClientToChannel($channelName, $client) {
+	    $channel = $this->getChannel($channelName);
+	    $channel->addClient($client);
     }
 
-    function removeUserFromChannel($channelName, $username) {
-	    foreach($this->channels[$channelName] as $user => $socket) {
-	        unset($user, $this->channels[$channelName]);
+    /*
+     * Removes the $client from the specified channel.
+     * Returns the client's socket resource.
+     */
+    function removeClientFromChannel($channelName, $client) {
+        if ($client == NULL) {
+            return NULL;
+        }
+        $channel = $this->getChannel($channelName);
+        $clientSocket = $client->socket;
+        $channel->removeClient($client);
+        return $clientSocket;
+    }
+
+    /*
+     * Handles a new client connection by placing them in their channel if available,
+     * and sending a greeting.
+     */
+    function addNewClient($clientSocket, $clientInfo) {
+        $clientUsername = $clientInfo["username"];
+        $channelName = $clientInfo["channel"];
+        $newClient = new Client($clientUsername, $clientSocket);
+        //ensure the channel is contained in $channels, if not add it
+        if ($this->getChannel($channelName) === NULL) {
+            $this->addChannel($channelName);
+        }
+        $this->addClientToChannel($channelName, $newClient);
+    }
+
+    /*
+     * Handles a socket message according to the message association's content.
+     *
+     * There are currently two message types: Broadcast, MoveToChannel
+     */
+    function handleSocketMessage($clientSocket, $messageAssoc) {
+        $username = $messageAssoc["username"];
+        $channel = $messageAssoc["channel"];
+        $message = $messageAssoc["message"];
+        if (isset($messageAssoc["action"]) && $messageAssoc["action"] === "MoveToChannel") {
+            $channelTo = $messageAssoc["channelTo"];
+            $channelObj = $this->getChannel($channel);
+            if ($channelObj == NULL) {
+                $this->send($this->formatMessage($channel . " cannot be found.", $username, $channel), $clientSocket);
+            }
+            else {
+                $client = $channelObj->getClientByUsername($username);
+                $this->removeClientFromChannel($channel, $client);
+                $this->broadcastClientLeft($username, $channel);
+                if ($this->getChannel($channelTo) === NULL) {
+                    $this->addChannel($channelTo);
+                }
+                $client = new Client($username, $clientSocket);
+                $this->addClientToChannel($channelTo, $client);
+                $this->broadcastClientJoined($username, $channelTo);
+            }
+        }
+        else {
+            $this->broadcast($this->formatMessage($message, $username, $channel), $channel);
         }
     }
-
-    function hasChannel($channelName) {
-        return array_key_exists($channelName, $this->channels);
-    }
 }
-?>
