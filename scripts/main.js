@@ -1,7 +1,11 @@
-var websocket;
 var roomInvite;
-var updateChatTimeoutId;
-var messagesReceived = 0;
+var websocket;
+//websocket readyState constants
+let CONNECTING = 0;
+let OPEN = 1;
+let CLOSING = 2;
+let CLOSED = 3;
+//end websocket readyState constants
 
 //Relative root from main.php to project directory(Mio)
 var relativeRoot = "../request_handlers/";
@@ -81,7 +85,7 @@ function refreshRoomList() {
 /*
 Sends the user's message to main.php through AJAX
 */
-function sendMessage() {
+function saveMessage() {
     let message = $("#message").val();
     if (message.trim() === "") {
         return;
@@ -350,7 +354,7 @@ document.addEventListener("click", function(event) {
 });
 
 function createSocket() {
-    let socket = new WebSocket("ws://localhost:8080/php/manager_classes/php-socket.php");
+    let socket = new WebSocket("ws://localhost:8080/php/manager_classes/socketServer.php");
     initializeSocketEventHandlers(socket);
     return socket;
 }
@@ -360,9 +364,8 @@ function onOpen() {
         username: $("#username").val(),
         channel: $("#roomName").val()
     };
-    //send the username and channel, so that server can store accordingly
     websocket.send(JSON.stringify(userInfo));
-};
+}
 
 function onMessage(event) {
     let data = JSON.parse(event.data);
@@ -376,20 +379,50 @@ function onMessage(event) {
     }
 };
 
-function onError() {
-    alert("An error has occurred with your socket connection to the server.");
-}
-
-function onClose() {
-    console.log($("#username").val() + "'s connection has been closed.");
+function displayErrorMessage(message) {
+    displayMessage(message, "self", Date(), 0, $("#username").val());
 }
 
 function initializeSocketEventHandlers(socket) {
+    socket.onerror = (event) => displayErrorMessage("An error occurred when attempting to connect to the chat server.\nTry reloading the page.");
     socket.onopen = onOpen;
     socket.onmessage = onMessage;
-    socket.onerror = onError;
-    socket.onclose = onClose;
 }
+
+function attemptSocketConnection() {
+    clearTimeout(attemptSocketConnection);
+    console.log("Attempting to create a socket and connect it to the server.");
+    websocket = createSocket();
+}
+
+/*
+ * Handles a failure to send a message.
+ * A message may fail to send because the websocket is undefined, or its readyState is not open.
+ * This function's responsibility is to let the user know why their message failed to send, and
+ * attempt to establish a new socket connection if needed.
+ */
+function handleSendMessageFailure() {
+    if (websocket == null || websocket.readyState === CLOSED || websocket.readyState === CLOSING) {
+        displayErrorMessage("An error occurred when sending your message to the chat server.\nAttempting to reconnect.");
+        setTimeout(attemptSocketConnection, 3000);
+    }
+    else if (websocket.readyState === CONNECTING) {
+        displayErrorMessage("Currently Connecting to the server.");
+    }
+}
+
+/*
+ * Sends message to websocket.
+ * Returns true if the message was successfully sent, else false.
+ */
+function sendMessage(message) {
+    if (websocket != null && websocket.readyState === OPEN) {
+        websocket.send(JSON.stringify(message));
+        return true;
+    }
+    return false;
+}
+
 $(document).ready(function() {
     websocket = createSocket();
 
@@ -440,8 +473,12 @@ $(document).ready(function() {
             message: $("#message").val()
         };
         //send the username and channel, so that server can store accordingly
-        websocket.send(JSON.stringify(userInfo));
-        sendMessage();
+        if (sendMessage(userInfo)) {
+            $("#message").val("");
+        }
+        else {
+            handleSendMessageFailure();
+        }
     });
     
     //Add enter button listener for message input
@@ -454,8 +491,12 @@ $(document).ready(function() {
                 message: $("#message").val()
             };
             //send the username and channel, so that server can store accordingly
-            websocket.send(JSON.stringify(userInfo));
-            sendMessage();
+            if (sendMessage(userInfo)) {
+                $("#message").val("");
+            }
+            else {
+                handleSendMessageFailure();
+            }
         }
     });
 });
