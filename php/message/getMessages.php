@@ -1,6 +1,6 @@
 <?php 
     require_once("../database_interface/db.php");
-    $conn = connect(LOCALHOST, USER, PASS, DB);
+    $conn = connect();
     
     if ($conn && isset($_POST["currentRoom"]) && !empty($_POST["currentRoom"]) && isset($_POST["messageCount"])) {
         $roomName = $_POST["currentRoom"];

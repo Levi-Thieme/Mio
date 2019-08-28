@@ -21,8 +21,15 @@
             $_SESSION["wrongCredentials"] = false;
             $_SESSION["authenticated"] = true;
             $_SESSION["username"] = $_POST["username"];
-            header("Location: ./main.php");
+            //redirect("main.php");
+            $host  = $_SERVER["HTTP_HOST"];
+            $uri   = rtrim(dirname($_SERVER["PHP_SELF"]), '/\\');
+            $pageName = "main.php";
+            header("Location: http://$host$uri/{$pageName}");
             die();
+        }
+        else {
+            $_SESSION["wrongCredentials"] = true;
         }
     }
 ?>

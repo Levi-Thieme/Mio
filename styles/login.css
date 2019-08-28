@@ -37,3 +37,7 @@
 .d-inline-block {
     text-align: center;
 }
+
+#well {
+    background : black;
+}
