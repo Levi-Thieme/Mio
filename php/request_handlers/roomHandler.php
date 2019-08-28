@@ -48,7 +48,8 @@ function leaveRoom() {
             if ($success = removeAllMembers($conn, $roomId)) {
                 deleteRoomById($conn, $roomId);
             }
-        } else {
+        }
+        else {
             removeMember($conn, $_SESSION["username"], $_GET["roomName"]);
         }
         $conn->close();
