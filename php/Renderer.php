@@ -21,6 +21,11 @@ class Renderer {
     static function divWrap($content) {
         return "<div>" . $content . "</div>";
     }
+
+    static function listItem($content) {
+        return "<li class='list-group-item'>" . $content . "</li>";
+    }
+
     static function createFriendDiv($username) {
         $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222; color:white'>" . $username .
             "<i class='fa fa-comment fa-fw' aria-hidden='true'></i>" .

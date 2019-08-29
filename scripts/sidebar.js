@@ -1,5 +1,6 @@
 //Refreshes the friend list
 function refreshFriendsList(userId) {
+    $("#friendsCollapse").html("");
     $.ajax({
         type: "GET",
         url: relativeRoot + "friendHandler.php",
@@ -16,6 +17,7 @@ function refreshFriendsList(userId) {
 
 //Refreshes the room list
 function refreshRoomList(userId) {
+    $("#roomCollapse").html("");
     $.ajax({
         type: "GET",
         url: relativeRoot + "/roomHandler.php",
@@ -91,7 +93,7 @@ document.addEventListener("click", function(event) {
     }
     else if ("addToRoom" in src.dataset) {
         let chatName = src.parentElement.childNodes[0].innerText;
-        openInviteToChatSlider(chatName);
+        openInviteToChatModal(chatName);
     }
     else if ("deleteFriend" in src.dataset) {
         let name = src.parentElement.id;

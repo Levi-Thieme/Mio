@@ -48,12 +48,19 @@
 <head>
     <title>Mio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Latest compiled JavaScript -->
     <script src="../../scripts/socket.js" type="text/javascript"></script>
     <script src="../../scripts/main.js" type="text/javascript"></script>
-    <script src="../../scripts/slider.js" type="text/javascript"></script>
+    <script src="../../scripts/modal.js" type="text/javascript"></script>
     <script src="../../scripts/sidebar.js" type="text/javascript"></script>
     <!-- Styles -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -64,7 +71,7 @@
     <!-- Search area styling -->
     <link rel="stylesheet" href="../../styles/search.css">
     <!-- Slider styling -->
-    <link rel="stylesheet" href="../../styles/slider.css">
+    <link rel="stylesheet" href="../../styles/modal.css">
     <!-- Common styling -->
     <link rel="stylesheet" href="../../styles/common.css">
 </head>
@@ -83,7 +90,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" style="background-color: #222">
             <h4 class="panel-title dark">
-              <a id="addRoomBtn" onclick="openCreateRoomSlider()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
+              <a id="addRoomBtn" onclick="openCreateRoomModal()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
               <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" style="background-color:#222;" onclick=<?php echo "refreshRoomList($userId)";?> >My Chats
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
@@ -96,7 +103,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" style="background-color: #222;">
             <h4 class="panel-title">
-              <a id="addFriendBtn" onclick="openFriendRequestSlider()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
+              <a id="addFriendBtn" onclick="openFriendRequestModal()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
               <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" style="background-color: #222" onclick="refreshFriendsList()">Friends
               <i class="fa fa-angle-double-down" style="float:right"></i></a>
             </h4>
@@ -110,24 +117,37 @@
     
     
     <div id="mainPanel" class="main">
-      
-        <div id="slider" class="slider">
-            <a id="closeBtn" href="javascript:void(0)" onclick="closeSlider()">X</a>
-            <div id="sliderFormDiv" class="form-group">
-                <label for="search"><h1 id="sliderTitle"></h1></label>
-                <input id="sliderInput" name="sliderInput" type="text" class="form-control input-dark">
-                <button id="sliderSubmitBtn" type="submit" class="btn btn-primary">
-                <div id = "optionList" name = "optionList"></div>
-            </div>
-        </div>
-    
         <div id="messageContainer">
             <ol id="messageList" class="discussion"></ol>
         </div>
-  
         <div id="imControls" class="input-group">
             <input type="text" class="form-control z-depth-1 input-dark" id="message" name ="message" placeholder="Write something here..."></textarea>
             <button id="sendMessageButton" class="w3-bar-item w3-button">Send</button>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 id="modalTitle" class="modal-title">Hello!</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <input id="modalInput" name="sliderInput" type="text" class="form-control input-dark">
+                    <ul id="optionList" class="list-group">
+                    </ul>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button id="modalSubmitBtn" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
