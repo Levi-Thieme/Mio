@@ -380,7 +380,12 @@ function onMessage(event) {
 };
 
 function displayErrorMessage(message) {
-    displayMessage(message, "self", Date(), 0, $("#username").val());
+    let messageItem =
+        '<li class="self">'+
+        '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+Date()+'</time></div>'+
+        '</li>';
+    $("#messageList").append(messageItem);
+    $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
 }
 
 function initializeSocketEventHandlers(socket) {
@@ -465,38 +470,28 @@ $(document).ready(function() {
             });
         }
     });
-    
-    $("#sendMessageButton").on("click", function() {
+
+    //Sends the username, channel, and message through websocket
+    function sendMessageWithUserInfo() {
         let userInfo = {
             username: $("#username").val(),
             channel: $("#roomName").val(),
             message: $("#message").val()
         };
-        //send the username and channel, so that server can store accordingly
         if (sendMessage(userInfo)) {
             $("#message").val("");
-        }
-        else {
+        } else {
             handleSendMessageFailure();
         }
-    });
+    }
+
+    $("#sendMessageButton").on("click", sendMessageWithUserInfo);
     
     //Add enter button listener for message input
     $("#message").on("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
-            let userInfo = {
-                username: $("#username").val(),
-                channel: $("#roomName").val(),
-                message: $("#message").val()
-            };
-            //send the username and channel, so that server can store accordingly
-            if (sendMessage(userInfo)) {
-                $("#message").val("");
-            }
-            else {
-                handleSendMessageFailure();
-            }
+            sendMessageWithUserInfo();
         }
     });
 });
