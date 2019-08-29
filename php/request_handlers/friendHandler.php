@@ -40,7 +40,7 @@ function searchFriend() {
         $conn = connect();
         $namesLike = searchFriends($conn, $_GET["friendName"])->fetch_all();
         foreach($namesLike as $name) {
-            echo Renderer::divWrap($name[0]);
+            echo Renderer::listItem($name[0]);
         }
         $conn->close();
     }

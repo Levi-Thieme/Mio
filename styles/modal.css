@@ -1,0 +1,30 @@
+#myModal {
+    width: 100%;
+    height: 60%;
+    align-self: center;
+}
+
+#closeBtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 80px;
+    margin-left: 50px;
+    color: #e68a00;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#modalInput {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+}
+
+#optionList li{
+    display: inline-block;
+    align-self: center;
+    margin-top: 3px;
+    margin-left: auto;
+    margin-right: auto;
+}
