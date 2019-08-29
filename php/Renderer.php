@@ -45,8 +45,8 @@ class Renderer {
         return $htmlContent;
     }
 
-    static function createRoomDiv($roomName) {
-        return "<div class='list-group-item' style='background-color: #222; color:white'><a data-to-room style='color: #e68a00;'>$roomName</a>" .
+    static function createRoomDiv($roomId, $roomName) {
+        return "<div id=$roomId class='list-group-item' style='background-color: #222; color:white'><a data-to-room style='color: #e68a00;'>$roomName</a>" .
             "<i data-leave-room class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
             "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>";
     }

@@ -1,7 +1,6 @@
 body {
     margin: 0;
     height: 100%;
-    background-color: #FFE;
     overflow-y: scroll;
     background: #222;
 }
@@ -63,9 +62,8 @@ input:focus {
     width: 10%;
     margin: 10px;
     float: right;
-    border: solid;
     border-radius: 30px;
-    border-color: #e68a00;
+    border: solid #e68a00;
     background: #222;
     color: white;
 }
@@ -236,9 +234,8 @@ a:active{
     background: #333;
     color: white;
     padding: 10px;
-    border: none;
     border-radius: 1px;
-    border-color: #e68a00;
+    border: none #e68a00;
 }
 
 .messages p {
