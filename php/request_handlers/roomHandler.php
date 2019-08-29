@@ -12,14 +12,18 @@ if (is_callable($_GET["request"])) {
 }
 
 function getRooms() {
-    $conn = connect();
-    $rooms = getParticipantOrOwnerRooms($conn, $_SESSION["username"]);
-    while ($room = $rooms->fetch_assoc()){
-        $roomName = htmlspecialchars($room["name"]);
-        $roomDiv = Renderer::createRoomDiv($roomName);
-        echo($roomDiv);
+    if (isset($_GET["userId"])) {
+        $conn = connect();
+        $userId = $_GET["userId"];
+        $username = getUsername($conn, $userId);
+        $rooms = getParticipantOrOwnerRooms($conn, $username);
+        while ($room = $rooms->fetch_assoc()){
+            $roomName = htmlspecialchars($room["name"]);
+            $roomDiv = Renderer::createRoomDiv($room["id"], $roomName);
+            echo($roomDiv);
+        }
+        $conn->close();
     }
-    $conn->close();
 }
 
 function createRoom() {
@@ -39,18 +43,16 @@ function addToRoom() {
 }
 
 function leaveRoom() {
-    if (isset($_GET["roomName"])) {
+    if (isset($_GET["roomId"]) && isset($_GET["userId"])) {
         $conn = connect();
-        $userId = getUserId($conn, $_SESSION["username"]);
-        $roomId = getRoomId($conn, $_GET["roomName"]);
-        $isOwner = isRoomOwner($conn, $userId, $roomId);
+        $isOwner = isRoomOwner($conn, $_GET["userId"], $_GET["roomId"]);
         if ($isOwner) {
-            if ($success = removeAllMembers($conn, $roomId)) {
-                deleteRoomById($conn, $roomId);
+            if ($success = removeAllMembers($conn, $_GET["roomId"])) {
+                deleteRoomById($conn, $_GET["roomId"]);
             }
         }
         else {
-            removeMember($conn, $_SESSION["username"], $_GET["roomName"]);
+            removeMember($conn, getUsername($conn, $_GET["userId"]), $_GET["roomName"]);
         }
         $conn->close();
     }
