@@ -1,14 +1,3 @@
-Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: SELECT COUNT(*) FROM room WHERE id =  AND user_id = 17 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND user_id = 17' at line 1
-Error: INSERT INTO friends(from_id, to_id) VALUES(17, ) 
+[{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}]Error: INSERT INTO friends(from_id, to_id) VALUES(17, ) 
 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1
-Error: INSERT INTO room_member(room, usr) VALUES(, ) 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' )' at line 1
+[{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"},{"id":"58","user_id":"17","name":"a new chatroom!"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"57","user_id":"17","name":"test"},{"id":"59","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"},{"id":"59","user_id":"17","name":"test"}][{"id":"56","user_id":"17","name":"test3"}][{"id":"56","user_id":"17","name":"test3"},{"id":"60","user_id":"17","name":"testetawetwetfsefgg"}][{"id":"56","user_id":"17","name":"test3"},{"id":"60","user_id":"17","name":"testetawetwetfsefgg"},{"id":"61","user_id":"17","name":"yyy"}][{"id":"56","user_id":"17","name":"test3"},{"id":"61","user_id":"17","name":"yyy"}][{"id":"56","user_id":"17","name":"test3"}][]

@@ -416,10 +416,10 @@
     
     $username - the username of the owner or participant
     */
-    function getParticipantOrOwnerRooms($conn, $username) {
-        $userId = getUserId($conn, $username);
+    function getParticipantOrOwnerRooms($conn, $userId) {
         $sql = "SELECT * FROM room r where r.id IN" .
-            "(SELECT rm.room FROM room_member rm where usr = $userId) OR r.user_id = $userId";
+            "(SELECT rm.room FROM room_member rm where rm.usr = {$userId}) " .
+            "OR r.user_id = {$userId}";
         return execQuery($sql, $conn);
     }
     

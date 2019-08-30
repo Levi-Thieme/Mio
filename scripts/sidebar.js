@@ -15,20 +15,37 @@ function refreshFriendsList(userId) {
     });
 }
 
+function createRoomDiv(roomId, roomName) {
+    return $("<div id="+roomId+" class='list-group-item' data-to-room style='background-color: #222; color:white'>" +
+        roomName +
+        "<i data-leave-room class='fa fa-trash fa-fw' aria-hidden='true'></i>" +
+        "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>")[0];
+}
+
 //Refreshes the room list
 function refreshRoomList(userId) {
-    $("#roomCollapse").html("");
     $.ajax({
         type: "GET",
         url: relativeRoot + "/roomHandler.php",
         async: true,
-        dataType: "HTML",
         data: {
             request: "getRooms",
             userId: userId
         },
-        success: function(data) { $("#roomCollapse").html(data); },
-        failure: function(data) { alert("Unable to load room list."); }
+        success: function(data) {
+            let roomList = document.getElementById("roomList");
+            roomList.innerHTML = "";
+            let rooms = JSON.parse(data);
+            rooms.forEach((room)=> {
+                let roomDiv = createRoomDiv(room.id, room.name);
+                if (room.id === $("#roomId").val()) {
+                    roomDiv.classList.add("active");
+                }
+                roomList.appendChild(roomDiv);
+                roomDiv.parentNode = roomList;
+            });
+        },
+        failure: function(data) { alert("Unable to load room list."); },
     });
 }
 
@@ -72,7 +89,6 @@ document.addEventListener("click", function(event) {
     let src = event.target;
     if ("leaveRoom" in src.dataset) {
         let roomId = src.parentElement.id;
-        console.log($("#userId").val() + " left " + roomId);
         $.ajax({
             url: relativeRoot + "roomHandler.php",
             type: "GET",
@@ -104,19 +120,25 @@ document.addEventListener("click", function(event) {
         approveFriendRequest($("#userId").val(), name);
     }
     else if ("toRoom" in src.dataset) {
-        let toRoomName = src.parentElement.childNodes[0].innerText;
-        let currentRoom = $("#roomName").val();
-        if (toRoomName !== currentRoom) {
+        let children = $("#roomList").children();
+        for (let i = 0; i < children.length; i++) {
+            $(children[i]).removeClass("active");
+        }
+        let toRoomId = src.id;
+        let currentRoomId = $("#roomId").val();
+        if (toRoomId !== currentRoomId) {
+            $(src).addClass("active");
             let message = {
                 username: $("#username").val(),
-                channel: currentRoom,
+                channel: $("#roomName"),
                 message: "",
                 action: "MoveToChannel",
-                channelTo: toRoomName
+                channelTo: toRoomId
             };
-            websocket.send(JSON.stringify(message));
+            //websocket.send(JSON.stringify(message));
             clearMessages();
-            $("#roomName").val(toRoomName);
+            $("#roomId").val(src.id);
+            $("#roomName").val(src.innerText);
         }
     }
 });

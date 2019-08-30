@@ -1,7 +1,10 @@
+.dark {
+    background-color: #222;
+    color: #e68a00;
+}
+
 .btn-primary {
-    margin: 1%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 1% auto;
     background-color: #f79824;
     color: black;
 }
@@ -12,4 +15,8 @@
 
 .fa-fw {
     float: right;
+}
+
+.body {
+   background: #222;
 }

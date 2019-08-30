@@ -6,7 +6,6 @@ function openCreateRoomModal() {
     document.getElementById("modalSubmitBtn").innerHTML = "Create";
     $("#modalSubmitBtn").one("click", function() {
         let newChatName = $("#modalInput").val().trim();
-        console.log(newChatName);
         if (newChatName === "") {
             return;
         }
@@ -18,7 +17,7 @@ function openCreateRoomModal() {
                 request: "createRoom",
                 roomName: newChatName
             },
-            complete: function() { refreshRoomList(); $("#modalInput").val(""); $("#myModal").hide(); },
+            complete: function() { refreshRoomList($("#userId").val()); $("#modalInput").val(""); $("#myModal").hide(); },
             failure: function(data) { alert(data["reason"]); }
         });
     });

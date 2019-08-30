@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head title="renderer">
-        <!-- The main page's custom styling -->
-        <link rel="stylesheet" href="../../styles/main.css" type="text/css">
-        <!-- Common styling -->
-        <link rel="stylesheet" href="../../styles/common.css" type="text/css">
-    </head>
-</html>
-
 <?php
 /**
  * Created by PhpStorm.
@@ -22,12 +12,12 @@ class Renderer {
         return "<div>" . $content . "</div>";
     }
 
-    static function listItem($content) {
+    static function listGroupItem($content) {
         return "<li class='list-group-item'>" . $content . "</li>";
     }
 
     static function createFriendDiv($username) {
-        $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222; color:white'>" . $username .
+        $htmlContent = "<div id=$username class='friendDiv'>". $username .
             "<i class='fa fa-comment fa-fw' aria-hidden='true'></i>" .
             "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
             "</div>";
@@ -35,7 +25,7 @@ class Renderer {
     }
 
     static function createFriendRequestToDiv($username) {
-        $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222; color:white'>" . $username .
+        $htmlContent = "<div id=$username class='friendDiv'>" . $username .
             "<i class='fa fa-comment fa-fw' style='float:right' aria-hidden='true'></i>" .
             "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
             "<i data-approve-friend-request class='fa fa-plus fa-fw' aria-hidden='true'></i>" .
@@ -44,14 +34,15 @@ class Renderer {
     }
 
     static function createFriendRequestFromDiv($username) {
-        $htmlContent = "<div id=$username class='list-group-item' style='background-color: #222; color:white'>" . $username .
+        $htmlContent = "<div id=$username class='friendDiv'>" . $username .
             "<i data-delete-friend class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
             "</div>";
         return $htmlContent;
     }
 
     static function createRoomDiv($roomId, $roomName) {
-        return "<div id=$roomId class='list-group-item' style='background-color: #222; color:white'><a data-to-room style='color: #e68a00;'>$roomName</a>" .
+        return "<div id=$roomId class='list-group-item roomItem' data-to-room style='background-color: #222; color:white'>" .
+            "<span>$roomName</span>" .
             "<i data-leave-room class='fa fa-trash fa-fw' aria-hidden='true'></i>" .
             "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>";
     }

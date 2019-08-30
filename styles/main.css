@@ -5,13 +5,6 @@ body {
     background: #222;
 }
 
-#sidebar {
-    min-width: 15%;
-    max-width: 15%;
-    height: 100%;
-    background-color: #222;
-}
-
 @media (max-width: 768px) {
     #sidebar {
         display: none;
@@ -37,30 +30,31 @@ body {
 }
 
 #imControls {
-    width: 80%;
+    width: 70%;
     height: 5%;
     bottom: 0;
+    right: 0;
     position: absolute;
+    display:inline-block;
+    vertical-align: bottom;
 }
 
 #message {
     width: 85%;
-    margin: 10px;
-    border: solid;
+    height: 75%;
     border-radius: 30px;
-    border-color: #e68a00;
+    border: solid #e68a00;
 }
 
-input:focus { 
-    outline: none !important;
-    border-color: #e68a00;
-    box-shadow: 5px 5px 5px #000;
+input:focus {
+    outline: none;
 }
 
 
 #sendMessageButton {
     width: 10%;
-    margin: 10px;
+    height: 90%;
+    margin-right: 20px;
     float: right;
     border-radius: 30px;
     border: solid #e68a00;
@@ -116,11 +110,6 @@ a:active{
     color: white;
 }
 
-.dark {
-    background-color: #222;
-    color: white;
-}
-
 .conversation {
     background: transparent;
     border: solid #f79824 1px;
@@ -142,24 +131,6 @@ a:active{
     text-decoration: none;
     color: darkviolet;
     vertical-align: middle;
-}
-
-.sidebar {
-    color: white;
-    height: 100%;
-    width: 190px;
-    position: fixed;
-    margin-left: 10px;
-    border-style: solid;
-    border-color: #0bf;
-}
-
-.sidebar-heading {
-    text-align: center;
-    padding: 5px 0px;
-    margin: 10px 5px;
-    border-top: solid white 1px;
-    border-bottom: solid white 1px;
 }
 
 .discussion {

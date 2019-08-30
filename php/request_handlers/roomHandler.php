@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once("../database_interface/db.php");
-require_once("../Renderer.php");
 
 /*
  * $_GET["request"] stores the function to be called.
@@ -15,14 +14,18 @@ function getRooms() {
     if (isset($_GET["userId"])) {
         $conn = connect();
         $userId = $_GET["userId"];
-        $username = getUsername($conn, $userId);
-        $rooms = getParticipantOrOwnerRooms($conn, $username);
-        while ($room = $rooms->fetch_assoc()){
-            $roomName = htmlspecialchars($room["name"]);
-            $roomDiv = Renderer::createRoomDiv($room["id"], $roomName);
-            echo($roomDiv);
+        $rooms = getParticipantOrOwnerRooms($conn, $userId);
+        $roomsArray = array();
+        while ($room = $rooms->fetch_assoc()) {
+            array_push($roomsArray, $room);
         }
+        error_log(json_encode($roomsArray), 3, "./error_log.txt");
+        echo json_encode($roomsArray);
         $conn->close();
+    }
+    else {
+        error_log("User id is not set.\n", 3, "./error_log.txt");
+        return false;
     }
 }
 

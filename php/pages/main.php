@@ -74,6 +74,8 @@
     <link rel="stylesheet" href="../../styles/modal.css">
     <!-- Common styling -->
     <link rel="stylesheet" href="../../styles/common.css">
+    <!-- Sidebar styling -->
+    <link rel="stylesheet" href="../../styles/sidebar.css">
 </head>
 
 <body>
@@ -82,46 +84,46 @@
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
   
-  <div id="sidebar" class="w3-sidebar w3-card">
-      <a class="list-group-item" href="myAccount.php" style="background-color:#222"><i class="fa fa-user fa-2x fa-fw" aria-hidden="true"></i>&nbsp; My Profile</a>
-
-      <!-- Panel for My Chats accordion -->
-      <div class="panel-group">
-        <div class="panel panel-default">
-          <div class="panel-heading" style="background-color: #222">
-            <h4 class="panel-title dark">
-              <a id="addRoomBtn" onclick="openCreateRoomModal()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
-              <a data-toggle="collapse" class="list-group-item" href="#roomCollapse" style="background-color:#222;" onclick=<?php echo "refreshRoomList($userId)";?> >My Chats
-              <i class="fa fa-angle-double-down" style="float:right"></i></a>
+    <div id="sidebar" class="w3-sidebar dark">
+        <div id="myProfileHeader">
+          <a id=myAccountLink" href="myAccount.php">
+              <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbspMy&nbspAccount</i>
+          </a>
+        </div>
+        <!-- Panel for My Chats accordion -->
+        <div id="chatPanel" class="sidebarPanel">
+          <div id="chatsPanelHeading" class="collapseHeading">
+            <h4>
+                <a id="addRoomBtn" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle"></i></a>
+                <a id="toggleRoomsCollapse" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
+                    My Chats <i id="toggleChatsIcon" class="fa fa-angle-double-down"></i>
+                </a>
             </h4>
           </div>
-          <div id="roomCollapse" class="panel-collapse collapse">
+          <div id="roomCollapse">
+              <div id="roomList"></div>
           </div>
         </div>
-        
         <!-- Panel for Friends accordion -->
-        <div class="panel panel-default">
-          <div class="panel-heading" style="background-color: #222;">
-            <h4 class="panel-title">
-              <a id="addFriendBtn" onclick="openFriendRequestModal()" class="w3-bar-item w3-button"><i class="fa fa-plus-circle"></i></a>
-              <a data-toggle="collapse" class="list-group-item" href="#friendsCollapse" style="background-color: #222" onclick="refreshFriendsList()">Friends
-              <i class="fa fa-angle-double-down" style="float:right"></i></a>
-            </h4>
-          </div>
-          <div id="friendsCollapse" class="panel-collapse collapse">
-          </div>
+        <div id="friendPanel" class="sidebarPanel">
+            <div id="friendsPanelHeading" class="collapseHeading">
+                <h4>
+                  <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
+                  <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse" onclick="refreshFriendsList()">
+                      Friends <i class="fa fa-angle-double-down"></i></a>
+                </h4>
+            </div>
+            <div id="friendsCollapse"></div>
         </div>
-      </div>
-      <a id="signout" class="list-group-item" href="logout.php" style="background-color:#222;"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>&nbsp; Signout</a>
+        <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>Signout</a>
     </div>
-    
-    
+
     <div id="mainPanel" class="main">
         <div id="messageContainer">
             <ol id="messageList" class="discussion"></ol>
         </div>
-        <div id="imControls" class="input-group">
-            <input type="text" class="form-control z-depth-1 input-dark" id="message" name ="message" placeholder="Write something here..."></textarea>
+        <div id="imControls">
+            <input type="text" class="z-depth-1 input-dark" id="message" name ="message" placeholder="Write something here...">
             <button id="sendMessageButton" class="w3-bar-item w3-button">Send</button>
         </div>
     </div>
@@ -137,19 +139,19 @@
                 </div>
 
                 <!-- Modal body -->
-                <div class="modal-body">
-                    <input id="modalInput" name="sliderInput" type="text" class="form-control input-dark">
-                    <ul id="optionList" class="list-group">
-                    </ul>
+                <div class="modal-body dark">
+                    <div class="input-group">
+                        <input id="modalInput" name="sliderInput" type="text" class="form-control input-dark">
+                        <button id="modalSubmitBtn" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button id="modalSubmitBtn" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                <div class="modal-footer dark">
+                    <ul id="optionList" class="list-group"></ul>
                 </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>

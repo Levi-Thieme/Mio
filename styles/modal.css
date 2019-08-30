@@ -1,6 +1,22 @@
+.modal-header {
+    background: #333;
+    color: white;
+}
+
+.input-group {
+    margin: 0 auto;
+    width: auto;
+}
+
+.modal-footer {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #myModal {
     width: 100%;
-    height: 60%;
+    height: 33%;
     align-self: center;
 }
 
@@ -15,16 +31,20 @@
 }
 
 #modalInput {
-    display: block;
+    width: 125px;
+}
+
+#modalSubmitBtn {
+    margin-left: 10px;
+    margin-bottom: 3px;
+}
+
+#optionList {
     margin-left: auto;
     margin-right: auto;
-    width: 25%;
 }
 
 #optionList li{
-    display: inline-block;
-    align-self: center;
     margin-top: 3px;
-    margin-left: auto;
-    margin-right: auto;
+    background-color: #333;
 }

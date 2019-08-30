@@ -1,4 +1,51 @@
-.sidebar {
-    min-width: 200px;
-    width:20%;
+.w3-sidebar {
+    border-right: solid 1px #e68a00;
+}
+
+.sidebarPanel {
+    margin: 25px 5px;
+}
+
+.collapseHeading {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.fa-plus-circle {
+    margin-right: 25px;
+}
+
+.fa-angle-double-down {
+    float: right;
+}
+
+.friendDiv {
+    margin: 10px;
+}
+
+#sidebar {
+    width:15%;
+    min-width: 250px;
+}
+
+#myProfileHeader {
+    align-content: center;
+    margin-top: 10px;
+    width: 200px;
+    height: 30px;
+    padding-right: 120px;
+}
+#myAccountLink {
+    margin: 10px;
+    width: 200px;
+}
+
+#roomList {
+    margin: 15px;
+}
+
+#signout {
+    position: absolute;
+    bottom: 0;
+    padding-left: 20px;
 }
