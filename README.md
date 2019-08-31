@@ -1,3 +1,3 @@
 # Mio
 
-This is an instant messaging web application with the following features: user accounts, user friends, chat rooms.
+This is an instant messaging web application started as a school project, and continued for the purpose of learning CSS,javascript, and php.
