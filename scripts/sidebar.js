@@ -1,5 +1,6 @@
 //Refreshes the friend list
 function refreshFriendsList(userId) {
+    console.log("refresh friends list for " + userId + "\n");
     $("#friendsCollapse").html("");
     $.ajax({
         type: "GET",
@@ -96,7 +97,7 @@ document.addEventListener("click", function(event) {
         )
     }
     else if ("addToRoom" in src.dataset) {
-        let chatName = src.parentElement.childNodes[0].innerText;
+        let chatName = src.parentElement.innerText;
         openInviteToChatModal(chatName);
     }
     else if ("deleteFriend" in src.dataset) {
@@ -121,11 +122,15 @@ document.addEventListener("click", function(event) {
             removeClassFromChildren($("#roomList"), "active");
             $(src).addClass("active");
             gotoRoom($("#username").val(), $("#roomName").val(), toRoomId, toRoomName);
-            $("#roomId").val(src.id);
-            $("#roomName").val(src.innerText);
+            $("#roomId").val(toRoomId);
+            $("#roomName").val(toRoomName);
             clearMessages();
         }
     }
+});
+
+$(document).ready(function(){
+    $("#toggleFriendsCollapse").on("click", refreshFriendsList($("#userId").val()));
 });
 
 function leaveRoom(userId, roomId, onComplete, onFailure) {

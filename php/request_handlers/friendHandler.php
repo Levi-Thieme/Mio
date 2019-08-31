@@ -13,22 +13,20 @@ if (is_callable($_GET["request"])) {
 }
 
 function getFriendDivs() {
-    $username = $_SESSION["username"];
+    $userId = $_GET["userId"];
     $conn = connect();
+    $username = getUsername($conn, $userId);
     $friends = getFriends($conn, $username);
     $requestsFrom = getRequestsFromUser($conn, $username);
     $requestsTo = getRequestsToUser($conn, $username);
-
     foreach ($friends as $friend) {
         $friendName = getUsername($conn, implode($friend));
         echo Renderer::createFriendDiv($friendName);
     }
-
     foreach ($requestsTo as $request) {
         $friendName = getUsername($conn, implode($request));
         echo Renderer::createFriendRequestToDiv($friendName);
     }
-
     foreach ($requestsFrom as $request) {
         $friendName = getUsername($conn, implode($request));
         echo Renderer::createFriendRequestFromDiv($friendName);

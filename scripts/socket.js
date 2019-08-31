@@ -20,7 +20,6 @@ function onOpen() {
     websocket.send(JSON.stringify(userInfo));
 }
 
-
 function onMessage(event) {
     let data = JSON.parse(event.data);
     let username = $("#username").val();
@@ -72,4 +71,17 @@ function sendMessage(message) {
         return true;
     }
     return false;
+}
+
+function getMessageTypes() {
+    return ["", "notifyFriendRequest", "MoveToChannel"];
+}
+
+function sendFriendRequestNotification(fromUsername, toUsername) {
+    let message = {
+        action: "notifyFriendRequest",
+        username: fromUsername,
+        toUsername: toUsername
+    };
+    sendMessage(message);
 }

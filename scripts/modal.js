@@ -30,21 +30,23 @@ function openInviteToChatModal(chatName) {
     document.getElementById("modalTitle").innerHTML = "Invite A Friend to " + chatName;
     document.getElementById("modalSubmitBtn").innerHTML = "Invite";
     $("#modalSubmitBtn").one("click", function() {
-        let friendName = $("#modalInput").val().trim();
-        if (friendName === "") {
-            return;
-        }
-        $.ajax({
-            url: relativeRoot + "roomHandler.php",
-            type: "GET",
-            async: true,
-            data: {
-                request: "addToRoom",
-                userToAdd: friendName,
-                roomName: chatName
-            },
-            complete: function (data) { $("#modalInput").val("");  $("#myModal").hide();; },
-            failure: function (data) { alert("Failed to invite " + friendName + " to " + $("$currentRoom")); }
+        console.log("Invite to " + chatName);
+        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
+        console.log(selectedNames);
+        selectedNames.map(selectedName => {
+            let name = selectedName.innerText;
+            $.ajax({
+                url: relativeRoot + "roomHandler.php",
+                type: "GET",
+                async: true,
+                data: {
+                    request: "addToRoom",
+                    userToAdd: name,
+                    roomName: chatName
+                },
+                complete: function (data) { $("#modalInput").val("");  $("#myModal").hide();; },
+                failure: function (data) { alert("Failed to invite " + name + " to " + $("#currentRoom")); }
+            });
         });
     });
     $("#myModal").modal();
@@ -57,7 +59,6 @@ function openFriendRequestModal() {
     document.getElementById("modalSubmitBtn").innerHTML = "Send";
     $("#modalSubmitBtn").one("click", function() {
         let selectedNames = Array.from(document.getElementsByClassName("list-group-item active"));
-        console.log(selectedNames);
         selectedNames.map(selectedName => {
             let name = selectedName.innerText;
             $.ajax({
@@ -69,13 +70,17 @@ function openFriendRequestModal() {
                     receiver: name
                 },
                 dataType: "JSON",
-                complete: function () { refreshFriendsList(); $("#modalInput").val("");  $("#myModal").hide(); },
+                complete: function () { sendFriendRequestNotification($("#username").val(), name);  },
                 failure: function () { alert("Failed to send friend request to " + name); }
             });
+            refreshFriendsList($("#userId").val());
+            $("#modalInput").val("");
+            $("#myModal").hide();
             });
         });
     $("#myModal").modal();
 }
+
 $(document).ready(function() {
     $("#modalInput").on("keyup", function(event) {
         if ($("#modalInput").val().trim().length === 0) {

@@ -76,14 +76,15 @@
     <link rel="stylesheet" href="../../styles/common.css">
     <!-- Sidebar styling -->
     <link rel="stylesheet" href="../../styles/sidebar.css">
+    <link rel="stylesheet" href="../../styles/toast.css">
 </head>
 
-<body>
+<body class="dark">
     <input type='hidden' name="roomName" id="roomName" value=<?php echo "\"$roomName\"";?>/>
     <input type='hidden' name="roomId" id="roomId" value=<?php echo "'" . $roomId . "'";?>/>
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
-  
+
     <div id="sidebar" class="w3-sidebar dark">
         <div id="myProfileHeader">
           <a id=myAccountLink" href="myAccount.php">
@@ -109,12 +110,13 @@
             <div id="friendsPanelHeading" class="collapseHeading">
                 <h4>
                   <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
-                  <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse" onclick="refreshFriendsList()">
+                  <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse">
                       Friends <i class="fa fa-angle-double-down"></i></a>
                 </h4>
             </div>
             <div id="friendsCollapse"></div>
         </div>
+
         <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i><div>Signout</div></a>
     </div>
 
