@@ -7,7 +7,7 @@ let CLOSED = 3;
 //end websocket readyState constants
 
 function createSocket() {
-    let socket = new WebSocket("ws://localhost:8080/php/manager_classes/socketServer.php");
+    let socket = new WebSocket("ws://localhost:8080/php/chat_server/socketServer.php");
     initializeSocketEventHandlers(socket);
     return socket;
 }
