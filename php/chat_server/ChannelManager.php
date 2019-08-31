@@ -28,6 +28,14 @@ class Channel {
         array_push($this->clients, $client);
     }
 
+    public function addReplaceClient($client) {
+        $containedClient = $this->getClientByUsername($client->username);
+        if ($containedClient != NULL) {
+            $this->removeClient($containedClient);
+        }
+        $this->addClient($client);
+    }
+
     public function removeClient($client) {
         unset($this->clients[array_search($client, $this->clients)]);
     }
@@ -160,7 +168,7 @@ class ChannelManager {
      */
 	function addClientToChannel($channelName, $client) {
 	    $channel = $this->getChannel($channelName);
-	    $channel->addClient($client);
+	    $channel->addReplaceClient($client);
 	    //error_log("Add {$client->username} to {$channelName}\n", 3, "socket_error_log.txt");
     }
 

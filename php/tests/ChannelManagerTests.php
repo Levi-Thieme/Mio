@@ -61,7 +61,19 @@ function testGetClientFromChannels() {
     return $client != NULL && $client->username === "Gauss";
 }
 
+/*
+ * Tests the addReplaceClient method
+ */
+function testAddReplaceClient() {
+    $manager = new ChannelManager();
+    $manager->addChannel("testChannel");
+    $client = new Client("testUser", "firstSocket");
+    $sameClient = new Client("testUser", "secondSocket");
+    $manager->addClientToChannel("testChannel", $sameClient);
+    return $manager->getClientFromChannels("testUser")->socket === "secondSocket";
+}
+
 $testsToRun = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
-    "testGetClientFromChannels");
+    "testGetClientFromChannels", "testAddReplaceClient");
 Tester::runTests($testsToRun);
 exit;
