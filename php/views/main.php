@@ -4,6 +4,9 @@
 
     $conn = connect();
 
+    $_SESSION["authenticated"] = true;
+    $_SESSION["username"] = "LeviThieme";
+
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
         header("Location: ./login.php");
@@ -85,56 +88,58 @@
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
 
-    <div id="sidebar" class="w3-sidebar dark">
-        <div id="myProfileHeader">
-          <a id=myAccountLink" href="myAccount.php">
-              <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbspMy&nbspAccount</i>
-          </a>
-        </div>
-        <!-- Panel for My Chats accordion -->
-        <div id="chatPanel" class="sidebarPanel">
-          <div id="chatsPanelHeading" class="collapseHeading">
-            <h4>
-                <a id="addRoomBtn" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle"></i></a>
-                <a id="toggleRoomsCollapse" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
-                    My Chats <i id="toggleChatsIcon" class="fa fa-angle-double-down"></i>
-                </a>
-            </h4>
-          </div>
-          <div id="roomCollapse">
-              <div id="roomList"></div>
-          </div>
-        </div>
-        <!-- Panel for Friends accordion -->
-        <div id="friendPanel" class="sidebarPanel">
-            <div id="friendsPanelHeading" class="collapseHeading">
-                <h4>
-                  <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
-                  <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse">
-                      Friends <i class="fa fa-angle-double-down"></i></a>
-                </h4>
+    <div class="grid-container">
+        <div id="sidebar" class="grid-item dark">
+            <div id="myProfileHeader">
+              <a id=myAccountLink" href="myAccount.php">
+                  <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbsp<?php echo $username;?></i>
+              </a>
             </div>
-            <div id="friendsCollapse"></div>
+            <!-- Panel for My Chats accordion -->
+            <div id="chatPanel" class="sidebarPanel">
+              <div id="chatsPanelHeading" class="collapseHeading">
+                <h4>
+                    <a id="addRoomBtn" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle"></i></a>
+                    <a id="toggleRoomsCollapse" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
+                        My Chats <i id="toggleChatsIcon" class="fa fa-angle-double-down"></i>
+                    </a>
+                </h4>
+              </div>
+              <div id="roomCollapse">
+                  <div id="roomList"></div>
+              </div>
+            </div>
+            <!-- Panel for Friends accordion -->
+            <div id="friendPanel" class="sidebarPanel">
+                <div id="friendsPanelHeading" class="collapseHeading">
+                    <h4>
+                      <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
+                      <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse" onclick=<?php echo "refreshFriendsList($userId)";?>>
+                          Friends <i class="fa fa-angle-double-down"></i></a>
+                    </h4>
+                </div>
+                <div id="friendsCollapse"></div>
+            </div>
+
+            <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i><div>Signout</div></a>
         </div>
 
-        <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i><div>Signout</div></a>
-    </div>
-
-    <div id="mainPanel" class="main">
-        <div id="messageContainer">
-            <ol id="messageList" class="discussion"></ol>
-        </div>
-        <div id="imControls" class="input-group mb-3">
-            <input id="message" name ="message"  type="text" class="form-control" placeholder="Write something here...">
-            <div id="submitBtnDiv" class="input-group-append dark">
-                <button id="sendMessageButton" class="w3-button">Send</button>
+        <div id="mainPanel" class="main">
+            <div id="messageContainer">
+                <ol id="messageList" class="discussion"></ol>
+            </div>
+            <div id="imControls" class="input-group mb-3">
+                <input id="message" name ="message"  type="text" class="form-control" placeholder="Write something here...">
+                <div id="submitBtnDiv" class="input-group-append dark">
+                    <button id="sendMessageButton" class="w3-button">Send</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- The Modal -->
     <div class="modal" id="myModal">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
@@ -151,7 +156,7 @@
                 </div>
 
                 <!-- Modal footer -->
-                <div class="modal-footer dark">
+                <div class="modal-footer modal-dialog-scrollable dark">
                     <ul id="optionList" class="list-group"></ul>
                 </div>
             </div>

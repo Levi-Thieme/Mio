@@ -61,7 +61,7 @@ function clearRoom() {
 function displayErrorMessage(message) {
     let messageItem =
         '<li class="self">'+
-        '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+Date()+'</time></div>'+
+        '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+dateTimestamp()+'</time></div>'+
         '</li>';
     $("#messageList").append(messageItem);
     $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));

@@ -21,17 +21,24 @@ function onOpen() {
     websocket.send(JSON.stringify(userInfo));
 }
 
+function dateTimestamp() {
+    let date = new Date();
+    let hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return days[date.getDay()] + " " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + hour + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+
 function onMessage(event) {
     let data = JSON.parse(event.data);
     let username = $("#username").val();
     let senderId = data["username"];
     if (senderId === username) {
-        displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
+        displayMessage(data["message"], "self", dateTimestamp(), data["messageId"], data["username"]);
     }
     else {
-        displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
+        displayMessage(data["message"], "other", dateTimestamp(), data["messageId"], data["username"]);
     }
-    console.log(data["message"]);
 }
 
 function initializeSocketEventHandlers(socket) {
