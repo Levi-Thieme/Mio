@@ -1,7 +1,6 @@
 <?php
-
-require_once("../manager_classes/ChannelManager.php");
-
+require_once("../chat_server/ChannelManager.php");
+require_once("./Tester.php");
 /*
  * Tests the addChannel method.
  */
@@ -62,29 +61,7 @@ function testGetClientFromChannels() {
     return $client != NULL && $client->username === "Gauss";
 }
 
-/*
- * Prints the results of the test.
- */
-function printTestResult($function, $success) {
-    if ($success) {
-        echo("<div style='color: green'>$function passed!</div><br>");
-    }
-    else {
-        echo("<div style='color: red'>$function failed! :(</div><br>");
-    }
-}
-
-/*
- * Print text in a div with a break element afterwards
- */
-function p($text) {
-    echo("<div> $text </div>");
-}
-
-$functionsToTest = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
+$testsToRun = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
     "testGetClientFromChannels");
-foreach ($functionsToTest as $test) {
-    p("<div style='color: blue'>Running $test test...</div>");
-    printTestResult($test, $test());
-}
+Tester::runTests($testsToRun);
 exit;

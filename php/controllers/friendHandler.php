@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once("../database_interface/db.php");
-require_once("../Renderer.php");
+require_once("../views/Renderer.php");
 
 /*
  *  Handle the request...

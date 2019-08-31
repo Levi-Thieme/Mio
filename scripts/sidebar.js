@@ -4,7 +4,7 @@ function refreshFriendsList(userId) {
     $("#friendsCollapse").html("");
     $.ajax({
         type: "GET",
-        url: relativeRoot + "friendHandler.php",
+        url: controllersPath + "friendHandler.php",
         async: true,
         dataType: "HTML",
         data: {
@@ -27,7 +27,7 @@ function createRoomDiv(roomId, roomName) {
 function refreshRoomList(userId) {
     $.ajax({
         type: "GET",
-        url: relativeRoot + "/roomHandler.php",
+        url: controllersPath + "/roomHandler.php",
         async: true,
         data: {
             request: "getRooms",
@@ -54,7 +54,7 @@ function refreshRoomList(userId) {
 function deleteFriend(userId, friendName, onComplete, onFailure) {
     console.log("Delete " + friendName);
     $.ajax({
-        url: relativeRoot + "friendHandler.php",
+        url: controllersPath + "friendHandler.php",
         type: "GET",
         async: true,
         data: {
@@ -71,7 +71,7 @@ function deleteFriend(userId, friendName, onComplete, onFailure) {
 //Approves a friend request
 function approveFriendRequest(userId, requesterName, onComplete, onFailure) {
     $.ajax({
-        url: relativeRoot + "friendHandler.php",
+        url: controllersPath + "friendHandler.php",
         type: "GET",
         async: true,
         data: {
@@ -135,7 +135,7 @@ $(document).ready(function(){
 
 function leaveRoom(userId, roomId, onComplete, onFailure) {
     $.ajax({
-        url: relativeRoot + "roomHandler.php",
+        url: controllersPath + "roomHandler.php",
         type: "GET",
         async: true,
         data: {

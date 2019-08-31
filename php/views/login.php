@@ -1,11 +1,8 @@
 <?php
-
     session_start();
     require_once("../database_interface/db.php");
-    require_once("../errors.php");
-    require_once("../manager_classes/AccountManager.php");
-
-
+    require_once("../router/redirect.php");
+    require_once("../controllers/AccountController.php");
     // connect to database
     $connection = connect();
     if (!$connection) {
@@ -21,11 +18,7 @@
             $_SESSION["wrongCredentials"] = false;
             $_SESSION["authenticated"] = true;
             $_SESSION["username"] = $_POST["username"];
-            //redirect("main.php");
-            $host  = $_SERVER["HTTP_HOST"];
-            $uri   = rtrim(dirname($_SERVER["PHP_SELF"]), '/\\');
-            $pageName = "main.php";
-            header("Location: http://$host$uri/{$pageName}");
+            redirect("main.php");
             die();
         }
         else {

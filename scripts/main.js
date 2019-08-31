@@ -1,5 +1,3 @@
-//Relative root from main.php to project directory(Mio)
-var relativeRoot = "../request_handlers/";
 //Relative path to the controllers directory
 var controllersPath = "../controllers/";
 
