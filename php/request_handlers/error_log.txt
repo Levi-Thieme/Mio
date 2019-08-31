@@ -1,4 +1,0 @@
-Error: INSERT INTO friends(from_id, to_id) VALUES(17, ) 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1
-Error: INSERT INTO friends(from_id, to_id) VALUES(17, ) 
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1

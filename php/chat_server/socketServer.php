@@ -122,6 +122,7 @@ while (true) {
             doHandshake($header, $newClient, HOST_NAME, PORT);
             if (socket_recv($newClient, $receiveBuffer, 1024, 0) > 0) {
                 $clientInfo = json_decode(unseal($receiveBuffer), true);
+                //error_log("Header\n{$clientInfo}", 3,"socket_error_log.txt");
                 $channelManager->addNewClient($newClient, $clientInfo);
             }
         }
@@ -131,7 +132,7 @@ while (true) {
 	}
 	//Receive incoming data from client sockets
 	foreach ($socketsToRead as $socketToRead) {
-		$socketData = socket_read($socketToRead, 16384);
+		$socketData = socket_read($socketToRead, 1024);
 		//close and unset any sockets closed by the client
 		if ($socketData == false || $socketData == "") {
 		    @socket_close($socketToRead);
@@ -140,6 +141,7 @@ while (true) {
 		else {
             $socketMessage = unseal($socketData);
             $json = json_decode($socketMessage, true);
+            //error_log("Message\n{$clientInfo}", 3,"socket_error_log.txt");
             //Pass off the JSON message to $channelManager to be handled.
             $channelManager->handleSocketMessage($socketToRead, $json);
         }

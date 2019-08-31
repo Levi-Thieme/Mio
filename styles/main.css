@@ -1,8 +1,6 @@
 body {
     margin: 0;
-    height: 100%;
     overflow-y: scroll;
-    background: #222;
 }
 
 @media (max-width: 768px) {
@@ -11,16 +9,15 @@ body {
     }
     
     #mainPanel {
-        margin-left: 0%;
-        width: 100%;
+        margin-left: 25%;
+        width: 75%;
         max-height: 100%;
     }
 }
 
 #mainPanel {
     margin-left: 15%;
-    width: 85%;
-    height: 100%;
+    width: 75%;
 }
 
 #messageContainer {
@@ -51,6 +48,7 @@ body {
     border-radius: 5px;
     border: solid #e68a00;
     margin-left: 10px;
+    min-width: 75px;
 }
 
 input:focus {

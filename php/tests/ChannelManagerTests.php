@@ -50,6 +50,19 @@ function testRemoveClientFromChannel() {
 }
 
 /*
+ * Tests the getUsersChannel method
+ */
+function testGetClientFromChannels() {
+    $manager = new ChannelManager();
+    $manager->addChannel("isClientChannel");
+    $manager->addChannel("notClientChannel");
+    $client = new Client("Gauss", NULL);
+    $manager->addClientToChannel("isClientChannel", $client);
+    $client = $manager->getClientFromChannels("Gauss");
+    return $client != NULL && $client->username === "Gauss";
+}
+
+/*
  * Prints the results of the test.
  */
 function printTestResult($function, $success) {
@@ -68,7 +81,8 @@ function p($text) {
     echo("<div> $text </div>");
 }
 
-$functionsToTest = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel");
+$functionsToTest = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
+    "testGetClientFromChannels");
 foreach ($functionsToTest as $test) {
     p("<div style='color: blue'>Running $test test...</div>");
     printTestResult($test, $test());

@@ -69,9 +69,9 @@ function displayErrorMessage(message) {
     $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
 }
 
-
 $(document).ready(function() {
     websocket = createSocket();
+
     //Sends the username, channel, and message through websocket
     function sendMessageWithUserInfo() {
         let userInfo = {

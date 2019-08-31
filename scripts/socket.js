@@ -7,7 +7,7 @@ let CLOSED = 3;
 //end websocket readyState constants
 
 function createSocket() {
-    let socket = new WebSocket("ws://localhost:8080/php/manager_classes/socketServer.php");
+    let socket = new WebSocket("ws://localhost:8080/php/chat_server/socketServer.php");
     initializeSocketEventHandlers(socket);
     return socket;
 }
@@ -19,7 +19,6 @@ function onOpen() {
     };
     websocket.send(JSON.stringify(userInfo));
 }
-
 
 function onMessage(event) {
     let data = JSON.parse(event.data);
@@ -72,4 +71,17 @@ function sendMessage(message) {
         return true;
     }
     return false;
+}
+
+function getMessageTypes() {
+    return ["", "notifyFriendRequest", "MoveToChannel"];
+}
+
+function sendFriendRequestNotification(fromUsername, toUsername) {
+    let message = {
+        action: "notifyFriendRequest",
+        username: fromUsername,
+        toUsername: toUsername
+    };
+    sendMessage(message);
 }
