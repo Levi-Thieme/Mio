@@ -131,7 +131,7 @@ while (true) {
 	}
 	//Receive incoming data from client sockets
 	foreach ($socketsToRead as $socketToRead) {
-		$socketData = socket_read($socketToRead, 1024);
+		$socketData = socket_read($socketToRead, 16384);
 		//close and unset any sockets closed by the client
 		if ($socketData == false || $socketData == "") {
 		    @socket_close($socketToRead);

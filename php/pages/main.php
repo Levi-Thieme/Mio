@@ -115,16 +115,18 @@
             </div>
             <div id="friendsCollapse"></div>
         </div>
-        <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i>Signout</a>
+        <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i><div>Signout</div></a>
     </div>
 
     <div id="mainPanel" class="main">
         <div id="messageContainer">
             <ol id="messageList" class="discussion"></ol>
         </div>
-        <div id="imControls">
-            <input type="text" class="z-depth-1 input-dark" id="message" name ="message" placeholder="Write something here...">
-            <button id="sendMessageButton" class="w3-bar-item w3-button">Send</button>
+        <div id="imControls" class="input-group mb-3">
+            <input id="message" name ="message"  type="text" class="form-control" placeholder="Write something here...">
+            <div id="submitBtnDiv" class="input-group-append dark">
+                <button id="sendMessageButton" class="w3-button">Send</button>
+            </div>
         </div>
     </div>
 

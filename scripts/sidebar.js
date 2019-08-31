@@ -50,7 +50,7 @@ function refreshRoomList(userId) {
 }
 
 //Deletes a friend
-function deleteFriend(userId, friendName) {
+function deleteFriend(userId, friendName, onComplete, onFailure) {
     console.log("Delete " + friendName);
     $.ajax({
         url: relativeRoot + "friendHandler.php",
@@ -62,13 +62,13 @@ function deleteFriend(userId, friendName) {
             friendName: ""+friendName+""
         },
         datatype: "JSON",
-        failure: function(data) { alert("Failed to delete friend: " + friendName); },
-        complete: function(data) { refreshFriendsList(userId); }
+        complete: onComplete,
+        failure: onFailure
     });
 }
 
 //Approves a friend request
-function approveFriendRequest(userId, requesterName) {
+function approveFriendRequest(userId, requesterName, onComplete, onFailure) {
     $.ajax({
         url: relativeRoot + "friendHandler.php",
         type: "GET",
@@ -79,33 +79,21 @@ function approveFriendRequest(userId, requesterName) {
             requester: ""+requesterName+""
         },
         dataType: "JSON",
-        failure: function(data) { alert("Failed to approve friend request from" + requesterName + "."); },
-        complete: function(data) { refreshFriendsList(userId); }
+        complete: onComplete,
+        failure: onFailure
     });
 }
 
 //Event listener for the sidebars icons and rooms
 document.addEventListener("click", function(event) {
     let src = event.target;
+    let userId = $("#userId").val();
     if ("leaveRoom" in src.dataset) {
         let roomId = src.parentElement.id;
-        $.ajax({
-            url: relativeRoot + "roomHandler.php",
-            type: "GET",
-            async: true,
-            data: {
-                request: "leaveRoom",
-                userId: $("#userId").val(),
-                roomId: roomId
-            },
-            datatype: "JSON",
-            complete: function(data) {
-                refreshRoomList($("#userId").val());
-                clearMessages();
-                clearRoom();
-            },
-            failure: function(data) { alert("Unable to leave room: " + name); }
-        });
+        leaveRoom(userId, roomId,
+            function(data) { refreshRoomList(userId); clearMessages(); clearRoom(); },
+            function(data) { alert("Unable to leave room: " + name); }
+        )
     }
     else if ("addToRoom" in src.dataset) {
         let chatName = src.parentElement.childNodes[0].innerText;
@@ -113,32 +101,65 @@ document.addEventListener("click", function(event) {
     }
     else if ("deleteFriend" in src.dataset) {
         let name = src.parentElement.id;
-        deleteFriend($("#userId").val(), name);
+        deleteFriend(userId, name,
+            function(data) { refreshFriendsList(userId); },
+            function(data) { alert("Failed to delete friend: " + name);}
+        );
     }
     else if ("approveFriendRequest" in src.dataset) {
         let name = src.parentElement.id;
-        approveFriendRequest($("#userId").val(), name);
+        approveFriendRequest(userId, name,
+            function(data) { refreshFriendsList(userId); },
+              function(data) { alert("Failed to approve friend request from" + name + "."); }
+        );
     }
     else if ("toRoom" in src.dataset) {
-        let children = $("#roomList").children();
-        for (let i = 0; i < children.length; i++) {
-            $(children[i]).removeClass("active");
-        }
         let toRoomId = src.id;
-        let currentRoomId = $("#roomId").val();
-        if (toRoomId !== currentRoomId) {
+        let toRoomName = src.innerText;
+        let fromRoomId = $("#roomId").val();
+        if (toRoomId !== fromRoomId) {
+            removeClassFromChildren($("#roomList"), "active");
             $(src).addClass("active");
-            let message = {
-                username: $("#username").val(),
-                channel: $("#roomName"),
-                message: "",
-                action: "MoveToChannel",
-                channelTo: toRoomId
-            };
-            //websocket.send(JSON.stringify(message));
-            clearMessages();
+            gotoRoom($("#username").val(), $("#roomName").val(), toRoomId, toRoomName);
             $("#roomId").val(src.id);
             $("#roomName").val(src.innerText);
+            clearMessages();
         }
     }
 });
+
+function leaveRoom(userId, roomId, onComplete, onFailure) {
+    $.ajax({
+        url: relativeRoot + "roomHandler.php",
+        type: "GET",
+        async: true,
+        data: {
+            request: "leaveRoom",
+            userId: userId,
+            roomId: roomId
+        },
+        datatype: "JSON",
+        complete: onComplete,
+        failure: onFailure
+    });
+}
+
+function gotoRoom(username, currentRoomName, toRoomId, toRoomName) {
+    let message = {
+        username: username,
+        currentChannelName: currentRoomName,
+        message: "",
+        action: "MoveToChannel",
+        channelToId: toRoomId,
+        channelToName: toRoomName
+    };
+    websocket.send(JSON.stringify(message));
+}
+
+//removes className from node's children
+function removeClassFromChildren(parent, className) {
+    let children = $(parent).children();
+    for (let i = 0; i < children.length; i++) {
+        $(children[i]).removeClass(className);
+    }
+}

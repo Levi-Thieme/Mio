@@ -30,42 +30,31 @@ body {
 }
 
 #imControls {
-    width: 70%;
+    width: 65%;
     height: 5%;
     bottom: 0;
-    right: 0;
-    position: absolute;
-    display:inline-block;
-    vertical-align: bottom;
+    right: 10%;
+    position: fixed;
+    margin-bottom: 5px;
 }
 
 #message {
-    width: 85%;
-    height: 75%;
-    border-radius: 30px;
+    width: 90%;
+    height: 90%;
+    border-radius: 5px;
     border: solid #e68a00;
+    margin-left: 20px;
+}
+
+#sendMessageButton {
+    height: 100%;
+    border-radius: 5px;
+    border: solid #e68a00;
+    margin-left: 10px;
 }
 
 input:focus {
     outline: none;
-}
-
-
-#sendMessageButton {
-    width: 10%;
-    height: 90%;
-    margin-right: 20px;
-    float: right;
-    border-radius: 30px;
-    border: solid #e68a00;
-    background: #222;
-    color: white;
-}
-
-
-#myAccount {
-    padding: 5px;
-    margin-bottom: 20px;
 }
 
 #myAccountPhoto {
@@ -85,8 +74,7 @@ input:focus {
 
 #submitButton {
     display: block;
-    padding-top: 25px ;
-    
+    padding-top: 25px;
 }
 
 a {
@@ -226,9 +214,5 @@ a:active{
 .shadow-textarea textarea.form-control {
     padding-left: 0.8rem;
     float: left;
-}
-
-.fa {
-    color: #e68a00;
 }
 

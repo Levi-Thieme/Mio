@@ -69,17 +69,6 @@ function displayErrorMessage(message) {
     $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
 }
 
-function onMessage(event) {
-    let data = JSON.parse(event.data);
-    let username = $("#username").val();
-    let senderId = data["username"];
-    if (senderId === username) {
-        displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
-    }
-    else {
-        displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
-    }
-}
 
 $(document).ready(function() {
     websocket = createSocket();
@@ -87,7 +76,7 @@ $(document).ready(function() {
     function sendMessageWithUserInfo() {
         let userInfo = {
             username: $("#username").val(),
-            channel: $("#roomName").val(),
+            currentChannelName: $("#roomName").val(),
             message: $("#message").val()
         };
         if (sendMessage(userInfo)) {

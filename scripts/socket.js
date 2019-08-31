@@ -20,6 +20,20 @@ function onOpen() {
     websocket.send(JSON.stringify(userInfo));
 }
 
+
+function onMessage(event) {
+    let data = JSON.parse(event.data);
+    let username = $("#username").val();
+    let senderId = data["username"];
+    if (senderId === username) {
+        displayMessage(data["message"], "self", data["time"], data["messageId"], data["username"]);
+    }
+    else {
+        displayMessage(data["message"], "other", data["time"], data["messageId"], data["username"]);
+    }
+    console.log(data["message"]);
+}
+
 function initializeSocketEventHandlers(socket) {
     socket.onerror = (event) => displayErrorMessage("An error occurred when attempting to connect to the chat server.\nTry reloading the page.");
     socket.onopen = onOpen;

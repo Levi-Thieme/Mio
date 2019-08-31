@@ -19,7 +19,6 @@ function getRooms() {
         while ($room = $rooms->fetch_assoc()) {
             array_push($roomsArray, $room);
         }
-        error_log(json_encode($roomsArray), 3, "./error_log.txt");
         echo json_encode($roomsArray);
         $conn->close();
     }

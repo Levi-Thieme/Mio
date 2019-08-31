@@ -11,6 +11,10 @@
     margin-right: 5px;
 }
 
+i.fa {
+    color: #e68a00;
+}
+
 .fa-plus-circle {
     margin-right: 25px;
 }
@@ -45,7 +49,10 @@
 }
 
 #signout {
+    font-size: large;
     position: absolute;
     bottom: 0;
-    padding-left: 20px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
 }
