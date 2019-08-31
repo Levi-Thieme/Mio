@@ -1,6 +1,7 @@
 <?php
     require_once("../database_interface/db.php");
     require_once("../router/redirect.php");
+    require_once("./Renderer.php");
     
     session_start();
     $conn;
@@ -66,8 +67,7 @@
                         else {
                             error_log("Successfully deleted user. $username\n", 3, "./error_log.txt");
                             session_destroy();
-                            $host = $_SERVER["HTTP_HOST"];
-                            header("Location: https://$host/html/signup.html");
+                            redirect("signup.php");
                             exit;
                         }
                     }
@@ -130,7 +130,7 @@
         <form onsubmit="return validateChangeEmail()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
-                    <?php if (isset($_POST["updateEmailSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
+                    <?php if (isset($_POST["updateEmailSubmit"])) { Renderer::myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <label for="updateEmailEmailInput">Update Email address</label>
                     <input type="email" class="form-control" id="updateEmailEmailInput" name="emailInput" aria-describedby="emailHelp" placeholder="Enter new email">
                     <label for="updateEmailPasswordInput">Password</label>
@@ -142,7 +142,7 @@
         <form onsubmit="return validateUpdatePassword()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
-                    <?php if (isset($_POST["updatePasswordSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
+                    <?php if (isset($_POST["updatePasswordSubmit"])) { Renderer::myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <label for="updatePasswordPasswordInput">Update Password</label>
                     <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" placeholder="Enter old password">
                 </div>
@@ -158,7 +158,7 @@
             <div class="well" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <strong>Delete My Account</strong>
-                    <?php if (isset($_POST["deleteAccountSubmit"])) { myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
+                    <?php if (isset($_POST["deleteAccountSubmit"])) { Renderer::myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
                     <input type="username" class="form-control" id="deleteUsername" name="deleteUsername" placeholder="Username">
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">

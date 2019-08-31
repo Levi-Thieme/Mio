@@ -1,9 +1,15 @@
-.w3-sidebar {
+#sidebar {
+    grid-row: 1;
+    grid-column: 1;
+    display: grid;
+    grid-template-rows: 45px auto auto 50px;
+    grid-gap: 0;
     border-right: solid 1px #e68a00;
 }
 
 .sidebarPanel {
-    margin: 25px 5px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .collapseHeading {
@@ -27,12 +33,8 @@ i.fa {
     margin: 10px;
 }
 
-#sidebar {
-    width:15%;
-    min-width: 250px;
-}
-
 #myProfileHeader {
+    grid-row: 1;
     align-content: center;
     margin-top: 10px;
     width: 200px;
@@ -44,13 +46,21 @@ i.fa {
     width: 200px;
 }
 
+#chatPanel {
+    grid-row: 2;
+}
+
 #roomList {
     margin: 15px;
 }
 
+#friendPanel {
+    grid-row: 3;
+}
+
 #signout {
+    grid-row: 4;
     font-size: large;
-    position: absolute;
     bottom: 0;
     padding-left: 10px;
     padding-bottom: 10px;

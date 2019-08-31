@@ -1,6 +1,15 @@
+.modal {
+    width: auto;
+    height: auto;
+}
+
 .modal-header {
     background: #333;
     color: white;
+}
+
+.modal-body {
+    min-height: 60px;
 }
 
 .input-group {

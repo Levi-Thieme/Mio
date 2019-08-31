@@ -130,10 +130,7 @@ document.addEventListener("click", function(event) {
 });
 
 $(document).ready(function(){
-    $("#toggleFriendsCollapse").on("click", refreshFriendsList($("#userId").val()));
     $("#signout").on("click", function(){ websocket.close(); });
-    refreshFriendsList(($("#userId").val()));
-    refreshRoomList($("#userId").val());
 });
 
 function leaveRoom(userId, roomId, onComplete, onFailure) {

@@ -47,7 +47,7 @@ class Renderer {
             "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>";
     }
 
-    function printError($msg, $color) {
+    static function printError($msg, $color) {
         echo "<p style=color:$color text-align:center> $msg </p>";
     }
 
@@ -55,7 +55,7 @@ class Renderer {
     Error handling function for the myAccount page.
     Prints the error associated with $errorToDisplay.
     */
-    function myAccountErrorHandler($errorToDisplay) {
+    static function myAccountErrorHandler($errorToDisplay) {
         $errorMessages = array(
             "emailError" => "Your email address is invalid.",
             "passError" => "Your password is incorrect.",
