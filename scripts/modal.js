@@ -10,7 +10,7 @@ function openCreateRoomModal() {
             return;
         }
         $.ajax({
-            url: relativeRoot + "roomHandler.php",
+            url: controllersPath + "roomHandler.php",
             type: "GET",
             async: true,
             data: {
@@ -36,7 +36,7 @@ function openInviteToChatModal(chatName) {
         selectedNames.map(selectedName => {
             let name = selectedName.innerText;
             $.ajax({
-                url: relativeRoot + "roomHandler.php",
+                url: controllersPath + "roomHandler.php",
                 type: "GET",
                 async: true,
                 data: {
@@ -62,7 +62,7 @@ function openFriendRequestModal() {
         selectedNames.map(selectedName => {
             let name = selectedName.innerText;
             $.ajax({
-                url: relativeRoot + "friendHandler.php",
+                url: controllersPath + "friendHandler.php",
                 type: "GET",
                 async: true,
                 data: {
@@ -105,7 +105,7 @@ $(document).ready(function() {
 
 function searchFriends(name) {
     $.ajax({
-        url: relativeRoot + "friendHandler.php",
+        url: controllersPath + "friendHandler.php",
         type: "GET",
         async: true,
         data: {

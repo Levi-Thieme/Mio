@@ -1,6 +1,6 @@
 <?php
     require_once("../database_interface/db.php");
-    require_once("../errors.php");
+    require_once("../router/redirect.php");
     
     //signup form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {

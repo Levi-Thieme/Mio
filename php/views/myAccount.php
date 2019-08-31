@@ -1,6 +1,6 @@
 <?php
     require_once("../database_interface/db.php");
-    require_once("../errors.php");
+    require_once("../router/redirect.php");
     
     session_start();
     $conn;
@@ -61,10 +61,10 @@
                     if (isPassword($conn, $username, $dPassword)) {
                         $_SESSION["credentialsError"] = "";
                         if (!deleteUser($conn, $username, $dPassword)) {
-                            error_log("Error:  \n" . $conn->error, 3, "./logs/error_log.txt");
+                            error_log("Error:  \n" . $conn->error, 3, "./error_log.txt");
                         }
                         else {
-                            error_log("Successfully deleted user. $username\n", 3, "./logs/error_log.txt");
+                            error_log("Successfully deleted user. $username\n", 3, "./error_log.txt");
                             session_destroy();
                             $host = $_SERVER["HTTP_HOST"];
                             header("Location: https://$host/html/signup.html");

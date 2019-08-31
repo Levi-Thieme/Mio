@@ -6,7 +6,7 @@
  * Time: 11:24 PM
  */
 
-class AccountManager {
+class AccountController {
     private $conn;
 
     public function __construct($databaseConnection) {
