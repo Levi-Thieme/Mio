@@ -16,6 +16,15 @@ body {
     grid-template-rows: auto 60px;
 }
 
+#toastWrapper {
+    grid-row: 1;
+    grid-column: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px;
+}
+
 #mainPanel {
     grid-row: 1;
     grid-column: 2;

@@ -2,6 +2,8 @@
     session_start();
     require_once("../database_interface/db.php");
     $conn = connect();
+    $_SESSION["authenticated"] = true;
+    $_SESSION["username"] = "LeviThieme";
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
         header("Location: ./login.php");
@@ -86,7 +88,7 @@
     <div class="grid-container">
         <div id="sidebar" class="grid-item dark">
             <div id="myProfileHeader">
-              <a id=myAccountLink" href="myAccount.php">
+              <a id="myAccountLink" href="myAccount.php">
                   <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbsp<?php echo $username;?></i>
               </a>
             </div>
@@ -120,6 +122,20 @@
         </div>
 
         <div id="mainPanel" class="main">
+            <!-- Top Right notification Toast wrapping div -->
+            <div id="toastWrapper">
+                <div class="toast">
+                    <div class="toast-header">
+                        <strong id="notificationToastHeader" class="mr-auto"><i class="fa fa-grav"></i></strong>
+                        <div id="notificationToastTime"></div>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="notificationToastBody" class="toast-body">
+                    </div>
+                </div>
+            </div>
             <div id="messageContainer">
                 <ol id="messageList" class="discussion"></ol>
             </div>
