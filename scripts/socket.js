@@ -22,11 +22,27 @@ function onOpen() {
 }
 
 function dateTimestamp() {
+    return currentDate(true) + " " + timestamp();
+}
+
+//return date in weekDay? MM DD, YYYY
+function currentDate(includeWeekday) {
     let date = new Date();
-    let hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return days[date.getDay()] + " " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + hour + ":" + date.getMinutes() + ":" + date.getSeconds();
+    let day = includeWeekday ? days[date.getDay()] : "";
+    return day + " " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+}
+
+//returns time in HH:MM:SS format
+function timestamp() {
+    let date = new Date();
+    let hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+    let minutes = date.getMinutes();
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let seconds = date.getSeconds();
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    return hour + ":" + minutes + ":" + seconds;
 }
 
 function onMessage(event) {
@@ -49,7 +65,6 @@ function initializeSocketEventHandlers(socket) {
 
 function attemptSocketConnection() {
     clearTimeout(attemptSocketConnection);
-    console.log("Attempting to create a socket and connect it to the server.");
     websocket = createSocket();
 }
 
@@ -79,10 +94,6 @@ function sendMessage(message) {
         return true;
     }
     return false;
-}
-
-function getMessageTypes() {
-    return ["", "notifyFriendRequest", "MoveToChannel"];
 }
 
 function sendFriendRequestNotification(fromUsername, toUsername) {

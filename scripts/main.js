@@ -59,12 +59,15 @@ function clearRoom() {
 }
 
 function displayErrorMessage(message) {
+    /*
     let messageItem =
         '<li class="self">'+
         '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+dateTimestamp()+'</time></div>'+
         '</li>';
     $("#messageList").append(messageItem);
     $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
+    */
+    displayToast("Error", message);
 }
 
 $(document).ready(function() {
@@ -83,9 +86,7 @@ $(document).ready(function() {
             handleSendMessageFailure();
         }
     }
-
     $("#sendMessageButton").on("click", sendMessageWithUserInfo);
-    
     //Add enter button listener for message input
     $("#message").on("keyup", function(event) {
         event.preventDefault();
@@ -94,3 +95,13 @@ $(document).ready(function() {
         }
     });
 });
+
+function displayToast(header, body) {
+    $("#notificationToastHeader").text(header);
+    $("#notificationToastTime").text(timestamp());
+    $("#notificationToastBody").text(body);
+    $(".toast").toast({
+        delay: 3000
+    });
+    $(".toast").toast("show");
+}
