@@ -1,3 +1,4 @@
 .toast {
     background: black;
+    z-index: 5;
 }
