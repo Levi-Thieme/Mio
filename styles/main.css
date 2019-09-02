@@ -10,6 +10,23 @@ body {
     height: 100vh;
 }
 
+
+@media (max-width: 767px) {
+    .grid-container {
+        grid-template-columns: 0 auto;
+        grid-template-rows: 100%;
+        width: 100vw;
+        height: 100vh;
+    }
+    .sidebar {
+        border-right: none;
+        display: none;
+    }
+    #sidebar {
+        border-right: none
+    }
+}
+
 .main {
     display: grid;
     grid-template-columns: auto;

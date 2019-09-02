@@ -86,14 +86,14 @@
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
 
     <div class="grid-container">
-        <div id="sidebar" class="grid-item dark">
-            <div id="myProfileHeader">
+        <div id="sidebar" class="grid-item dark sidebar">
+            <div id="myProfileHeader" class="sidebar">
               <a id="myAccountLink" href="myAccount.php">
                   <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbsp<?php echo $username;?></i>
               </a>
             </div>
             <!-- Panel for My Chats accordion -->
-            <div id="chatPanel" class="sidebarPanel">
+            <div id="chatPanel" class="sidebarPanel sidebar">
               <div id="chatsPanelHeading" class="collapseHeading">
                 <h4>
                     <a id="addRoomBtn" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle"></i></a>
@@ -107,7 +107,7 @@
               </div>
             </div>
             <!-- Panel for Friends accordion -->
-            <div id="friendPanel" class="sidebarPanel">
+            <div id="friendPanel" class="sidebarPanel sidebar">
                 <div id="friendsPanelHeading" class="collapseHeading">
                     <h4>
                       <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
@@ -117,8 +117,7 @@
                 </div>
                 <div id="friendsCollapse"></div>
             </div>
-
-            <a id="signout" class="dark" href="logout.php"><i class="fa fa-sign-out fa-2x fa-fw fa-rotate-180" aria-hidden="true"></i><div>Signout</div></a>
+            <a id="signout" class="dark sidebar" href="logout.php"><button id="signoutBtn" class="btn btn-primary sidebar">Signout</button></a>
         </div>
 
         <div id="mainPanel" class="main">
