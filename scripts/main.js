@@ -31,10 +31,10 @@ Appends a message div into the chat
 */
 function displayMessage(message, classStyle, time, id, name) {
     if (message !== "")  {
-        let messageItem = 
+        let messageItem =
         '<li id ="'+id+'" class="'+classStyle+'">'+
-            '<div class="avatar"><img src="../../imgs/user.png" /></div>'+
-            '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
+            '<div class="avatar animated pulse"><img src="../../imgs/user.png" alt="User profile picture"/></div>'+
+            '<div class="messages div-dark animated pulse"><p class="username">'+name+'</p><p>'+message+'</p><time>'+time+'</time></div>'+
         '</li>';
         
         $("#messageList").append(messageItem);
@@ -59,14 +59,6 @@ function clearRoom() {
 }
 
 function displayErrorMessage(message) {
-    /*
-    let messageItem =
-        '<li class="self">'+
-        '<div class="messages div-dark"><p class="username">'+name+'</p><p>'+message+'</p><time>'+dateTimestamp()+'</time></div>'+
-        '</li>';
-    $("#messageList").append(messageItem);
-    $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
-    */
     displayToast("Error", message);
 }
 

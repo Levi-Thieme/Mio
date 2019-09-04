@@ -206,3 +206,7 @@ a:active{
     float: left;
 }
 
+.animated {
+    animation-duration: .5s;
+}
+
