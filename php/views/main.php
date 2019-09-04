@@ -85,7 +85,7 @@
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
 
     <div class="grid-container">
-        <div id="sidebar" class="grid-item dark sidebar">
+        <div id="sidebar" class="grid-item dark sidebar animated slideInLeft">
             <div id="myProfileHeader" class="sidebar">
               <a id="myAccountLink" href="myAccount.php">
                   <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbsp<?php echo $username;?></i>
@@ -101,7 +101,7 @@
                     </a>
                 </h4>
               </div>
-              <div id="roomCollapse">
+              <div id="roomCollapse" class="animated zoomIn">
                   <div id="roomList"></div>
               </div>
             </div>
@@ -138,8 +138,8 @@
                 <ol id="messageList" class="discussion"></ol>
             </div>
             <div id="imControls" class="input-group mb-3">
-                <input id="message" name ="message"  type="text" class="form-control" placeholder="Write something here...">
-                <div id="submitBtnDiv" class="input-group-append dark">
+                <input id="message" name ="message"  type="text" class="form-control animated slideInUp" placeholder="Write something here...">
+                <div id="submitBtnDiv" class="input-group-append dark animated slideInRight">
                     <button id="sendMessageButton" class="w3-button">Send</button>
                 </div>
             </div>
