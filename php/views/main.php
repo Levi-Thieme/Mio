@@ -4,13 +4,13 @@
     $conn = connect();
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
-        header("Location: ./login.php");
+        header("Location: ./index.php");
         die();
     }
     
     if (!isset($_SESSION["username"])) {
         error_log("Username is not set in session variable.", 3, "error_log.txt");
-        header("Location: ./login.php");
+        header("Location: ./index.php");
         die();
     }
     

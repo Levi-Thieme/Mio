@@ -44,7 +44,7 @@
         <link rel="stylesheet" href="../../styles/login.css">
     </head>
     <body style="background-color: #222;">
-        <form id=loginform name="loginForm" class="change-form col-md-4 col-md-offset-4" action="login.php" method="post">
+        <form id=loginform name="loginForm" class="change-form col-md-4 col-md-offset-4" action="index.php" method="post">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <h2>Mio Login Page</h2><br>
                 <div class="form-group">

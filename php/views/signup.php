@@ -9,7 +9,7 @@
             if ($conn) {
                 insertUser($conn, $_POST["name"], $_POST["email"], $_POST["password"]);
                 $conn->close();
-                redirect("login.php");
+                redirect("index.php");
             }
         }
         else {

@@ -163,7 +163,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="login.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <a href="index.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
                 </div>
             </div>
         </form>
