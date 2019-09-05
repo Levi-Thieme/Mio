@@ -10,10 +10,10 @@ class Tester {
     */
     public static function printTestResult($function, $success) {
         if ($success) {
-            echo("<div style='color: green'>$function passed!</div><br>");
+            return ("<div style='color: green'>$function passed!</div><br>");
         }
         else {
-            echo("<div style='color: red'>$function failed! :(</div><br>");
+            return ("<div style='color: red'>$function failed! :(</div><br>");
         }
     }
 
@@ -21,18 +21,20 @@ class Tester {
      * Print text in a div with a break element afterwards
      */
     public static function p($text) {
-        echo("<div> $text </div>");
+        return ("<div> $text </div>");
     }
 
     /*
      * Runs each test in $functionsToTest.
      * Each test must return true or false to indicate whether or not it passed.
      */
-    public static function runTests($testsToRun) {
+    public static function runTests($class, $testsToRun) {
+        $results = array();
         foreach ($testsToRun as $test) {
-            Tester::p("<div style='color: blue'>Running $test test...</div>");
-            Tester::printTestResult($test, $test());
+            $results[] = Tester::p("<div style='color: blue'>Running $test test...</div>");
+            $results[] = Tester::printTestResult($test, $class->$test());
         }
+        return $results;
     }
 
 

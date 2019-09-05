@@ -11,7 +11,8 @@ function testAddChannel()
     $manager = new ChannelManager();
     $channelToAdd = "addedChannel";
     $manager->addChannel($channelToAdd);
-    return $manager->getChannels()[array_search($channelToAdd, $manager->getChannels())];
+    $channels = $manager->getChannels();
+    return $manager->getChannels()[0]->getName() === $channelToAdd;
 }
 
 /*
@@ -75,7 +76,11 @@ function testAddReplaceClient() {
     return $manager->getClientFromChannels("testUser")->getSocket() === "secondSocket";
 }
 
-$testsToRun = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
+$tests = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
     "testGetClientFromChannels", "testAddReplaceClient");
-Tester::runTests($testsToRun);
-exit;
+$results = array();
+foreach ($tests as $test) {
+    $results[$test] = $test();
+}
+echo json_encode($results, JSON_PRETTY_PRINT);
+exit();

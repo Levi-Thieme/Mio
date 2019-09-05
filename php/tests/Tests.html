@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script>
+                function resultDiv(text, color) {
+                    let div = document.createElement("div");
+                    div.style.color = color;
+                    div.textContent = text;
+                    return div;
+                }
+                function runClientTests(url, resultId) {
+                    $(resultId).empty();
+                    $.ajax({
+                        type: "POST",
+                        async: true,
+                        url: url,
+                        complete: function(data) {
+                            let testResults = JSON.parse(data["responseText"]);
+                            for (let result in testResults) {
+                                if (testResults[result]) {
+                                    $(resultId).append(resultDiv(result + " Passed", "green"));
+                                }
+                                else {
+                                    $(resultId).append(resultDiv(result + " Failed", "red"));
+                                }
+                            }
+                        }
+                    });
+                }
+            </script>
+        </head>
+        <body>
+            <ul>
+            <li>
+                <button onclick="runClientTests('chat_server_tests/ClientTests.php', '#ClientTests');">Run Client Tests</button>
+                <div id="ClientTests"></div>
+                <button onclick="runClientTests('chat_server_tests/ChannelManagerTests.php', '#ChannelManagerTests');">Run ChannelManager Tests</button>
+                <div id="ChannelManagerTests"></div>
+            </li>
+            </ul>
+        </body>
+    </html>
