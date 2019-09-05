@@ -15,6 +15,7 @@ function createSocket() {
 
 function onOpen() {
     let userInfo = {
+        id : $("#userId").val(),
         username: $("#username").val(),
         channel: $("#roomName").val()
     };

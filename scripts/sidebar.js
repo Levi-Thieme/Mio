@@ -121,7 +121,7 @@ document.addEventListener("click", function(event) {
         if (toRoomId !== fromRoomId) {
             removeClassFromChildren($("#roomList"), "active");
             $(src).addClass("active");
-            gotoRoom($("#username").val(), $("#roomName").val(), toRoomId, toRoomName);
+            gotoRoom($("#userId").val(), $("#username").val(), $("#roomName").val(), toRoomId, toRoomName);
             $("#roomId").val(toRoomId);
             $("#roomName").val(toRoomName);
             clearMessages();
@@ -149,8 +149,9 @@ function leaveRoom(userId, roomId, onComplete, onFailure) {
     });
 }
 
-function gotoRoom(username, currentRoomName, toRoomId, toRoomName) {
+function gotoRoom(userId, username, currentRoomName, toRoomId, toRoomName) {
     let message = {
+        id: userId,
         username: username,
         currentChannelName: currentRoomName,
         message: "",

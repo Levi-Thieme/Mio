@@ -1,55 +1,12 @@
 <?php
+require_once("SocketData.php");
+require_once("Client.php");
+require_once("Channel.php");
+//define("LOG_URL", "../logs/socket_error_log.txt");
 
 /*
- * The Client class is used to wrap a username and socket resource in an object, so that
- * the $channels array doesn't have nested arrays.
- */
-class Client {
-    public $username;
-    public $socket;
-
-    function __construct($username, $socketResource)
-    {
-        $this->username = $username;
-        $this->socket = $socketResource;
-    }
-}
-
-class Channel {
-    public $name;
-    public $clients;
-
-    function __construct($name, $clients) {
-        $this->name = $name;
-        $this->clients = $clients;
-    }
-
-    public function addClient($client) {
-        array_push($this->clients, $client);
-    }
-
-    public function addReplaceClient($client) {
-        $containedClient = $this->getClientByUsername($client->username);
-        if ($containedClient != NULL) {
-            $this->removeClient($containedClient);
-        }
-        $this->addClient($client);
-    }
-
-    public function removeClient($client) {
-        unset($this->clients[array_search($client, $this->clients)]);
-    }
-
-    public function getClientByUsername($username) {
-        foreach ($this->clients as $client) {
-            if ($client->username === $username) {
-                return $client;
-            }
-        }
-        return NULL;
-    }
-}
-
+The ChannelManager class' responsibility is create and destroy channels, and place clients in the proper channel.
+*/
 class ChannelManager {
     private $channels;
 
@@ -67,26 +24,10 @@ class ChannelManager {
 
     function getChannel($channelName) {
         foreach(array_values($this->channels) as $channel) {
-            if ($channel->name === $channelName)
+            if ($channel->getName() === $channelName)
                 return $channel;
         }
         return NULL;
-    }
-
-    /*
-     * Prepends a header onto $socketData to describe the contents.
-     */
-    function seal($socketData) {
-        $b1 = 0x80 | (0x1 & 0x0f);
-        $length = strlen($socketData);
-        $header = "";
-        if($length <= 125)
-            $header = pack('CC', $b1, $length);
-        elseif($length > 125 && $length < 65536)
-            $header = pack('CCn', $b1, 126, $length);
-        elseif($length >= 65536)
-            $header = pack('CCNN', $b1, 127, $length);
-        return $header.$socketData;
     }
 
     /**
@@ -102,7 +43,7 @@ class ChannelManager {
             "channel" => $channel,
             "time" => date("F d, Y h:i:s A", time()),
             "messageId" => 0);
-        return $this->seal(json_encode($messageAssoc));
+        return SocketData::seal(json_encode($messageAssoc));
     }
 
     /**
@@ -127,12 +68,11 @@ class ChannelManager {
 	    $status = true;
 	    $channel = $this->getChannel($channelName);
         if ($channel != NULL) {
-            foreach ($channel->clients as $client) {
-                $this->send($message, $client->socket);
+            foreach ($channel->getClients() as $client) {
+                $this->send($message, $client->getSocket());
             }
         }
         else {
-            error_log($channelName . " does not exist\n", 3, "../logs/error_log.txt");
             $status = false;
         }
 		return $status;
@@ -169,7 +109,6 @@ class ChannelManager {
 	function addClientToChannel($channelName, $client) {
 	    $channel = $this->getChannel($channelName);
 	    $channel->addReplaceClient($client);
-	    //error_log("Add {$client->username} to {$channelName}\n", 3, "socket_error_log.txt");
     }
 
     /*
@@ -181,9 +120,8 @@ class ChannelManager {
             return NULL;
         }
         $channel = $this->getChannel($channelName);
-        $clientSocket = $client->socket;
+        $clientSocket = $client->getSocket();
         $channel->removeClient($client);
-        //error_log("Remove {$client->username} from {$channelName}\n", 3, "socket_error_log.txt");
         return $clientSocket;
     }
 
@@ -192,13 +130,13 @@ class ChannelManager {
      * and sending a greeting.
      */
     function addNewClient($clientSocket, $clientInfo) {
+        $clientId = $clientInfo["id"];
         $clientUsername = $clientInfo["username"];
         $channelName = $clientInfo["channel"];
-        $newClient = new Client($clientUsername, $clientSocket);
+        $newClient = new Client($clientId, $clientUsername, $clientSocket);
         //ensure the channel is contained in $channels, if not add it
         if ($this->getChannel($channelName) === NULL) {
             $this->addChannel($channelName);
-            //error_log("Creating channel: {$channelName}\n", 3, "socket_error_log.txt");
         }
         $this->addClientToChannel($channelName, $newClient);
     }
@@ -209,8 +147,8 @@ class ChannelManager {
      * There are currently two message types: Broadcast, MoveToChannel
      */
     function handleSocketMessage($clientSocket, $messageAssoc) {
+        $id = $messageAssoc["id"];
         $username = $messageAssoc["username"];
-        //error_log(print_r($messageAssoc), 3, "socket_error_log.txt");
         if (isset($messageAssoc["action"])) {
             if ($messageAssoc["action"] === "MoveToChannel") {
                 $currentChannelName = $messageAssoc["currentChannelName"];
@@ -226,7 +164,7 @@ class ChannelManager {
                     if ($this->getChannel($channelToName) === NULL) {
                         $this->addChannel($channelToName);
                     }
-                    $client = new Client($username, $clientSocket);
+                    $client = new Client($id, $username, $clientSocket);
                     $this->addClientToChannel($channelToName, $client);
                     $this->broadcastClientJoined($username, $channelToName);
                 }
@@ -259,8 +197,7 @@ class ChannelManager {
         $toClient = $this->getClientFromChannels($toUsername);
         if ($toClient != NULL) {
             $message = $this->formatMessage("You have a friend request from {$fromUsername}.", $fromUsername, "testChannel");
-            $this->send($message, $toClient->socket);
-            //error_log("sent: you have a friend request from {$fromUsername}\n", 3, "socket_error_log.txt");
+            $this->send($message, $toClient->getSocket());
             return true;
         }
         return false;
