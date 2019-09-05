@@ -16,7 +16,7 @@ class SocketServer {
     /*
     * Performs a handshake with the client socket resource.
     */
-    function createHandshakeMessage($received_header, $client_socket_resource, $host_name, $port) {
+    function createHandshakeMessage($received_header, $host_name, $port) {
         $headers = array();
         $lines = preg_split("/\r\n/", $received_header);
         foreach($lines as $line)
@@ -35,7 +35,7 @@ class SocketServer {
             "WebSocket-Origin: $host_name\r\n" .
             "WebSocket-Location: ws://$host_name:$port/demo/shout.php\r\n".
             "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
-        socket_write($client_socket_resource,$buffer,strlen($buffer));
+        return $buffer;
     }
 
     /*
@@ -58,7 +58,7 @@ class SocketServer {
         }
         else {
             $header = socket_read($newClient, 1024);
-            $handshakeMessage = $this->createHandshakeMessage($header, $newClient, HOST_NAME, PORT);
+            $handshakeMessage = $this->createHandshakeMessage($header, HOST_NAME, PORT);
             socket_write($newClient, $handshakeMessage, strlen($handshakeMessage));
             if (socket_recv($newClient, $receiveBuffer, 1024, 0) > 0) {
                 $clientInfo = json_decode(SocketData::unseal($receiveBuffer), true);
