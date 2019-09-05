@@ -3,19 +3,32 @@
         <head>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script>
+                function runAllTests() {
+                    $("#allTestsResults").empty();
+                    let testUrls = [
+                        "chat_server_tests/ClientTests.php",
+                        "chat_server_tests/ChannelManagerTests.php",
+                    ]
+                    testUrls.map(url => runTests(url, "#allTestsResults", false));
+                }
+
                 function resultDiv(text, color) {
                     let div = document.createElement("div");
                     div.style.color = color;
                     div.textContent = text;
                     return div;
                 }
-                function runClientTests(url, resultId) {
-                    $(resultId).empty();
+
+                function runTests(url, resultId, emptyBeforeExecuting) {
+                    if (emptyBeforeExecuting) {
+                        $(resultId).empty();
+                    }
                     $.ajax({
                         type: "POST",
                         async: true,
                         url: url,
                         complete: function(data) {
+                            $(resultId).append(resultDiv("Running tests @ " + url, "blue"));
                             let testResults = JSON.parse(data["responseText"]);
                             for (let result in testResults) {
                                 if (testResults[result]) {
@@ -31,11 +44,13 @@
             </script>
         </head>
         <body>
+            <button onclick="runAllTests();">Run All Tests</button>
+            <div id="allTestsResults"></div>
             <ul>
             <li>
-                <button onclick="runClientTests('chat_server_tests/ClientTests.php', '#ClientTests');">Run Client Tests</button>
+                <button onclick="runTests('chat_server_tests/ClientTests.php', '#ClientTests', true);">Run Client Tests</button>
                 <div id="ClientTests"></div>
-                <button onclick="runClientTests('chat_server_tests/ChannelManagerTests.php', '#ChannelManagerTests');">Run ChannelManager Tests</button>
+                <button onclick="runTests('chat_server_tests/ChannelManagerTests.php', '#ChannelManagerTests', true);">Run ChannelManager Tests</button>
                 <div id="ChannelManagerTests"></div>
             </li>
             </ul>
