@@ -1,4 +1,5 @@
 <?php
+//Tests for the Client class.
 require_once("../../chat_server/Client.php");
 require_once("../Tester.php");
 
@@ -26,4 +27,4 @@ function testClientSetId() {
 
 $testsToRun = array("testClientConstruct", "testClientGetId" , "testClientSetId");
 Tester::runTests($testsToRun);
-exit;
+exit();

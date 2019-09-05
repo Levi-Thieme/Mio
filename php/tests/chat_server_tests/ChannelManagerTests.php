@@ -1,4 +1,5 @@
 <?php
+//Tests for the ChannelManager class.
 require_once("../../chat_server/ChannelManager.php");
 require_once("../Tester.php");
 
