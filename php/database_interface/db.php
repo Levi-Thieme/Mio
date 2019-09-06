@@ -357,12 +357,10 @@
     /*
     Removes a member from a room
     
-    $username - the username of the user to remove
-    $roomName - the name of the room
+    $userId - the id of the user to remove
+    $roomId - the id of the room
     */
-    function removeMember($conn, $username, $roomName) {
-        $userId = getUserId($conn, $username);
-        $roomId = getRoomId($conn, $roomName);
+    function removeMember($conn, $userId, $roomId) {
         $sql = "DELETE FROM room_member WHERE room = $roomId AND usr = $userId";
         $success = execQuery($sql, $conn);
         return $success;

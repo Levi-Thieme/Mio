@@ -46,15 +46,17 @@ function addToRoom() {
 
 function leaveRoom() {
     if (isset($_GET["roomId"]) && isset($_GET["userId"])) {
+        $userId = $_GET["userId"];
+        $roomId = $_GET["roomId"];
         $conn = connect();
-        $isOwner = isRoomOwner($conn, $_GET["userId"], $_GET["roomId"]);
+        $isOwner = isRoomOwner($conn, $userId, $roomId);
         if ($isOwner) {
-            if ($success = removeAllMembers($conn, $_GET["roomId"])) {
-                deleteRoomById($conn, $_GET["roomId"]);
+            if ($success = removeAllMembers($conn, $roomId)) {
+                deleteRoomById($conn, $roomId);
             }
         }
         else {
-            removeMember($conn, getUsername($conn, $_GET["userId"]), $_GET["roomName"]);
+            removeMember($conn, $userId, $roomId);
         }
         $conn->close();
     }
