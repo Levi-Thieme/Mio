@@ -1,6 +1,6 @@
 <?php
     //Tests for the Client class.
-    require_once("../../chat_server/Client.php");
+    require_once("../../../chat_server/Client.php");
     $tests = array("testClientConstruct", "testClientGetId" , "testClientSetId");
 
     function testClientConstruct() {

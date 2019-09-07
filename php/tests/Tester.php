@@ -36,6 +36,4 @@ class Tester {
         }
         return $results;
     }
-
-
 }
