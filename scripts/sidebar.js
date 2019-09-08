@@ -17,10 +17,20 @@ function refreshFriendsList(userId) {
 }
 
 function createRoomDiv(roomId, roomName) {
-    return $("<div id="+roomId+" class='list-group-item' data-to-room style='background-color: #222; color:white'>" +
-        roomName +
-        "<i data-leave-room class='fa fa-trash fa-fw' aria-hidden='true'></i>" +
-        "<i data-add-to-room class='fa fa-plus fa-fw' aria-hidden='true'></i></div>")[0];
+    let div = document.createElement("div");
+    div.classList.add("list-group-item", "roomDiv");
+    div.dataset.toRoom = roomId;
+    div.dataset.roomName = roomName;
+    div.innerText = roomName;
+    let leaveIcon = document.createElement("i");
+    leaveIcon.dataset.leaveRoom = roomId;
+    leaveIcon.classList.add("fa", "fa-trash", "fa-fw");
+    let inviteIcon = document.createElement("i");
+    inviteIcon.dataset.addToRoom = roomId;
+    inviteIcon.classList.add("fa", "fa-plus", "fa-fw");
+    div.append(leaveIcon);
+    div.append(inviteIcon);
+    return div;
 }
 
 //Refreshes the room list
@@ -42,9 +52,15 @@ function refreshRoomList(userId) {
                 if (room.id === $("#roomId").val()) {
                     roomDiv.classList.add("active");
                 }
-                roomList.appendChild(roomDiv);
+                roomList.append(roomDiv);
                 roomDiv.parentNode = roomList;
             });
+            if (roomList.children.length === 1) {
+                let room = roomList.firstChild;
+                $("#roomId").val(room.dataset.toRoom);
+                $("#roomName").val(room.dataset.roomName);
+                room.classList.add("active");
+            }
         },
         failure: function(data) { alert("Unable to load room list."); },
     });
@@ -90,7 +106,7 @@ document.addEventListener("click", function(event) {
     let src = event.target;
     let userId = $("#userId").val();
     if ("leaveRoom" in src.dataset) {
-        let roomId = src.parentElement.id;
+        let roomId = src.dataset.leaveRoom;
         leaveRoom(userId, roomId,
             function(data) { refreshRoomList(userId); clearMessages(); clearRoom(); },
             function(data) { alert("Unable to leave room: " + name); }
@@ -115,7 +131,7 @@ document.addEventListener("click", function(event) {
         );
     }
     else if ("toRoom" in src.dataset) {
-        let toRoomId = src.id;
+        let toRoomId = src.dataset.toRoom;
         let toRoomName = src.innerText;
         let fromRoomId = $("#roomId").val();
         if (toRoomId !== fromRoomId) {
