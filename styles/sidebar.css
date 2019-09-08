@@ -1,73 +1,73 @@
-#sidebar {
-    grid-row: 1;
-    grid-column: 1;
-    display: grid;
-    grid-template-rows: 45px auto auto 80px;
-    grid-gap: 0;
-    border-right: solid 1px #e68a00;
-}
-
 .sidebarPanel {
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-.collapseHeading {
-    margin-left: 15px;
-    margin-right: 5px;
-}
-
-i.fa {
-    color: #e68a00;
-}
-
-.fa-plus-circle {
-    margin-right: 25px;
-}
-
-.fa-angle-double-down {
-    float: right;
-}
-
-.friendDiv {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 25% 50% 25%;
+    height: auto;
+    overflow: hidden;
     margin: 10px;
+    min-height: 40px;
 }
 
-#myProfileHeader {
+.firstRow {
     grid-row: 1;
-    align-content: center;
-    margin-top: 10px;
-    width: 200px;
-    height: 30px;
-    padding-right: 120px;
-}
-#myAccountLink {
-    margin: 10px;
-    width: 200px;
 }
 
-#chatPanel {
+.secondRow {
     grid-row: 2;
 }
 
-#roomList {
-    margin: 10px;
+.spanAllCols {
+    grid-column: span 3;
 }
 
-#friendPanel {
-    grid-row: 3;
+.sidebarLeft {
+    grid-column: 1;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#signout {
-    grid-row: 4;
-    font-size: large;
-    bottom: 0;
-    display: inline-block;
-    margin-left: 20%;
-    margin-right: 20%;
+.sidebarMiddle {
+    grid-column: 2;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebarRight {
+    grid-column: 3;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.collapse {
+    margin-top: 10px;
+}
+
+.fa:hover {
+    color: #007bff;
+}
+
+#sidebar {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    border-right: solid 1px #e68a00;
+    min-width: 60px;
+    max-width: 300px;
+    width: 300px;
+}
+
+#hideShowDiv {
+    position: absolute;
+    right: 0;
+    margin-right: 10px;
+}
+
+#sidebarFooter {
+    margin-top: auto;
 }
 
 #signoutBtn {
     width: 100%;
-    margin-top: 30px;
 }

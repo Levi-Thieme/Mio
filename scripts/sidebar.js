@@ -129,8 +129,50 @@ document.addEventListener("click", function(event) {
     }
 });
 
+function setAllNodesHidden(nodeClass) {
+    let nodes = document.querySelectorAll(nodeClass);
+    console.log(nodes);
+    nodes.forEach((node) => node.style.visibility = "hidden");
+}
+
+function setAllNodesVisible(nodeClass) {
+    let nodes = document.querySelectorAll(nodeClass);
+    nodes.forEach((node) => node.style.visibility = "visible");
+}
+
+function showMiniSidebar(style) {
+    let sidebar = document.getElementById("sidebar");
+    sidebar.style.width = style.minWidth;
+    setAllNodesHidden(".sidebarPanel")
+    let hideShowDiv = document.getElementById("hideShowDiv");
+    hideShowDiv.style.visibility = "visible";
+    let gridContainer = document.getElementById("pageGridContainer");
+    gridContainer.style.gridTemplateColumns = "60px auto";
+}
+
+function showDefaultSidebar() {
+    let gridContainer = document.getElementById("pageGridContainer");
+    gridContainer.style.gridTemplateColumns = "300px auto";
+    let sidebar = document.getElementById("sidebar");
+    setAllNodesVisible(".sidebarPanel");
+    let style = window.getComputedStyle(sidebar);
+    sidebar.style.width = style.maxWidth;
+    
+}
+
 $(document).ready(function(){
     $("#signout").on("click", function(){ websocket.close(); });
+    //Alternates between the minimized and default sidebar view.
+    $("#hideShowSidebarBtn").on("click", function() {
+        let sidebar = document.getElementById("sidebar");
+        let style = window.getComputedStyle(sidebar);
+        if (sidebar.style.width === style.maxWidth) {
+            showMiniSidebar(style);
+        }
+        else {
+            showDefaultSidebar();
+        }
+    })
 });
 
 function leaveRoom(userId, roomId, onComplete, onFailure) {

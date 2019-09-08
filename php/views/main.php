@@ -2,6 +2,8 @@
     session_start();
     require_once("../database_interface/db.php");
     $conn = connect();
+    $_SESSION["authenticated"] = true;
+    $_SESSION["username"] = "LeviThieme";
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
         header("Location: ./index.php");
@@ -51,7 +53,11 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+    </script>
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -84,39 +90,43 @@
     <input type='hidden' name="userId" id="userId" value=<?php echo "'" . $userId . "'";?>/>
     <input type='hidden' name="username" id="username" value=<?php echo "'" . $username . "'";?>/>
 
-    <div class="grid-container">
-        <div id="sidebar" class="grid-item dark sidebar animated slideInLeft">
-            <div id="myProfileHeader" class="sidebar">
-              <a id="myAccountLink" href="myAccount.php">
-                  <i id="myProfile" class="fa fa-user fa-2x fa-fw" aria-hidden="true">&nbsp<?php echo $username;?></i>
-              </a>
-            </div>
-            <!-- Panel for My Chats accordion -->
-            <div id="chatPanel" class="sidebarPanel sidebar">
-              <div id="chatsPanelHeading" class="collapseHeading">
-                <h4>
-                    <a id="addRoomBtn" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle"></i></a>
-                    <a id="toggleRoomsCollapse" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
-                        My Chats <i id="toggleChatsIcon" class="fa fa-angle-double-down"></i>
-                    </a>
-                </h4>
-              </div>
-              <div id="roomCollapse" class="animated zoomIn">
-                  <div id="roomList"></div>
-              </div>
-            </div>
-            <!-- Panel for Friends accordion -->
-            <div id="friendPanel" class="sidebarPanel sidebar">
-                <div id="friendsPanelHeading" class="collapseHeading">
-                    <h4>
-                      <a id="addFriendBtn" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle"></i></a>
-                      <a id="toggleFriendsCollapse" data-toggle="collapse" href="#friendsCollapse" onclick=<?php echo "refreshFriendsList($userId)";?>>
-                          Friends <i class="fa fa-angle-double-down"></i></a>
-                    </h4>
+    <div id="pageGridContainer" class="grid-container">
+        <div id="sidebar" class="grid-item dark sidebar animated slideInLeft"
+            style="width: 300px;">
+
+            <div id="sidebarHeader" class="sidebarPanel">
+                <a id="myAccountLink" class="sidebarMiddle" href="myAccount.php">
+                    <h4><?php echo $username;?></h4>
+                </a>
+                <div id="hideShowDiv" class="sidebarRight">
+                    <i id="hideShowSidebarBtn" class="fa fa-bars fa-3x"></i>
                 </div>
-                <div id="friendsCollapse"></div>
             </div>
-            <a id="signout" class="dark sidebar" href="logout.php"><button id="signoutBtn" class="btn btn-primary sidebar">Signout</button></a>
+
+            <!-- Panel for My Chats accordion -->
+            <div id="chatPanel" class="sidebarPanel">
+                <a id="addRoomBtn" class="firstRow sidebarLeft" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle fa-3x"></i></a>
+                <h4 class="firstRow sidebarMiddle">Chats</h4>
+                <a id="toggleRoomsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
+                    <i id="toggleChatsIcon" class="fa fa-angle-double-down fa-3x"></i>
+                </a>
+                <div id="roomCollapse" class="collapse animated zoomIn secondRow spanAllCols">
+                    <div id="roomList"></div>
+                </div>
+            </div>
+
+            <!-- Panel for Friends accordion -->
+            <div id="friendPanel" class="sidebarPanel">
+                <a id="addFriendBtn" class="firstRow sidebarLeft" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle fa-3x sidebarLeft"></i></a>
+                <h4 class="firstRow sidebarMiddle">Friends</h4>
+                <a id="toggleFriendsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#friendsCollapse" onclick=<?php echo "refreshFriendsList($userId)";?>>
+                    <i class="fa fa-angle-double-down fa-3x"></i></a>
+                <div id="friendsCollapse" class="collapse secondRow spanAllCols"></div>
+            </div>
+
+            <div id="sidebarFooter" class="sidebarPanel">
+                <a id="signout" class="dark sidebarMiddle" href="logout.php"><button id="signoutBtn" class="btn btn-primary">Signout</button></a>
+            </div>
         </div>
 
         <div id="mainPanel" class="main">
