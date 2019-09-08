@@ -19,7 +19,8 @@ function refreshFriendsList(userId) {
 function createRoomDiv(roomId, roomName) {
     let div = document.createElement("div");
     div.classList.add("list-group-item", "roomDiv");
-    div.dataset.toRoom = roomId;
+    div.dataset.moveToRoom = roomId;
+    div.dataset.roomId = roomId;
     div.dataset.roomName = roomName;
     div.innerText = roomName;
     let leaveIcon = document.createElement("i");
@@ -27,6 +28,7 @@ function createRoomDiv(roomId, roomName) {
     leaveIcon.classList.add("fa", "fa-trash", "fa-fw");
     let inviteIcon = document.createElement("i");
     inviteIcon.dataset.addToRoom = roomId;
+    inviteIcon.dataset.roomName = roomName;
     inviteIcon.classList.add("fa", "fa-plus", "fa-fw");
     div.append(leaveIcon);
     div.append(inviteIcon);
@@ -55,9 +57,9 @@ function refreshRoomList(userId) {
                 roomList.append(roomDiv);
                 roomDiv.parentNode = roomList;
             });
-            if (roomList.children.length === 1) {
+            if (roomList.children.length > 0) {
                 let room = roomList.firstChild;
-                $("#roomId").val(room.dataset.toRoom);
+                $("#roomId").val(room.dataset.roomId);
                 $("#roomName").val(room.dataset.roomName);
                 room.classList.add("active");
             }
@@ -100,50 +102,6 @@ function approveFriendRequest(userId, requesterName, onComplete, onFailure) {
         failure: onFailure
     });
 }
-
-//Event listener for the sidebars icons and rooms
-document.addEventListener("click", function(event) {
-    let src = event.target;
-    let userId = $("#userId").val();
-    if ("leaveRoom" in src.dataset) {
-        let roomId = src.dataset.leaveRoom;
-        leaveRoom(userId, roomId,
-            function(data) { refreshRoomList(userId); clearMessages(); clearRoom(); },
-            function(data) { alert("Unable to leave room: " + name); }
-        )
-    }
-    else if ("addToRoom" in src.dataset) {
-        let chatName = src.parentElement.innerText;
-        openInviteToChatModal(chatName);
-    }
-    else if ("deleteFriend" in src.dataset) {
-        let name = src.parentElement.id;
-        deleteFriend(userId, name,
-            function(data) { refreshFriendsList(userId); },
-            function(data) { alert("Failed to delete friend: " + name);}
-        );
-    }
-    else if ("approveFriendRequest" in src.dataset) {
-        let name = src.parentElement.id;
-        approveFriendRequest(userId, name,
-            function(data) { refreshFriendsList(userId); },
-              function(data) { alert("Failed to approve friend request from" + name + "."); }
-        );
-    }
-    else if ("toRoom" in src.dataset) {
-        let toRoomId = src.dataset.toRoom;
-        let toRoomName = src.innerText;
-        let fromRoomId = $("#roomId").val();
-        if (toRoomId !== fromRoomId) {
-            removeClassFromChildren($("#roomList"), "active");
-            $(src).addClass("active");
-            gotoRoom($("#userId").val(), $("#username").val(), $("#roomName").val(), toRoomId, toRoomName);
-            $("#roomId").val(toRoomId);
-            $("#roomName").val(toRoomName);
-            clearMessages();
-        }
-    }
-});
 
 function setAllNodesHidden(nodeClass) {
     let nodes = document.querySelectorAll(nodeClass);
@@ -188,7 +146,61 @@ $(document).ready(function(){
         else {
             showDefaultSidebar();
         }
-    })
+    });
+
+    //Event Listener for room divs
+    let roomList = document.getElementById("roomList");
+    roomList.addEventListener("click", function(event) {
+        let userId = document.getElementById("userId").value;
+        let clickedElement = event.target;
+        if ("moveToRoom" in clickedElement.dataset) {
+            let roomId = clickedElement.dataset.roomId;
+            let roomName = clickedElement.dataset.roomName;
+            let currentRoomId = document.getElementById("roomId").value;
+            if (roomId != currentRoomId) {
+                removeClassFromChildren(roomList, "active");
+                clickedElement.classList.add("active");
+                gotoRoom(
+                    userId, 
+                    document.getElementById("username").value,
+                    document.getElementById("roomName").value, 
+                    roomId, 
+                    roomName
+                );
+                document.getElementById("roomId").value = roomId;
+                document.getElementById("roomName").value = roomName;
+                clearMessages();
+            }
+        } else if ("addToRoom" in clickedElement.dataset) {
+            openInviteToChatModal(clickedElement.dataset.roomName);
+        } else if ("leaveRoom" in clickedElement.dataset) {
+            let roomId = clickedElement.dataset.leaveRoom;
+            leaveRoom(userId, roomId,
+                function(data) { refreshRoomList(userId); clearMessages(); clearRoom(); },
+                function(data) { alert("Unable to leave room: " + name); }
+            )
+        }
+    });
+
+    //Event listener for the sidebars icons and rooms
+    document.addEventListener("click", function(event) {
+    let src = event.target;
+    let userId = $("#userId").val();
+    if ("deleteFriend" in src.dataset) {
+        let name = src.parentElement.id;
+        deleteFriend(userId, name,
+            function(data) { refreshFriendsList(userId); },
+            function(data) { alert("Failed to delete friend: " + name);}
+        );
+    }
+    else if ("approveFriendRequest" in src.dataset) {
+        let name = src.parentElement.id;
+        approveFriendRequest(userId, name,
+            function(data) { refreshFriendsList(userId); },
+              function(data) { alert("Failed to approve friend request from" + name + "."); }
+        );
+    }
+});
 });
 
 function leaveRoom(userId, roomId, onComplete, onFailure) {
@@ -217,7 +229,7 @@ function gotoRoom(userId, username, currentRoomName, toRoomId, toRoomName) {
         channelToId: toRoomId,
         channelToName: toRoomName
     };
-    websocket.send(JSON.stringify(message));
+    sendMessage(message);
 }
 
 //removes className from node's children

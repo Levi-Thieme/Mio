@@ -100,7 +100,9 @@ class ChannelManager {
 	 * Adds a channel to $channels.
 	 */
 	function addChannel($channelToAdd) {
-	    array_push($this->channels, new Channel($channelToAdd, array()));
+        $newChannel = new Channel($channelToAdd, array());
+        array_push($this->channels, $newChannel);
+        return $newChannel;
     }
 
     /*
@@ -154,20 +156,19 @@ class ChannelManager {
                 $currentChannelName = $messageAssoc["currentChannelName"];
                 $channelToId = $messageAssoc["channelToId"];
                 $channelToName = $messageAssoc["channelToName"];
+                //Remove client from their current channel.
                 $currentChannelObj = $this->getChannel($currentChannelName);
-                if ($currentChannelObj == NULL) {
-                    $this->send($this->formatMessage($currentChannelName . " cannot be found.", $username, $currentChannelName), $clientSocket);
-                } else {
-                    $client = $currentChannelObj->getClientByUsername($username);
-                    $this->removeClientFromChannel($currentChannelName, $client);
-                    $this->broadcastClientLeft($username, $currentChannelName);
-                    if ($this->getChannel($channelToName) === NULL) {
-                        $this->addChannel($channelToName);
-                    }
-                    $client = new Client($id, $username, $clientSocket);
-                    $this->addClientToChannel($channelToName, $client);
-                    $this->broadcastClientJoined($username, $channelToName);
+                $client = $currentChannelObj->getClientByUsername($username);
+                $this->removeClientFromChannel($currentChannelName, $client);
+                $this->broadcastClientLeft($username, $currentChannelName);
+                //Create the channel the client is moving to if it doesn't already exist.
+                if ($this->getChannel($channelToName) === NULL) {
+                    $this->addChannel($channelToName);
                 }
+                //Add a the Client to the channel they are moving to.
+                $client = new Client($id, $username, $clientSocket);
+                $this->addClientToChannel($channelToName, $client);
+                $this->broadcastClientJoined($username, $channelToName);
             }
             else if ($messageAssoc["action"] === "notifyFriendRequest") {
                 $this->notifyFriendRequest($username, $messageAssoc["toUsername"]);
