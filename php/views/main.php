@@ -2,8 +2,6 @@
     session_start();
     require_once("../database_interface/db.php");
     $conn = connect();
-    $_SESSION["authenticated"] = true;
-    $_SESSION["username"] = "LeviThieme";
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");
         header("Location: ./index.php");
