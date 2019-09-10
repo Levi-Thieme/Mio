@@ -67,21 +67,23 @@ $(document).ready(function() {
 
     //Sends the username, channel, and message through websocket
     function sendMessageWithUserInfo() {
-        let id =  $("#userId").val();
-        let username = $("#username").val();
-        let roomName = $("#roomName").val();
         let message = $("#message").val().trim();
         if (message === "") {
             return;
         }
-        if (id == "" || username == "" || roomName == "") {
+        let clientId = $("#userId").val();
+        let roomId = $("#roomId").val();
+        let username = $("#username").val();
+        let roomName = $("#roomName").val();
+        if (clientId == "" || username == "" || roomId == "" || roomName == "") {
             displayErrorMessage("User id, username, or roomName is not set. Unable to send your message.");
             return;
         }
         let userInfo = {
-            id: id,
+            clientId: clientId,
             username: username,
-            currentChannelName: roomName,
+            channelId: roomId,
+            channelName: roomName,
             message: message
         };
         if (sendMessage(userInfo)) {

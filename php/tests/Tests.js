@@ -1,34 +1,19 @@
 var testUrls = [];
 
-function createTestArray(testData) {
-    let allTests = [];
-    for (let testName in testData) {
-        let test = { name: testName, passed: testData[testName]};
-        allTests.push(test);
-    }
-    return allTests;
-}
-
 /*
 Retrieves the test results from each url in testUrls and displays the results.
 */
 function runAllTests() {
     clearTestResults();
-    let testPromises = getTestPromises().then(function(testData) {
-        let allTests = [];
-        testData.map(tests => {
-            let parsedTests = JSON.parse(tests);
-            for(let testName in parsedTests) {
-                let test = { name: testName, passed: parsedTests[testName]};
-                allTests.push(test);
-            }
-        });       
-        displayTestResults(allTests);
-        displayTestPassToFailRatio(allTests.filter(test=>test.passed).length, allTests.length);
+    let startTime = performance.now();
+    let testPromises = getTestPromises().then((allTestSuites)=> {
+        allTestSuites = allTestSuites.flat();
+        displayRuntime(startTime, performance.now());
+        displayTestResults(allTestSuites);
+        displayTestPassToFailRatio(allTestSuites.filter(test=>test.status).length, allTestSuites.length);
     }, function(reason) {
         alert(reason);
     });
-
 }
 
 function getTestPromises() {
@@ -51,13 +36,54 @@ function runTestsAsync(url, resolve, reject) {
     xhr.setRequestHeader("Content-Type", "JSON");
     xhr.onload = function() {
         if (xhr.status === 200) {
-            resolve(xhr.responseText);
+            resolve(constructTestResults(xhr.responseText));
         }
         else {
             reject("Failed to run tests at " + url);
         }
     }
     xhr.send();
+}
+
+/*
+Parses the responseText from runTestsAsync
+*/
+function parseResponseText(text) {
+    let tests = "{}";
+    let start = text.search("{");
+    let end = text.search("}");
+    if (start > 0) {
+        let phpErrorMessage = text.slice(0, start - 1);
+        console.log(phpErrorMessage);
+        let div = document.createElement("div");
+        div.innerHTML = phpErrorMessage;
+        let row = document.createElement("tr");
+        row.classList.add("failed");
+        row.append(createElementWithTextContent("td", "A PHP Error Occurred"));
+        let status = createElementWithTextContent("td", div.innerText);
+        status.style.textAlign = "center";
+        row.append(status);
+        document.getElementById("testsTableBody").append(row);
+    }
+    try {
+        tests = JSON.parse(text.slice(start, end + 1));
+    } catch (e) {
+        console.log(e);
+        console.log(text);
+    }
+    return tests;
+}
+
+/*
+Constructs an array of test result objects.
+*/
+function constructTestResults(responseText) {
+    let tests = parseResponseText(responseText);
+    let testResults = [];
+    for (let test in tests) {
+        testResults.push({ name: test, status: tests[test]})
+    }
+    return testResults;
 }
 
 /*
@@ -80,7 +106,7 @@ Displays the test results in the testsTable.
 function displayTestResults(tests) {
     tests.map(test => {
         let row = document.createElement("tr");
-        if (test.passed) {
+        if (test.status) {
             row.classList.add("passed");
             row.append(createElementWithTextContent("td", test.name));
             let status = createElementWithTextContent("td", "Passed");
@@ -96,6 +122,10 @@ function displayTestResults(tests) {
         }
         document.getElementById("testsTableBody").append(row);
     });
+}
+
+function displayRuntime(startTime, endTime) {
+    document.getElementById("runtime").innerText = (endTime - startTime).toFixed(2) + " ms";
 }
 
 /*
@@ -136,12 +166,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById("runAllTestsBtn").addEventListener("click", runAllTests);
     document.getElementById("dropdownContent").addEventListener("click", function(target) {
+        clearTestResults();
+        let startTime = performance.now();
         runTestsAsync(target.srcElement.innerText, 
             function(testData) { //accept
-                clearTestResults();
-                let tests = createTestArray(JSON.parse(testData));
-                displayTestResults(tests);
-                displayTestPassToFailRatio(tests.filter(test=>test.passed).length ,tests.length);
+                displayRuntime(startTime, performance.now());
+                displayTestResults(testData);
+                displayTestPassToFailRatio(testData.filter(test=>test.status).length , testData.length);
             },
             function(reason) { //reject
                 alert(reason);

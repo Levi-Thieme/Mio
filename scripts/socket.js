@@ -15,9 +15,10 @@ function createSocket() {
 
 function onOpen() {
     let userInfo = {
-        id : $("#userId").val(),
+        clientId : $("#userId").val(),
         username: $("#username").val(),
-        channel: $("#roomName").val()
+        channelId: $("#roomId").val(),
+        channelName: $("#roomName").val()
     };
     websocket.send(JSON.stringify(userInfo));
 }

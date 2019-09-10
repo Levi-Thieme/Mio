@@ -4,26 +4,38 @@ require_once("../../../chat_server/ChannelManager.php");
 require_once("../../Tester.php");
 
 /*
-* Tests the addChannel method.
-*/
-function testAddChannel()
-{
-    $manager = new ChannelManager();
-    $channelToAdd = "addedChannel";
-    $manager->addChannel($channelToAdd);
-    $channels = $manager->getChannels();
-    return $manager->getChannels()[0]->getName() === $channelToAdd;
-}
-
-/*
 * Tests the getChannel method
 */
 function testGetChannel() {
     $manager = new ChannelManager();
+    $id = 1;
     $channelName = "testChannel";
-    $testChannel = new Channel("testChannel", array());
+    $testChannel = new Channel($id, "testChannel", array());
     $manager->setChannels(array($testChannel));
-    return $manager->getChannel($channelName) === $testChannel;
+    return $manager->getChannel($id) === $testChannel;
+}
+
+/*
+* Tests the addChannel method.
+*/
+function testAddChannel() {
+    $manager = new ChannelManager();
+    $id = 1;
+    $name = "addedChannel";
+    $manager->addChannel($id, $name);
+    $channels = $manager->getChannels();
+    return $channels[0]->getId() === $id;
+}
+
+/*
+ * Tests the containsChannel method
+ */
+function testContainsChannel() {
+    $manager = new ChannelManager();
+    $id = 1;
+    $name = "addedChannel";
+    $manager->addChannel($id, $name);
+    return $manager->containsChannel(1);
 }
 
 /*
@@ -31,24 +43,45 @@ function testGetChannel() {
 */
 function testAddClientToChannel() {
     $manager = new ChannelManager();
-    $manager->addChannel("testChannel");
+    $manager->addChannel(1, "testChannel");
     $client = new Client(1, "testUser", NULL);
-    $manager->addClientToChannel("testChannel", $client);
-    $channel = $manager->getChannel("testChannel");
+    $manager->addClientToChannel(1, $client);
+    $channel = $manager->getChannel(1);
     return in_array($client, $channel->getClients());
 }
+
+
 
 /*
 * Tests the removeClientFromChannel method
 */
 function testRemoveClientFromChannel() {
     $manager = new ChannelManager();
-    $manager->addChannel("testChannel");
-    $client = new Client(1, "testUser", NULL);
-    $manager->addClientToChannel("testChannel", $client);
-    $manager->removeClientFromChannel("testChannel", $client);
-    $channel = $manager->getChannel("testChannel");
+    $channelId = 1;
+    $clientId = 2;
+    $manager->addChannel($channelId, "testChannel");
+    $client = new Client($clientId, "testUser", NULL);
+    $manager->addClientToChannel($channelId, $client);
+    $manager->removeClientFromChannel($channelId, $clientId);
+    $channel = $manager->getChannel($channelId);
     return in_array($client, $channel->getClients()) == false;
+}
+
+/*
+ * Tests the addNewClient method.
+ */ 
+function testAddNewClient() {
+    $manager = new ChannelManager();
+    $clientSocket = "socketResource";
+    $clientInfo = array("clientId"=>1, "username"=>"Jimbob", "channelId"=>2, "channelName"=>"channel name");
+    $manager->addNewClient($clientSocket, $clientInfo);
+    $addedChannel = $manager->getChannels()[0];
+    $addedClient = $addedChannel->getClients()[0];
+    return $addedChannel->getId() === 2
+        && $addedChannel->getName() === "channel name"
+        && $addedClient->getId() === 1
+        && $addedClient->getUsername() === "Jimbob"
+        && $addedClient->getSocket() === $clientSocket;
 }
 
 /*
@@ -56,28 +89,16 @@ function testRemoveClientFromChannel() {
 */
 function testGetClientFromChannels() {
     $manager = new ChannelManager();
-    $manager->addChannel("isClientChannel");
-    $manager->addChannel("notClientChannel");
+    $manager->addChannel(1, "isClientChannel");
+    $manager->addChannel(2, "notClientChannel");
     $client = new Client(1, "Gauss", NULL);
-    $manager->addClientToChannel("isClientChannel", $client);
-    $client = $manager->getClientFromChannels("Gauss");
-    return $client != NULL && $client->getId() === 1;
+    $manager->addClientToChannel(1, $client);
+    $client = $manager->getClientFromChannels(1);
+    return $client != NULL && $client->getId() === 1 && $client->getUsername() === "Gauss";
 }
 
-/*
-* Tests the addReplaceClient method
-*/
-function testAddReplaceClient() {
-    $manager = new ChannelManager();
-    $manager->addChannel("testChannel");
-    $client = new Client(1, "testUser", "firstSocket");
-    $sameClient = new Client(1, "testUser", "secondSocket");
-    $manager->addClientToChannel("testChannel", $sameClient);
-    return $manager->getClientFromChannels("testUser")->getSocket() === "secondSocket";
-}
-
-$tests = array("testAddChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
-    "testGetClientFromChannels", "testAddReplaceClient");
+$tests = array("testAddChannel", "testContainsChannel", "testGetChannel", "testAddClientToChannel", "testRemoveClientFromChannel",
+    "testAddNewClient", "testGetClientFromChannels");
 $results = array();
 foreach ($tests as $test) {
     $results[$test] = $test();

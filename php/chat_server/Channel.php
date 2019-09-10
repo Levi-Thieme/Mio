@@ -8,7 +8,8 @@ class Channel {
     private $name;
     private $clients;
 
-    function __construct($name, $clients) {
+    function __construct($id, $name, $clients) {
+        $this->id = $id;
         $this->name = $name;
         $this->clients = $clients;
     }
@@ -18,7 +19,7 @@ class Channel {
     }
 
     public function addReplaceClient($client) {
-        $containedClient = $this->getClientByUsername($client->getUsername());
+        $containedClient = $this->getClientById($client->getId());
         if ($containedClient != NULL) {
             $this->removeClient($containedClient);
         }
@@ -27,6 +28,26 @@ class Channel {
 
     public function removeClient($client) {
         unset($this->clients[array_search($client, $this->clients)]);
+    }
+
+    public function removeClientById($id) {
+        foreach ($this->clients as $client) {
+            if ($client->getId() === $id) {
+                $socket = $client->getSocket();
+                $this->removeClient($client);
+                return $socket;
+            }
+        }
+        return false;
+    }
+
+    public function getClientById($id) {
+        foreach ($this->clients as $client) {
+            if ($client->getId() === $id) {
+                return $client;
+            }
+        }
+        return NULL;
     }
 
     public function getClientByUsername($username) {
