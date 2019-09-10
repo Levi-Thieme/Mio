@@ -1,3 +1,43 @@
+
+function joinRoom(userId, username, channelId, channelName) {
+    document.getElementById("roomId").value = channelId;
+    document.getElementById("roomName").value = channelName;
+    let message = {
+        action: "JoinChannel",
+        clientId: userId,
+        username: username,
+        channelId: channelId,
+        channelName: channelName,
+        message: ""
+    };
+    sendMessage(message);
+}
+
+function removeRoom(userId, channelId) {
+    $.ajax({
+        url: controllersPath + "roomHandler.php",
+        type: "GET",
+        async: true,
+        data: {
+            request: "removeRoom",
+            clientId: userId,
+            channelId: channelId
+        },
+        datatype: "JSON"
+    });
+}
+
+function leaveRoom(userId, channelId) {
+    clearRoom();
+    clearMessages();
+    let message = {
+        action: "LeaveChannel",
+        clientId: userId,
+        channelId: channelId
+    }
+    sendMessage(message);
+}
+
 //Refreshes the friend list
 function refreshFriendsList(userId) {
     console.log("refresh friends list for " + userId + "\n");
@@ -49,16 +89,19 @@ function refreshRoomList(userId) {
             let roomList = document.getElementById("roomList");
             roomList.innerHTML = "";
             let rooms = JSON.parse(data);
+            let roomNotSelected = true;
             rooms.forEach((room)=> {
                 let roomDiv = createRoomDiv(room.id, room.name);
                 if (room.id === $("#roomId").val()) {
                     roomDiv.classList.add("active");
+                    roomNotSelected = false;
                 }
                 roomList.append(roomDiv);
                 roomDiv.parentNode = roomList;
             });
-            if (roomList.children.length > 0) {
+            if (roomList.children.length > 0 && roomNotSelected) {
                 let room = roomList.firstChild;
+                joinRoom($("#userId").val(), $("#username").val(), room.dataset.roomId, room.dataset.roomName);
                 $("#roomId").val(room.dataset.roomId);
                 $("#roomName").val(room.dataset.roomName);
                 room.classList.add("active");
@@ -105,7 +148,6 @@ function approveFriendRequest(userId, requesterName, onComplete, onFailure) {
 
 function setAllNodesHidden(nodeClass) {
     let nodes = document.querySelectorAll(nodeClass);
-    console.log(nodes);
     nodes.forEach((node) => node.style.visibility = "hidden");
 }
 
@@ -152,85 +194,42 @@ $(document).ready(function(){
     let roomList = document.getElementById("roomList");
     roomList.addEventListener("click", function(event) {
         let userId = document.getElementById("userId").value;
+        let username = document.getElementById("username").value;
         let clickedElement = event.target;
         if ("moveToRoom" in clickedElement.dataset) {
             let roomId = clickedElement.dataset.roomId;
             let roomName = clickedElement.dataset.roomName;
             let currentRoomId = document.getElementById("roomId").value;
             if (roomId != currentRoomId) {
+                //if the client is currently in a room, then remove them
+                if (currentRoomId) {
+                    leaveRoom(userId, currentRoomId);
+                }
                 removeClassFromChildren(roomList, "active");
                 clickedElement.classList.add("active");
-                gotoRoom(
-                    userId, 
-                    document.getElementById("username").value,
-                    document.getElementById("roomName").value, 
-                    roomId, 
-                    roomName
-                );
-                document.getElementById("roomId").value = roomId;
-                document.getElementById("roomName").value = roomName;
-                clearMessages();
+                joinRoom(userId, username, roomId, roomName);
             }
         } else if ("addToRoom" in clickedElement.dataset) {
             openInviteToChatModal(clickedElement.dataset.roomName);
         } else if ("leaveRoom" in clickedElement.dataset) {
-            let roomId = clickedElement.dataset.leaveRoom;
-            leaveRoom(userId, roomId,
-                function(data) { refreshRoomList(userId); clearMessages(); clearRoom(); },
-                function(data) { alert("Unable to leave room: " + name); }
-            )
+            let channelIdToRemove = clickedElement.dataset.leaveRoom;
+            roomList.removeChild(clickedElement.parentNode);
+            leaveRoom(userId, channelIdToRemove);
+            removeRoom(userId, channelIdToRemove);
+            
+            //TODO If this person was the room owner, then tell the ChannelManager to
+            // kick out any other users currently in the room.
+
+            if (roomList.children.length > 0) {
+                let username = document.getElementById("username").value;
+                let firstRoom = roomList.firstChild;
+                let roomId = firstRoom.dataset.roomId;
+                let roomName = firstRoom.dataset.roomName;
+                joinRoom(userId, username, roomId, roomName);
+                firstRoom.classList.add("active");
+            }
         }
     });
-
-    //Event listener for the sidebars icons and rooms
-    document.addEventListener("click", function(event) {
-    let src = event.target;
-    let userId = $("#userId").val();
-    if ("deleteFriend" in src.dataset) {
-        let name = src.parentElement.id;
-        deleteFriend(userId, name,
-            function(data) { refreshFriendsList(userId); },
-            function(data) { alert("Failed to delete friend: " + name);}
-        );
-    }
-    else if ("approveFriendRequest" in src.dataset) {
-        let name = src.parentElement.id;
-        approveFriendRequest(userId, name,
-            function(data) { refreshFriendsList(userId); },
-              function(data) { alert("Failed to approve friend request from" + name + "."); }
-        );
-    }
-});
-});
-
-function leaveRoom(userId, roomId, onComplete, onFailure) {
-    $.ajax({
-        url: controllersPath + "roomHandler.php",
-        type: "GET",
-        async: true,
-        data: {
-            request: "leaveRoom",
-            userId: userId,
-            roomId: roomId
-        },
-        datatype: "JSON",
-        complete: onComplete,
-        failure: onFailure
-    });
-}
-
-function gotoRoom(userId, username, currentRoomName, toRoomId, toRoomName) {
-    let message = {
-        id: userId,
-        username: username,
-        currentChannelName: currentRoomName,
-        message: "",
-        action: "MoveToChannel",
-        channelToId: toRoomId,
-        channelToName: toRoomName
-    };
-    sendMessage(message);
-}
 
 //removes className from node's children
 function removeClassFromChildren(parent, className) {
@@ -239,3 +238,24 @@ function removeClassFromChildren(parent, className) {
         $(children[i]).removeClass(className);
     }
 }
+
+    //Event listener for the sidebar friend related icons
+    document.addEventListener("click", function(event) {
+        let src = event.target;
+        let userId = $("#userId").val();
+        if ("deleteFriend" in src.dataset) {
+            let name = src.parentElement.id;
+            deleteFriend(userId, name,
+                function(data) { refreshFriendsList(userId); },
+                function(data) { alert("Failed to delete friend: " + name);}
+            );
+        }
+        else if ("approveFriendRequest" in src.dataset) {
+            let name = src.parentElement.id;
+            approveFriendRequest(userId, name,
+                function(data) { refreshFriendsList(userId); },
+                function(data) { alert("Failed to approve friend request from" + name + "."); }
+            );
+        }
+    });
+});

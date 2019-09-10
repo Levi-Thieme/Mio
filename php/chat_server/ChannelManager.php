@@ -2,7 +2,6 @@
 require_once("SocketData.php");
 require_once("Client.php");
 require_once("Channel.php");
-//define("LOG_URL", "../logs/socket_error_log.txt");
 
 /*
 The ChannelManager class' responsibility is create and destroy channels, and place clients in the proper channel.
@@ -22,9 +21,9 @@ class ChannelManager {
         $this->channels = $channels;
     }
 
-    function getChannel($channelName) {
+    function getChannel($id) {
         foreach(array_values($this->channels) as $channel) {
-            if ($channel->getName() === $channelName)
+            if ($channel->getId() === $id)
                 return $channel;
         }
         return NULL;
@@ -64,9 +63,9 @@ class ChannelManager {
      * @param $channelName String The name of the channel to send message to.
      * @return int The number of bytes successfully written to the socket or False on failure.
      */
-	function broadcast($message, $channelName) {
+	function broadcast($message, $channelId) {
 	    $status = true;
-	    $channel = $this->getChannel($channelName);
+	    $channel = $this->getChannel($channelId);
         if ($channel != NULL) {
             foreach ($channel->getClients() as $client) {
                 $this->send($message, $client->getSocket());
@@ -81,35 +80,50 @@ class ChannelManager {
 	/*
 	 * Broadcasts a message to the specified channel that a new user has joined.
 	 */
-	function broadcastClientJoined($username, $channelName) {
-		$message = "{$username} has joined the chat.";
+	function broadcastClientJoined($username, $channelId) {
+        $message = "{$username} has joined the chat.";
+        $channelName = $this->getChannel($channelId)->getName();
 		$formattedMessage = $this->formatMessage($message, $username, $channelName);
-		$this->broadcast($formattedMessage, $channelName);
+		$this->broadcast($formattedMessage, $channelId);
 	}
 
     /*
      * Broadcast a message to the specified channel that a user has left.
      */
-	function broadcastClientLeft($username, $channel) {
-		$message = "{$username} has left the chat.";
-		$formattedMessage = $this->formatMessage($message, $username, $channel);
-		$this->broadcast($formattedMessage, $channel);
+	function broadcastClientLeft($username, $channelId) {
+        $message = "{$username} has left the chat.";
+        $channelName = $this->getChannel($channelId)->getName();
+		$formattedMessage = $this->formatMessage($message, $username, $channelName);
+		$this->broadcast($formattedMessage, $channelId);
 	}
 
 	/*
 	 * Adds a channel to $channels.
 	 */
-	function addChannel($channelToAdd) {
-        $newChannel = new Channel($channelToAdd, array());
+	function addChannel($id, $name) {
+        $newChannel = new Channel($id, $name, array());
         array_push($this->channels, $newChannel);
         return $newChannel;
     }
 
     /*
+     * Returns true if there is a channel with id
+     */ 
+    function containsChannel($id) {
+        foreach ($this->channels as $channel) {
+            if ($channel->getId() === $id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
      * Adds a Client object to the specified channel.
+     * Precondition: A Channel with $channelId must already exist in $this->channels.
      */
-	function addClientToChannel($channelName, $client) {
-	    $channel = $this->getChannel($channelName);
+	function addClientToChannel($channelId, $client) {
+	    $channel = $this->getChannel($channelId);
 	    $channel->addReplaceClient($client);
     }
 
@@ -117,13 +131,12 @@ class ChannelManager {
      * Removes the $client from the specified channel.
      * Returns the client's socket resource.
      */
-    function removeClientFromChannel($channelName, $client) {
-        if ($client == NULL) {
-            return NULL;
+    function removeClientFromChannel($channelId, $clientId) {
+        $channel = $this->getChannel($channelId);
+        $clientSocket = NULL;
+        if ($channel != NULL) {
+            $clientSocket = $channel->removeClientById($clientId);
         }
-        $channel = $this->getChannel($channelName);
-        $clientSocket = $client->getSocket();
-        $channel->removeClient($client);
         return $clientSocket;
     }
 
@@ -132,15 +145,16 @@ class ChannelManager {
      * and sending a greeting.
      */
     function addNewClient($clientSocket, $clientInfo) {
-        $clientId = $clientInfo["id"];
+        $clientId = $clientInfo["clientId"];
         $clientUsername = $clientInfo["username"];
-        $channelName = $clientInfo["channel"];
+        $channelId = $clientInfo["channelId"];
+        $channelName = $clientInfo["channelName"];
         $newClient = new Client($clientId, $clientUsername, $clientSocket);
-        //ensure the channel is contained in $channels, if not add it
-        if ($this->getChannel($channelName) === NULL) {
-            $this->addChannel($channelName);
+        //If the channel does not already exist, then create it.
+        if ($this->getChannel($channelId) === NULL) {
+            $this->addChannel($channelId, $channelName);
         }
-        $this->addClientToChannel($channelName, $newClient);
+        $this->addClientToChannel($channelId, $newClient);
     }
 
     /*
@@ -149,43 +163,44 @@ class ChannelManager {
      * There are currently two message types: Broadcast, MoveToChannel
      */
     function handleSocketMessage($clientSocket, $messageAssoc) {
-        $id = $messageAssoc["id"];
-        $username = $messageAssoc["username"];
+        $clientId = $messageAssoc["clientId"];
         if (isset($messageAssoc["action"])) {
-            if ($messageAssoc["action"] === "MoveToChannel") {
-                $currentChannelName = $messageAssoc["currentChannelName"];
-                $channelToId = $messageAssoc["channelToId"];
-                $channelToName = $messageAssoc["channelToName"];
-                //Remove client from their current channel.
-                $currentChannelObj = $this->getChannel($currentChannelName);
-                $client = $currentChannelObj->getClientByUsername($username);
-                $this->removeClientFromChannel($currentChannelName, $client);
-                $this->broadcastClientLeft($username, $currentChannelName);
-                //Create the channel the client is moving to if it doesn't already exist.
-                if ($this->getChannel($channelToName) === NULL) {
-                    $this->addChannel($channelToName);
+            if ($messageAssoc["action"] === "LeaveChannel") {
+                $this->removeClientFromChannel($messageAssoc["channelId"], $clientId);
+            }
+            else if ($messageAssoc["action"] === "JoinChannel") {
+                $username = $messageAssoc["username"];
+                $channelId = $messageAssoc["channelId"];
+                if (!isset($channelId)) {
+                    error_log("Channel ID not set.\n", 3, LOG_URL);
                 }
-                //Add a the Client to the channel they are moving to.
-                $client = new Client($id, $username, $clientSocket);
-                $this->addClientToChannel($channelToName, $client);
-                $this->broadcastClientJoined($username, $channelToName);
+                //If it doesn't already exist, create the channel the client is joining.
+                if ($this->getChannel($channelId) === NULL) {
+                    $this->addChannel($channelId, $messageAssoc["channelName"]);
+                }
+                $client = new Client($clientId, $username, $clientSocket);
+                $this->addClientToChannel($channelId, $client);
+                $this->broadcastClientJoined($username, $channelId);
             }
             else if ($messageAssoc["action"] === "notifyFriendRequest") {
-                $this->notifyFriendRequest($username, $messageAssoc["toUsername"]);
+                $username = $messageAssoc["username"];
+                $this->notifyFriendRequest($username, $clientId);
             }
         }
         else {
-            $currentChannelName = $messageAssoc["currentChannelName"];
             $message = $messageAssoc["message"];
-            $this->broadcast($this->formatMessage($message, $username, $currentChannelName), $currentChannelName);
+            $username = $messageAssoc["username"];
+            $channelId = $messageAssoc["channelId"];
+            $channelName = $messageAssoc["channelName"];
+            $this->broadcast($this->formatMessage($message, $username, $channelName), $channelId);
         }
     }
 
     //Attempts to retrieve the channel that a client with $username belongs to.
-    function getClientFromChannels($username) {
+    function getClientFromChannels($clientId) {
         $channels = $this->getChannels();
         foreach ($channels as $channel) {
-            $client = $channel->getClientByUsername($username);
+            $client = $channel->getClientById($clientId);
             if ($client != NULL) {
                 return $client;
             }
@@ -194,8 +209,8 @@ class ChannelManager {
     }
 
     //Attempts to send a friend request message to a user with $toUsername if they are online.
-    function notifyFriendRequest($fromUsername, $toUsername) {
-        $toClient = $this->getClientFromChannels($toUsername);
+    function notifyFriendRequest($fromUsername, $toUserId) {
+        $toClient = $this->getClientFromChannels($toUserId);
         if ($toClient != NULL) {
             $message = $this->formatMessage("You have a friend request from {$fromUsername}.", $fromUsername, "testChannel");
             $this->send($message, $toClient->getSocket());

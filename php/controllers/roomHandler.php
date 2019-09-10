@@ -44,10 +44,10 @@ function addToRoom() {
     }
 }
 
-function leaveRoom() {
-    if (isset($_GET["roomId"]) && isset($_GET["userId"])) {
-        $userId = $_GET["userId"];
-        $roomId = $_GET["roomId"];
+function removeRoom() {
+    if (isset($_GET["channelId"]) && isset($_GET["clientId"])) {
+        $userId = $_GET["clientId"];
+        $roomId = $_GET["channelId"];
         $conn = connect();
         $isOwner = isRoomOwner($conn, $userId, $roomId);
         if ($isOwner) {
