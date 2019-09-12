@@ -35,7 +35,7 @@ function runTestsAsync(url, resolve, reject) {
     xhr.open("GET", url);
     xhr.setRequestHeader("Content-Type", "JSON");
     xhr.onload = function() {
-        if (xhr.status === 200) {
+        if (xhr.status === 200 && xhr.responseText != "") {
             resolve(constructTestResults(xhr.responseText));
         }
         else {
@@ -54,7 +54,7 @@ function parseResponseText(text) {
     let end = text.search("}");
     if (start > 0) {
         let phpErrorMessage = text.slice(0, start - 1);
-        console.log(phpErrorMessage);
+        console.log(text);
         let div = document.createElement("div");
         div.innerHTML = phpErrorMessage;
         let row = document.createElement("tr");
@@ -66,7 +66,8 @@ function parseResponseText(text) {
         document.getElementById("testsTableBody").append(row);
     }
     try {
-        tests = JSON.parse(text.slice(start, end + 1));
+        let parsedText = text.slice(start, end + 1);
+        tests = JSON.parse(parsedText);
     } catch (e) {
         console.log(e);
         console.log(text);
@@ -78,8 +79,8 @@ function parseResponseText(text) {
 Constructs an array of test result objects.
 */
 function constructTestResults(responseText) {
-    let tests = parseResponseText(responseText);
     let testResults = [];
+    let tests = parseResponseText(responseText);
     for (let test in tests) {
         testResults.push({ name: test, status: tests[test]})
     }

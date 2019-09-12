@@ -1,13 +1,14 @@
 <?php
 require_once("SocketData.php");
 require_once("ChannelManager.php");
+require_once("SocketEventHandler.php");
 define("LOG_URL", "../logs/socket_error_log.txt");
 class SocketServer {
-    private $channelManager;
+    private $eventHandler;
     private $clients;
 
-    function __construct($channelManager) {
-        $this->channelManager = $channelManager;
+    function __construct($eventHandler) {
+        $this->eventHandler = $eventHandler;
         $this->clients = array();
     }
 
@@ -102,7 +103,6 @@ class SocketServer {
                 $newClient = $this->attemptNewClientAccept($serverSocket, $clientInfo);
                 if ($newClient !== false && $clientInfo != NULL && $clientInfo !== false) {
                     $this->clients[] = $newClient;
-                    $this->channelManager->addNewClient($newClient, $clientInfo);
                 }
                 //remove the serverSocket from the readSockets array
                 $this->removeSocket($socketsToRead, $serverSocket);
@@ -117,14 +117,13 @@ class SocketServer {
                 }
                 else {
                     $socketMessage = SocketData::unseal($socketData);
-                    $json = json_decode($socketMessage, true);
-                    //Pass off the JSON message to $channelManager to be handled.
-                    $this->channelManager->handleSocketMessage($socketToRead, $json);
+                    //Pass off the message to $eventHandler to be handled.
+                    $this->eventHandler->handleSocketMessage($socketToRead, $socketMessage);
                 }
             }
         }
         socket_close($serverSocket);
     }
 }
-$socketServer = new SocketServer(new ChannelManager());
+$socketServer = new SocketServer(new SocketEventHandler(new ChannelManager()));
 $socketServer->Listen();
