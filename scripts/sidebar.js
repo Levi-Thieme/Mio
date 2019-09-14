@@ -2,18 +2,15 @@
 function joinRoom(userId, username, channelId, channelName) {
     document.getElementById("roomId").value = channelId;
     document.getElementById("roomName").value = channelName;
-    let message = {
+    let joinRoomEvent = {
         type: "sendRoomNotification",
-        action: "joined",
-        content: {
-            clientId: userId,
-            fromUsername: username,
-            roomId: channelId,
-            roomName: channelName
-        }
+        action: "join",
+        clientId: userId,
+        fromUsername: username,
+        roomId: channelId,
+        roomName: channelName
     };
-    console.log(message);
-    sendMessage(message);
+    sendMessage(joinRoomEvent);
 }
 
 function removeRoom(userId, channelId) {
@@ -35,7 +32,7 @@ function leaveRoom(userId, channelId, username) {
     clearMessages();
     let message = {
         type: "sendRoomNotification",
-        action: "left",
+        action: "leave",
         clientId: userId,
         roomId: channelId,
         fromUsername: username

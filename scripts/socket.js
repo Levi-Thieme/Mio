@@ -14,17 +14,9 @@ function createSocket() {
 }
 
 function onOpen() {
-    console.log("Websocket Opened!\n");
-    console.log("Sent user info to join current room.\n");
-    let userInfo = {
-        type: "sendRoomNotification",
-        action: "join",
-        clientId : $("#userId").val(),
-        fromUsername: $("#username").val(),
-        roomId: $("#roomId").val(),
-        channelName: $("#roomName").val()
-    };
-    websocket.send(JSON.stringify(userInfo));
+    setTimeout(function() {
+        joinRoom($("#userId").val(), $("#username").val(), $("#roomId").val(), $("#roomName").val());
+    }, 1500);
 }
 
 function dateTimestamp() {
@@ -53,7 +45,6 @@ function timestamp() {
 
 function onMessage(event) {
     let data = JSON.parse(event.data);
-    console.log(data);
     if (data["type"] === "message") {
         let content = data["content"];
         if (content["fromId"] === $("#userId").val()) {
@@ -68,15 +59,10 @@ function onMessage(event) {
         displayToast("New Friend Request", "You have a friend request from " + content["fromUsername"]);
     }
     else if (data["type"] === "sendRoomNotification") {
-        let content = data["content"];
-        let userAction = "";
-        if (data["action"] === "inviteToRoom") {
-            userAction = " invited you to ";
+        if (data["action"] === "join") {
+            console.log("toast");
+            displayToast(data["roomName"], data["fromUsername"] + " has joined " + data["roomName"] + ".");
         }
-        else {
-            userAction = data["action"];
-        }
-        displayToast(content["fromUsername"] + " has " + action + content["roomName"] + ".");
     }
     else {
         console.log(data);

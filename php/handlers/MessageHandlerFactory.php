@@ -1,6 +1,7 @@
 <?php
 require_once("RoomMessageHandler.php");
 require_once("ChildHandler.php");
+require_once(dirname(__FILE__) . "/../Utils/ArrayUtils.php");
 class MessageHandlerFactory {
     /*
     Constructs and returns a RoomMessageHandler with the specified type as handleType.
@@ -41,17 +42,41 @@ class MessageHandlerFactory {
     /*
     Constructs a RoomMessageHandler with a typekey of type and a type of roomEvent.
     The RoomMessageHandler has children for events with typeKeys of "subtype",
-    where subtype has a value of "left", "joined", or "deleted".
+    where subtype has a value of "broadcast", "leave", "join", or "delete".
     */
     public static function ConstructDefaultRoomMessageHandler($channelManager) {
         $childInitData = array();
-        $leaveRoomChild = MessageHandlerFactory::ConstructChildInitData("action", "left", function($event) use ($channelManager) {
-            $channelManager->broadcastClientLeft($event["fromUsername"], $event["roomId"]);
+        $broadcastRoomChild = MessageHandlerFactory::ConstructChildInitData("action", "broadcast", function($event) use ($channelManager) {
+            $channelManager->broadcast(SocketData::seal(json_encode($event, JSON_PRETTY_PRINT)), $event["roomId"]);
+        });
+        $childInitData[] = $broadcastRoomChild;
+        $leaveRoomChild = MessageHandlerFactory::ConstructChildInitData("action", "leave", function($event) use ($channelManager) {
+            $requiredKeys = array("clientId", "roomId", "fromUsername");
+            if (!ArrayUtils::hasKeysWithNonEmptyValues($event, $requiredKeys)) {
+                return false;
+            }
+            //removeClientFromChannel returns the client's socket if succesfull, else it returns false.
+            $clientSocket = $channelManager->removeClientFromChannel($message["roomId"], $message["clientId"]);
+            $channelManager->broadcast(SocketData::seal(json_encode($event, JSON_PRETTY_PRINT, true)), $event["roomId"]);
+            return $clientSocket != false;
         });
         $childInitData[] = $leaveRoomChild;
-        $joinRoomChild = MessageHandlerFactory::ConstructChildInitData("action", "joined", function($event) use ($channelManager) {
-            $channelManager->broadcastClientJoined($event["fromUsername"], $event["roomId"]);
+        $joinRoomChild = MessageHandlerFactory::ConstructChildInitData("action", "join", function($event) use ($channelManager) {
+            $requiredKeys = array("clientId", "fromUsername", "socket", "roomId", "roomName");
+            if (!ArrayUtils::hasKeysWithNonEmptyValues($event, $requiredKeys)) {
+                return false;
+            }
+            $client = new Client($event["clientId"], $event["fromUsername"], $event["socket"]);
+            if (!$channelManager->containsChannel($event["roomId"])) {
+                $channelManager->addChannel($event["roomId"], $event["roomName"]);   
+            }
+            $hasJoined = false;
+            $hasJoined = $channelManager->addClientToChannel($event["roomId"], $client);
+            $message = array("type" => "sendRoomNotification", "action" => "join", "fromUsername" => $event["fromUsername"], "roomName" => $event["roomName"]);
+            $channelManager->broadcast(SocketData::seal(json_encode($message, JSON_PRETTY_PRINT, true)), $event["roomId"]);
+            return $hasJoined;
         });
+        $childInitData[] = $joinRoomChild;
         return MessageHandlerFactory::ConstructRoomMessageHandler("type", "sendRoomNotification", $channelManager, $childInitData);
     }
 }

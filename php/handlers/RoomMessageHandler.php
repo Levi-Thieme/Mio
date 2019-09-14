@@ -10,7 +10,6 @@ class RoomMessageHandler extends BaseMessageHandler implements Handler {
     }
 
     function handle($message) {
-        echo "Handling " . print_r($message) . "\n";
         if ($this->canHandle($message) && $this->childHandler != NULL) {
             return $this->childHandler->handle($message);
         }
