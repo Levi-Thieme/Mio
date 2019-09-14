@@ -1,8 +1,7 @@
 <?php
     //Tests for the Client class.
     require_once("../../../chat_server/Client.php");
-    $tests = array("testClientConstruct", "testClientGetId" , "testClientSetId");
-
+    require_once("../../Tester.php");
     function testClientConstruct() {
         $id = 1;
         $username = "Bob";
@@ -23,10 +22,6 @@
         $client->setId(2);
         return $client->getId() === 2;
     }
-
-    $results = array();
-    foreach ($tests as $test) {
-        $results[$test] = $test();
-    }
-    echo json_encode($results, JSON_PRETTY_PRINT);
+    $tests = array("testClientConstruct", "testClientGetId" , "testClientSetId");
+    Tester::echoTestResults($tests);
     exit();

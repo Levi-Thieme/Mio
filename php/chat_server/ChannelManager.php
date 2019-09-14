@@ -64,10 +64,13 @@ class ChannelManager {
      * @return int The number of bytes successfully written to the socket or False on failure.
      */
 	function broadcast($message, $channelId) {
+        echo "Broadcasting message to {$channelId}\n";
 	    $status = true;
 	    $channel = $this->getChannel($channelId);
         if ($channel != NULL) {
+            echo "channel found\n";
             foreach ($channel->getClients() as $client) {
+                echo "sending message to client: {$client->getUsername()}\n";
                 $this->send($message, $client->getSocket());
             }
         }

@@ -80,11 +80,14 @@ $(document).ready(function() {
             return;
         }
         let userInfo = {
-            clientId: clientId,
-            username: username,
-            channelId: roomId,
-            channelName: roomName,
-            message: message
+            type: "message",
+            action: "broadcast",
+            content: {
+                fromId: clientId,
+                roomId: roomId,
+                fromUsername: username,
+                message: message
+            }
         };
         if (sendMessage(userInfo)) {
             $("#message").val("");

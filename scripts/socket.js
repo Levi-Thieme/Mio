@@ -14,10 +14,14 @@ function createSocket() {
 }
 
 function onOpen() {
+    console.log("Websocket Opened!\n");
+    console.log("Sent user info to join current room.\n");
     let userInfo = {
+        type: "sendRoomNotification",
+        action: "join",
         clientId : $("#userId").val(),
-        username: $("#username").val(),
-        channelId: $("#roomId").val(),
+        fromUsername: $("#username").val(),
+        roomId: $("#roomId").val(),
         channelName: $("#roomName").val()
     };
     websocket.send(JSON.stringify(userInfo));
@@ -49,13 +53,33 @@ function timestamp() {
 
 function onMessage(event) {
     let data = JSON.parse(event.data);
-    let username = $("#username").val();
-    let senderId = data["username"];
-    if (senderId === username) {
-        displayMessage(data["message"], "self", dateTimestamp(), data["messageId"], data["username"]);
+    console.log(data);
+    if (data["type"] === "message") {
+        let content = data["content"];
+        if (content["fromId"] === $("#userId").val()) {
+            displayMessage(data["message"], "self", dateTimestamp(), data["fromId"], data["fromUsername"]);
+        }
+        else {
+            displayMessage(data["message"], "other", dateTimestamp(), data["fromId"], data["fromUsername"]);
+        }
+    }
+    else if (data["type"] === "sendFriendNotification" && data["action"] === "newRequest") {
+        let content = data["content"];
+        displayToast("New Friend Request", "You have a friend request from " + content["fromUsername"]);
+    }
+    else if (data["type"] === "sendRoomNotification") {
+        let content = data["content"];
+        let userAction = "";
+        if (data["action"] === "inviteToRoom") {
+            userAction = " invited you to ";
+        }
+        else {
+            userAction = data["action"];
+        }
+        displayToast(content["fromUsername"] + " has " + action + content["roomName"] + ".");
     }
     else {
-        displayMessage(data["message"], "other", dateTimestamp(), data["messageId"], data["username"]);
+        console.log(data);
     }
 }
 
@@ -98,11 +122,19 @@ function sendMessage(message) {
     return false;
 }
 
-function sendFriendRequestNotification(fromUsername, toUsername) {
+/*
+Sends a notification that the client with id = toId that clientUsername has
+sent them a friend request.
+*/
+function sendFriendRequestNotification(clientId, clientUsername, toId) {
     let message = {
-        action: "notifyFriendRequest",
-        username: fromUsername,
-        toUsername: toUsername
+        clientId: clientId,
+        type: "sendFriendNotification",
+        action: "newRequest",
+        content: {
+            toId: toId,
+            fromUsername: clientUsername
+        }
     };
     sendMessage(message);
 }

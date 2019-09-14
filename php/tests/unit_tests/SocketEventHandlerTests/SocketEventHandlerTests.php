@@ -1,6 +1,7 @@
 <?php
-require_once("../../../../chat_server/SocketEventHandler.php");
-require_once("../../../../chat_server/ChannelManager.php");
+require_once("../../../chat_server/SocketEventHandler.php");
+require_once("../../../chat_server/ChannelManager.php");
+require_once("../../Tester.php");
 define(LOG_URL, "../log.txt");
 /*
 Test Suite for the SocketEventHandler class.
@@ -190,9 +191,5 @@ $tests = array("testSocketEventHandlerConstruct",
     "testHasKeysWithNonEmptyValuesForTrue", "testHasKeysWithNonEmptyValuesForFalse", "testRequestActionParamsAreValidForMissingType",
     "testRequestActionParamsAreValidForMissingAction", "testRequestActionParamsAreValidForMissingContent",
     "testRequestActionParamsAreValidForSendFriendNotificationType", "testRequestActionParamsAreValidForRoomType");
-$testResults = array();
-foreach ($tests as $test) {
-    $testResults[$test] = $test();
-}
-echo json_encode($testResults, JSON_PRETTY_PRINT);
+Tester::echoTestResults($tests);
 exit();

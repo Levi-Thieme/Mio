@@ -64,9 +64,5 @@ function testGetClientByUsername() {
 
 $tests = array("testConstruct", "testAddClient", "testAddReplaceClient", "testRemoveClient",
     "testRemoveClientById", "testGetClientById", "testGetClientByUsername");
-$results = array();
-foreach ($tests as $test) {
-$results[$test] = $test();
-}
-echo json_encode($results, JSON_PRETTY_PRINT);
+Tester::echoTestResults($tests);
 exit();

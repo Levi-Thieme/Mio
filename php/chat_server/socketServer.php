@@ -2,7 +2,6 @@
 require_once("SocketData.php");
 require_once("ChannelManager.php");
 require_once("SocketEventHandler.php");
-define("LOG_URL", "../logs/socket_error_log.txt");
 class SocketServer {
     private $eventHandler;
     private $clients;
@@ -62,7 +61,7 @@ class SocketServer {
             $handshakeMessage = $this->createHandshakeMessage($header, HOST_NAME, PORT);
             socket_write($newClient, $handshakeMessage, strlen($handshakeMessage));
             if (socket_recv($newClient, $receiveBuffer, 1024, 0) > 0) {
-                $clientInfo = json_decode(SocketData::unseal($receiveBuffer), true);
+                $clientInfo = SocketData::unseal($receiveBuffer);
             }
         }
         return $newClient;
@@ -103,6 +102,7 @@ class SocketServer {
                 $newClient = $this->attemptNewClientAccept($serverSocket, $clientInfo);
                 if ($newClient !== false && $clientInfo != NULL && $clientInfo !== false) {
                     $this->clients[] = $newClient;
+                    $this->eventHandler->handleSocketMessage($newClient, $clientInfo);
                 }
                 //remove the serverSocket from the readSockets array
                 $this->removeSocket($socketsToRead, $serverSocket);
@@ -125,5 +125,7 @@ class SocketServer {
         socket_close($serverSocket);
     }
 }
-$socketServer = new SocketServer(new SocketEventHandler(new ChannelManager()));
+$channelManager = new ChannelManager();
+$socketEventHandler = new SocketEventHandler($channelManager);
+$socketServer = new SocketServer($socketEventHandler);
 $socketServer->Listen();

@@ -1,11 +1,14 @@
 <?php
+require_once(dirname(__FILE__) . "\../handlers/MessageHandlerFactory.php");
 define ("LOG_URL", "../../../../logs/error_log.txt");
-//php/tests/unit_tests/chat_server_tests/SocketEventHandlerTests/SocketEventHandlerTests.php
+
 class SocketEventHandler {
     private $channelManager;
+    private $messageHandler;
 
     function __construct($channelManager) {
         $this->channelManager = $channelManager;
+        $this->messageHandler = MessageHandlerFactory::ConstructDefaultRoomMessageHandler($channelManager);
     }
 
     function getChannelManager() {
@@ -42,7 +45,13 @@ class SocketEventHandler {
         $type = $request["type"];
         $action = $request["action"];
         $content = $request["content"];
-        if ($type === "sendFriendNotification") {
+        if ($type === "message") {
+            if ($action === "broadcast" && 
+                $this->hasKeysWithNonEmptyValues($content, array("fromId", "roomId", "fromUsername", "message"))) {
+                return true;
+            }
+        }
+        else if ($type === "sendFriendNotification") {
             if (($action === "accepted" || $action === "denied" || $action === "newRequest")
                 && $this->hasKeysWithNonEmptyValues($content, array("toId", "fromUsername"))) {
                 return true;
@@ -66,35 +75,51 @@ class SocketEventHandler {
     */
     function handleSocketMessage($sendingSocket, $message) {
         $message = json_decode($message, true);
-        echo $message;
+        $this->messageHandler->handle($message);
+    }
+
+    function handleMessage($message) {
+        echo "Handling message...\n";
+        if ($message["action"] === "broadcast") {
+            $this->sendMessageToChannel(json_encode($message), $message["content"]["roomId"]);
+        }
+    }
+
+    function handleFriendNotification($request) {
+        $this->sendNotificationToUser($request["content"]["toId"], json_encode($request));
+    }
+
+    function handleRoomNotification($message) {
+        $this->sendMessageToChannel($message, $message["content"]["roomId"]);
     }
 
     /*
     Broadcasts the message to the channel with id = channelId
     */
     function sendMessageToChannel($message, $channelId) {
-        $channelManager->broadcast(SocketData::seal($message), $channelId);
+        echo "Sending message to Channel " . $channelId . "\n";
+        $this->channelManager->broadcast(SocketData::seal($message), $channelId);
     }
     /*
         Posts message in the user with id = userId
      */
     function sendMessageToUser($clientId, $message) {
-        $client = $channelManager->getClientFromChannels($clientId);
+        $client = $this->channelManager->getClientFromChannels($clientId);
         //if Client is online
         if ($client != NULL) {
             $clientSocket = $client->getSocket();
-            $channelManager->send(SocketData::seal($message), $clientSocket);
+            $this->channelManager->send(SocketData::seal($message), $clientSocket);
         }
     }
     /*
     - message appears as toast to the user with id = userId
     */
     function sendNotificationToUser($clientId, $message) {
-        $client = $channelManager->getClientFromChannels($clientId);
+        $client = $this->channelManager->getClientFromChannels($clientId);
         //if Client is online
         if ($client != NULL) {
             $clientSocket = $client->getSocket();
-            $channelManager->send(SocketData::seal($message), $clientSocket);
+            $this->channelManager->send(SocketData::seal($message), $clientSocket);
         }
     }
 }

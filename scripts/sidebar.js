@@ -3,13 +3,16 @@ function joinRoom(userId, username, channelId, channelName) {
     document.getElementById("roomId").value = channelId;
     document.getElementById("roomName").value = channelName;
     let message = {
-        action: "JoinChannel",
-        clientId: userId,
-        username: username,
-        channelId: channelId,
-        channelName: channelName,
-        message: ""
+        type: "sendRoomNotification",
+        action: "joined",
+        content: {
+            clientId: userId,
+            fromUsername: username,
+            roomId: channelId,
+            roomName: channelName
+        }
     };
+    console.log(message);
     sendMessage(message);
 }
 
@@ -27,13 +30,15 @@ function removeRoom(userId, channelId) {
     });
 }
 
-function leaveRoom(userId, channelId) {
+function leaveRoom(userId, channelId, username) {
     clearRoom();
     clearMessages();
     let message = {
-        action: "LeaveChannel",
+        type: "sendRoomNotification",
+        action: "left",
         clientId: userId,
-        channelId: channelId
+        roomId: channelId,
+        fromUsername: username
     }
     sendMessage(message);
 }
@@ -203,7 +208,7 @@ $(document).ready(function(){
             if (roomId != currentRoomId) {
                 //if the client is currently in a room, then remove them
                 if (currentRoomId) {
-                    leaveRoom(userId, currentRoomId);
+                    leaveRoom(userId, currentRoomId, roomName);
                 }
                 removeClassFromChildren(roomList, "active");
                 clickedElement.classList.add("active");
