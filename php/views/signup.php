@@ -1,6 +1,7 @@
 <?php
-    require_once("../database_interface/db.php");
-    require_once("../router/redirect.php");
+    $root = dirname(__FILE__);
+    require_once($root . DIRECTORY_SEPARATOR .  "../database_interface/db.php");
+    require_once($root . DIRECTORY_SEPARATOR .  "../router/redirect.php");
     
     //signup form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {

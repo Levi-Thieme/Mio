@@ -1,7 +1,8 @@
 <?php
-    require_once("../database_interface/db.php");
-    require_once("../router/redirect.php");
-    require_once("./Renderer.php");
+    $root = dirname(__FILE__);
+    require_once($root . DIRECTORY_SEPARATOR .  "../database_interface/db.php");
+    require_once($root . DIRECTORY_SEPARATOR .  "../router/redirect.php");
+    require_once($root . DIRECTORY_SEPARATOR .  "Renderer.php");
     
     session_start();
     $conn;

@@ -1,7 +1,8 @@
 <?php
 //Tests for the ChannelManager class.
-require_once("../../../chat_server/ChannelManager.php");
-require_once("../../Tester.php");
+$root = dirname(__FILE__);
+require_once($root . DIRECTORY_SEPARATOR .  "../../../chat_server/ChannelManager.php");
+require_once($root . DIRECTORY_SEPARATOR .  "../../Tester.php");
 
 /*
 * Tests the getChannel method

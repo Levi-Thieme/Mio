@@ -1,6 +1,7 @@
 <?php
-require_once("SocketData.php");
-require_once("ChannelManager.php");
+$root = dirname(__FILE__);
+require_once($root . DIRECTORY_SEPARATOR .  "SocketData.php");
+require_once($root . DIRECTORY_SEPARATOR .  "ChannelManager.php");
 define("LOG_URL", "../logs/socket_error_log.txt");
 class SocketServer {
     private $channelManager;

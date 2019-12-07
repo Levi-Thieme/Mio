@@ -1,7 +1,8 @@
 <?php
-require_once("../../../chat_server/Channel.php");
-require_once("../../../chat_server/Client.php");
-require_once("../../Tester.php");
+$root = dirname(__FILE__);
+require_once($root . DIRECTORY_SEPARATOR . "../../../chat_server/Channel.php");
+require_once($root . DIRECTORY_SEPARATOR . "../../../chat_server/Client.php");
+require_once($root . DIRECTORY_SEPARATOR . "../../Tester.php");
 //Tests for the Channel.php class
 
 function testConstruct() {

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: signo
- * Date: 5/7/2019
- * Time: 11:24 PM
- */
 
 class AccountController {
     private $conn;
