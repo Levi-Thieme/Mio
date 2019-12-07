@@ -1,6 +1,6 @@
 var websocket;
-let websocketUrl = "ws://localhost:8080/php/chat_server/socketServer.php";
-let remoteSocketUrl = "ws://mio-chats.herokuapp.com/php/chat_server/socketServer.php";
+let websocketUrl = "ws://localhost:3000/index.js";
+let remoteSocketUrl = "ws://mio-chat-server.herokuapp.com/index.js";
 //websocket readyState constants
 let CONNECTING = 0;
 let OPEN = 1;
