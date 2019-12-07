@@ -1,6 +1,7 @@
 <?php
     session_start();
-    require_once("../database_interface/db.php");
+    $root = dirname(__FILE__);
+    require_once($root . DIRECTORY_SEPARATOR .  "../database_interface/db.php");
     $conn = connect();
     if (!$_SESSION["authenticated"]) {
         error_log("User is not authenticated.", 3, "error_log.txt");

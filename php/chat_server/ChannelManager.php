@@ -1,7 +1,8 @@
 <?php
-require_once("SocketData.php");
-require_once("Client.php");
-require_once("Channel.php");
+$root = dirname(__FILE__);
+require_once($root . DIRECTORY_SEPARATOR .  "SocketData.php");
+require_once($root . DIRECTORY_SEPARATOR .  "Client.php");
+require_once($root . DIRECTORY_SEPARATOR .  "Channel.php");
 
 /*
 The ChannelManager class' responsibility is create and destroy channels, and place clients in the proper channel.

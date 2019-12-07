@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once("../database_interface/db.php");
+$root = dirname(__FILE__);
+require_once($root . DIRECTORY_SEPARATOR .  "../database_interface/db.php");
 
 /*
  * $_GET["request"] stores the function to be called.

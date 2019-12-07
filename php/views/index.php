@@ -1,8 +1,9 @@
 <?php
     session_start();
-    require_once("../database_interface/db.php");
-    require_once("../router/redirect.php");
-    require_once("../controllers/AccountController.php");
+    $root = dirname(__FILE__);
+    require_once($root . DIRECTORY_SEPARATOR .  "../database_interface/db.php");
+    require_once($root . DIRECTORY_SEPARATOR .  "../router/redirect.php");
+    require_once($root . DIRECTORY_SEPARATOR .  "../controllers/AccountController.php");
     // connect to database
     $connection = connect();
     if (!$connection) {

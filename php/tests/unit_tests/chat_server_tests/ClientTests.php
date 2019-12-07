@@ -1,6 +1,7 @@
 <?php
     //Tests for the Client class.
-    require_once("../../../chat_server/Client.php");
+    $root = dirname(__FILE__);
+    require_once($root . DIRECTORY_SEPARATOR . "../../../chat_server/Client.php");
     $tests = array("testClientConstruct", "testClientGetId" , "testClientSetId");
 
     function testClientConstruct() {

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: signo
- * Date: 5/8/2019
- * Time: 12:13 AM
- */
-
 class Renderer {
 
     static function divWrap($content) {
