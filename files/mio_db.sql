@@ -210,22 +210,7 @@ INSERT INTO `user` (`id`, `name`, `email`, `password`, `image`) VALUES
 (18, 'BradEberbach', 'eberbm01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
 (19, 'IsaacHarter', 'hartia01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
 (20, 'AaronODonnell', 'odonap01@students.ipfw.edu', '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19', 0x416e20496d616765),
-(21, 'jordaj01', 'jordaj01@pfw.edu', '*1A415D842F616B82C17AF887CB4B0135FA8CDA03', 0x616e20496d616765),
-(22, 'chenz', 'chen@pfw.edu', '*720B26BCDF52FE9C5F61C4CC4C987B2C2B5601E3', 0x616e20496d616765),
-(25, 'Sender User', '', '', ''),
-(26, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(29, 'Sender User', '', '', ''),
-(30, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(33, 'Sender User', '', '', ''),
-(34, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(37, 'Sender User', '', '', ''),
-(38, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(41, 'Sender User', '', '', ''),
-(42, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(45, 'Sender User', '', '', ''),
-(46, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', ''),
-(49, 'Sender User', '', '', ''),
-(50, 'Receiver User', 'receiver@gmail.com', 'receiverpassword', '');
+(21, 'jordaj01', 'jordaj01@pfw.edu', '*1A415D842F616B82C17AF887CB4B0135FA8CDA03', 0x616e20496d616765)
 
 --
 -- Constraints for dumped tables
