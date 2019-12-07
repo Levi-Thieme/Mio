@@ -1,8 +1,15 @@
 <?php
+    $url = getenv('JAWSDB_URL');
+    $dbparts = parse_url($url);
+    $hostname = $dbparts['host'];
+    $username = $dbparts['user'];
+    $password = $dbparts['pass'];
+    $database = ltrim($dbparts['path'],'/');
+
     //Development DB login credentials
     define("LOCALHOST", "127.0.0.1");
-    define("USER", "mio_db");
-    define("PASS", "pfw");
+    define("USER", "root");
+    define("PASS", "");
     define("DB", "mio_db");
     
     /*
@@ -20,7 +27,7 @@
     }
 
     function connect() {
-        return connectTo(LOCALHOST, USER, PASS, DB);
+        return connectTo($hostname, $username, $password, $database);
     }
     
     /*
