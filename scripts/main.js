@@ -38,7 +38,6 @@ function displayMessage(message, classStyle, time, id, name) {
         '</li>';
         
         $("#messageList").append(messageItem);
-        $("#message").val("");
         $("#messageContainer").scrollTop($("#messageContainer").prop("scrollHeight"));
     }
 }
