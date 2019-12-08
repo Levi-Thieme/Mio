@@ -132,8 +132,8 @@
         $name = filter($conn, $name);
         $password = filter($conn, $password);
         $newPassword = filter($conn, $newPassword);
-        $sql = "UPDATE user SET password = '$newPassword' 
-            WHERE name = '$name' AND password = '$password'";
+        $sql = "UPDATE user SET password = PASSWORD('$newPassword')
+            WHERE name = '$name' AND password = PASSWORD('$password')";
         return execQuery($sql, $conn);
     }
     
@@ -141,9 +141,10 @@
     Deletes a user's account.
     */
     function deleteUser($conn, $name, $password) {
+        deleteFriends($conn, $name);
         $name = filter($conn, $name);
         $password = filter($conn, $password);
-        $sql = "DELETE FROM user WHERE name = '$name' AND password = '$password'";
+        $sql = "DELETE FROM user WHERE name = '$name' AND password = PASSWORD('$password')";
         return execQuery($sql, $conn);
     }
     
@@ -263,7 +264,16 @@
         $sql = "UPDATE friends SET pending = false WHERE from_id = $requesterId AND to_id = $acceptorId";
         return execQuery($sql, $conn);
     }
-    
+
+    /*
+    $conn - database connection
+    $username - the username of the user for which to delete all friends
+    */
+    function deleteFriends($conn, $username) {
+        $userId = getUserId($conn, $username);
+        $sql = "DELETE FROM friends WHERE (from_id = $userId OR to_id = $userId)";
+        return execQuery($sql, $conn);
+    }
     
     /*
     Deletes a friend from the from_user

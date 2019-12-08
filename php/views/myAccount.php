@@ -13,9 +13,10 @@
     
     $_SESSION["email"] = getUserEmail($conn, $_SESSION["username"])->fetch_assoc()["email"];
     $username = $_SESSION["username"];
-    
+
     //Email change form submitted
     if (isset($_POST["updateEmailSubmit"])) {
+        error_log("update email form submitted\n", 3, $root . DIRECTORY_SEPARATOR . "error_log.txt");
         $newEmail = $_POST["emailInput"];
         $password = $_POST["updateEmailPasswordInput"];
         
@@ -63,12 +64,12 @@
                     if (isPassword($conn, $username, $dPassword)) {
                         $_SESSION["credentialsError"] = "";
                         if (!deleteUser($conn, $username, $dPassword)) {
-                            error_log("Error:  \n" . $conn->error, 3, "./error_log.txt");
+                            error_log("Error:  \n" . $conn->error, 3, $root . DIRECTORY_SEPARATOR . "error_log.txt");
                         }
                         else {
-                            error_log("Successfully deleted user. $username\n", 3, "./error_log.txt");
+                            error_log("Successfully deleted user. $username\n", 3, $root . DIRECTORY_SEPARATOR . "error_log.txt");
                             session_destroy();
-                            redirect("signup.php");
+                            redirect("index.php");
                             exit;
                         }
                     }
@@ -140,7 +141,7 @@
                 </div>
             </div>
         </form>
-        <form onsubmit="return validateUpdatePassword()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
+        <form onsubmit="return validateUpdatePassword()" action='<?php echo($_SERVER['PHP_SELF']);?>' method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <?php if (isset($_POST["updatePasswordSubmit"])) { Renderer::myAccountErrorHandler($_SESSION["credentialsError"]); } ?>
@@ -151,11 +152,11 @@
                     <label for="newPassword newPasswordConfirm">Password</label>
                     <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New password">
                     <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirm new password">
-                    <button type="submit" id="updatePasswordBtn" class="btn btn-primary">Update Password</button>
+                    <button id="updatePasswordBtn" name="updatePasswordSubmit" type="submit" class="btn btn-primary">Update Password</button>
                 </div>
             </div>
         </form>
-        <form onsubmit="return validateDeleteAccount()" action='<?php echo $_SERVER['PHP_SELF']; ?>' method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
+        <form onsubmit="return validateDeleteAccount()" action='<?php echo($_SERVER['PHP_SELF']);?>' method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
             <div class="well" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
                     <strong>Delete My Account</strong>
@@ -164,7 +165,7 @@
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
-                    <a href="index.php" id="deleteAccountBtn" type="submit" class="btn btn-primary" role="button">Delete Account</a>
+                    <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
                 </div>
             </div>
         </form>
