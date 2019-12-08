@@ -27,13 +27,14 @@ function removeRoom(userId, channelId) {
     });
 }
 
-function leaveRoom(userId, channelId) {
+function leaveRoom(userId, channelId, username) {
     clearRoom();
     clearMessages();
     let message = {
         action: "LeaveChannel",
         clientId: userId,
-        channelId: channelId
+        channelId: channelId,
+        username: username
     }
     sendMessage(message);
 }
@@ -203,7 +204,7 @@ $(document).ready(function(){
             if (roomId != currentRoomId) {
                 //if the client is currently in a room, then remove them
                 if (currentRoomId) {
-                    leaveRoom(userId, currentRoomId);
+                    leaveRoom(userId, currentRoomId, username);
                 }
                 removeClassFromChildren(roomList, "active");
                 clickedElement.classList.add("active");
@@ -214,7 +215,7 @@ $(document).ready(function(){
         } else if ("leaveRoom" in clickedElement.dataset) {
             let channelIdToRemove = clickedElement.dataset.leaveRoom;
             roomList.removeChild(clickedElement.parentNode);
-            leaveRoom(userId, channelIdToRemove);
+            leaveRoom(userId, channelIdToRemove, username);
             removeRoom(userId, channelIdToRemove);
             
             //TODO If this person was the room owner, then tell the ChannelManager to

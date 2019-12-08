@@ -80,6 +80,7 @@ $(document).ready(function() {
             return;
         }
         let userInfo = {
+            action: "message",
             clientId: clientId,
             username: username,
             channelId: roomId,
