@@ -62,8 +62,8 @@ class Renderer {
         }
         $errorMessage = $errorMessages[$errorToDisplay];
         if ($errorMessage) {
-            printError($errorMessage, "red");
-            printError($errorMessages["tryAgain"], "red");
+            Renderer::printError($errorMessage, "red");
+            Renderer::printError($errorMessages["tryAgain"], "red");
         }
     }
 }
