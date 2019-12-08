@@ -1,5 +1,4 @@
 var websocket;
-let websocketUrl = "ws://localhost:3000/index.js";
 let remoteSocketUrl = "ws://mio-chat-server.herokuapp.com/index.js";
 //websocket readyState constants
 let CONNECTING = 0;
@@ -16,6 +15,7 @@ function createSocket() {
 
 function onOpen() {
     let userInfo = {
+        action: "JoinChannel",
         clientId : $("#userId").val(),
         username: $("#username").val(),
         channelId: $("#roomId").val(),
