@@ -247,7 +247,9 @@ function removeClassFromChildren(parent, className) {
         if ("deleteFriend" in src.dataset) {
             let name = src.parentElement.id;
             deleteFriend(userId, name,
-                function(data) { refreshFriendsList(userId); },
+                function(data) { 
+                    removeFriendElement(name);
+                 },
                 function(data) { alert("Failed to delete friend: " + name);}
             );
         }
@@ -260,3 +262,88 @@ function removeClassFromChildren(parent, className) {
         }
     });
 });
+
+
+/*
+Adds an element to the friends list.
+*/
+function addFriendElement(element) {
+    let friendsList = document.getElementById("friendsCollapse");
+    friendsList.append(element);
+}
+
+function createFriendDiv(username) {
+    let div = document.createElement("DIV");
+    div.id = username;
+    div.classList.add("friendDiv");
+    div.classList.add("animated");
+    div.classList.add("zoomIn");
+    div.innerText = username;
+    let commentIcon = document.createElement("I");
+    commentIcon.classList.add("fa");
+    commentIcon.classList.add("fa-comment");
+    commentIcon.classList.add("fa-fw");
+    commentIcon.style = "float: right";
+    let deleteIcon = document.createElement("I");
+    deleteIcon.classList.add("fa");
+    deleteIcon.classList.add("fa-trash");
+    deleteIcon.classList.add("fa-fw");
+    deleteIcon.setAttribute("data-delete-friend", username);
+    return div;
+}
+
+function createFriendRequestToDiv(username) {
+    let div = document.createElement("DIV");
+    div.id = username;
+    div.classList.add("friendDiv");
+    div.classList.add("animated");
+    div.classList.add("zoomIn");
+    div.innerText = username;
+    let deleteIcon = document.createElement("I");
+    deleteIcon.classList.add("fa");
+    deleteIcon.classList.add("fa-trash");
+    deleteIcon.classList.add("fa-fw");
+    deleteIcon.setAttribute("data-delete-friend", username);
+    div.append(deleteIcon);
+    return div;
+}
+
+function createFriendRequestFromDiv(username) {
+    let div = document.createElement("DIV");
+    div.id = username;
+    div.classList.add("friendDiv");
+    div.classList.add("animated");
+    div.classList.add("zoomIn");
+    div.innerText = username;
+    let commentIcon = document.createElement("I");
+    commentIcon.classList.add("fa");
+    commentIcon.classList.add("fa-comment");
+    commentIcon.classList.add("fa-fw");
+    commentIcon.style = "float: right";
+    let deleteIcon = document.createElement("I");
+    deleteIcon.classList.add("fa");
+    deleteIcon.classList.add("fa-trash");
+    deleteIcon.classList.add("fa-fw");
+    deleteIcon.setAttribute("data-delete-friend", username);
+    let approveIcon = document.createElement("I");
+    approveIcon.classList.add("fa");
+    approveIcon.classList.add("fa-plus");
+    approveIcon.classList.add("fa-fw");
+    approveIcon.setAttribute("data-approve-friend-request", username);
+    div.append(commentIcon);
+    div.append(deleteIcon);
+    div.append(approveIcon);
+    return div;
+}
+
+/*
+Removes the element with innerText === username from the friends list.
+*/
+function removeFriendElement(username) {
+    let friendList = document.getElementById("friendsCollapse");
+    Array.from(friendList.children).forEach(child => {
+        if (child.id === username) {
+            friendList.removeChild(child);
+        }
+    });
+}

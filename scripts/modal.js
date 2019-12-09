@@ -70,10 +70,14 @@ function openFriendRequestModal() {
                     receiver: name
                 },
                 dataType: "JSON",
-                complete: function () { sendFriendRequestNotification($("#username").val(), name);  },
+                complete: function () { 
+                    sendFriendRequestNotification($("#username").val(), name); 
+                    let element = createFriendRequestToDiv(name); 
+                    addFriendElement(element);
+                },
                 failure: function () { alert("Failed to send friend request to " + name); }
             });
-            refreshFriendsList($("#userId").val());
+            
             $("#modalInput").val("");
             $("#myModal").hide();
             });
