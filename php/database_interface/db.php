@@ -225,18 +225,48 @@
         $sql = "SELECT from_id FROM friends WHERE to_id = $userId AND pending";
         return execQuery($sql, $conn);
     }
+
+    /*
+    Returns true if the requester and recipient are already friends
+    or one of them has sent a friend request to the other.
+    */
+    function isFriendOrRequest($conn, $requesterId, $recipientId) {
+        $sql = "SELECT COUNT(*) FROM friends f WHERE " . 
+            " (f.from_id = $requesterId AND f.to_id = $recipientId) " . 
+            " OR (f.from_id = $recipientId AND f.to_id = $requesterId)";
+        return execQuery($sql, $conn)->fetch_row()[0];
+    }
     
     /*
-    Creates a friend request from user to recipient
-    
+    Creates a friend request from requester to recipient
     $requester - username of the user requesting the friend request
     $recipient - username of the recipient
     */
     function createFriendRequest($conn, $requester, $recipient) {
         $requesterId = getUserId($conn, $requester);
         $recipientId = getUserId($conn, $recipient);
-        $sql = "INSERT INTO friends(from_id, to_id) VALUES($requesterId, $recipientId)";
-        return execQuery($sql, $conn);
+        $isFriendOrRequest = isFriendOrRequest($conn, $requesterId, $recipientId);
+        if ($isFriendOrRequest > 0) {
+            return false;
+        }
+        else {
+            $sql = "INSERT INTO friends(from_id, to_id) VALUES($requesterId, $recipientId)";
+            $result = execQuery($sql, $conn);
+            return true;
+        }
+    }
+
+    /*
+    Creates a friend request from requester to each recipient.
+    */
+    function createFriendRequests($conn, $requester, $recipients) {
+        $insertedRequests = array();
+        foreach ($recipients as $recipient) {
+            if (createFriendRequest($conn, $requester, $recipient)) {
+                array_push($insertedRequests, $recipient);
+            }
+        }
+        return $insertedRequests;
     }
     
     /*
