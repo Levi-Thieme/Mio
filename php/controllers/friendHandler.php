@@ -51,17 +51,20 @@ function searchFriend() {
 }
 
 function sendFriendRequest() {
-    if (isset($_GET["receiver"])) {
+    $insertedRequests = array();
+    if (isset($_GET["receivers"])) {
         $conn = connect();
-        createFriendRequest($conn, $_SESSION["username"], $_GET["receiver"]);
+        $recipients = json_decode($_GET["receivers"]);
+        $insertedRequests = createFriendRequests($conn, $_SESSION["username"], $recipients);
         $conn->close();
     }
+    echo(json_encode($insertedRequests));
 }
 
 function acceptFriendRequest() {
     if (isset($_GET["requester"])) {
         $conn = connect();
-        updateFriendRequest($conn, $_SESSION["username"], $_GET["requester"]);
+        updateFriendRequest($conn, $_SESSION["username"], json_decode($_GET["requester"]));
         $conn->close();
     }
 }

@@ -67,28 +67,28 @@ function openFriendRequestModal() {
     $("#modalInput").on("keyup", function(event) {
         searchFriends($("#modalInput").val());
     });
-    $("#modalSubmitBtn").one("click", function() {
-        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
-        selectedNames.forEach(selectedName => {
-            let name = selectedName.innerText;
-            $.ajax({
-                url: controllersPath + "friendHandler.php",
-                type: "GET",
-                async: true,
-                data: {
-                    request: "sendFriendRequest",
-                    receiver: name
-                },
-                dataType: "JSON",
-                complete: function () {
-                    $("#modalInput").val("");
-                    $("#myModal").hide();
-                    sendFriendRequestNotification($("#username").val(), name);
-                    let element = createFriendRequestToDiv(name); 
+    $("#modalSubmitBtn").one("click", function(event) {
+        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"))
+            .map(selectedListItem => selectedListItem.innerText);
+        $.ajax({
+            url: controllersPath + "friendHandler.php",
+            type: "GET",
+            async: true,
+            data: {
+                request: "sendFriendRequest",
+                receivers: JSON.stringify(selectedNames)
+            },
+            dataType: "JSON",
+            complete: function (data) {
+                $("#modalInput").val("");
+                $("#myModal").hide();
+                let addedRequests = data.responseJSON;
+                addedRequests.forEach(name => {
+                    let element = createFriendRequestToDiv(name);
                     $("#friendsCollapse").append(element);
-                },
-                failure: function () { alert("Failed to send friend request to " + name); }
-            });
+                });
+            },
+            failure: function () { alert("Failed to send friend request(s). Please try again later."); }
         });
     });
     $("#myModal").modal();
@@ -96,7 +96,7 @@ function openFriendRequestModal() {
 
 $(document).ready(function() {
     $("#optionList").click(function(event) {
-        if (event.target.tagName === "LI") {
+        if (event && event.target && event.target.tagName === "LI") {
             if (event.target.classList.contains("active")) {
                 event.target.classList.remove("active");
             }
