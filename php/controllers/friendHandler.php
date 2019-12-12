@@ -8,7 +8,6 @@ require_once($root . DIRECTORY_SEPARATOR .  "../views/Renderer.php");
  *  Handle the request...
  * $_GET["request"] stores the function to be called.
  */
-
 if (is_callable($_GET["request"])) {
     $_GET["request"]();
 }
@@ -17,21 +16,27 @@ function getFriendDivs() {
     $userId = $_GET["userId"];
     $conn = connect();
     $username = getUsername($conn, $userId);
+    $friendData = array();
     $friends = getFriends($conn, $username);
-    $requestsFrom = getRequestsFromUser($conn, $username);
-    $requestsTo = getRequestsToUser($conn, $username);
     foreach ($friends as $friend) {
         $friendName = getUsername($conn, implode($friend));
-        echo Renderer::createFriendDiv($friendName);
+        $friendAssoc = (object) array("id" => $friend["to_id"], "name" => $friendName, "type" => "accepted");
+        array_push($friendData, $friendAssoc);
     }
+    $requestsTo = getRequestsToUser($conn, $username);
     foreach ($requestsTo as $request) {
         $friendName = getUsername($conn, implode($request));
-        echo Renderer::createFriendRequestToDiv($friendName);
+        $friendAssoc = (object) array("id" => $request["from_id"], "name" => $friendName, "type" => "toMe");
+        array_push($friendData, $friendAssoc);
     }
+    $requestsFrom = getRequestsFromUser($conn, $username);
     foreach ($requestsFrom as $request) {
         $friendName = getUsername($conn, implode($request));
-        echo Renderer::createFriendRequestFromDiv($friendName);
+        $friendAssoc = (object) array("id" => $request["to_id"], "name" => $friendName, "type" => "fromMe");
+        array_push($friendData, $friendAssoc);
     }
+    echo json_encode($friendData);
+    $conn->close();
 }
 
 function searchFriend() {
