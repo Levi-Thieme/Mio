@@ -27,7 +27,7 @@ function removeRoom(userId, channelId) {
     });
 }
 
-function leaveRoom(userId, channelId, username) {
+function leaveRoom(userId, channelId, username, onSuccess, onFailure) {
     clearRoom();
     clearMessages();
     let message = {
@@ -41,8 +41,10 @@ function leaveRoom(userId, channelId, username) {
 
 //Refreshes the friend list
 function refreshFriendsList(userId) {
-    console.log("refresh friends list for " + userId + "\n");
-    $("#friendsCollapse").html("");
+    let friendsCollapse = document.getElementById("friendsCollapse");
+    while (friendsCollapse.firstChild) {
+        friendsCollapse.removeChild(friendsCollapse.firstChild);
+    }
     $.ajax({
         type: "GET",
         url: controllersPath + "friendHandler.php",
@@ -52,7 +54,19 @@ function refreshFriendsList(userId) {
             request: "getFriendDivs",
             userId: userId
         },
-        success: function(data) { $("#friendsCollapse").html(data); },
+        success: function(data) {
+            Array.from(JSON.parse(data)).forEach(friend => {
+                if (friend.type === "accepted") {
+                    $("#friendsCollapse").append(createFriendDiv(friend.name));
+                }
+                else if (friend.type === "toMe") {
+                    $("#friendsCollapse").append(createFriendRequestFromDiv(friend.name));
+                }
+                else if (friend.type === "fromMe") {
+                    $("#friendsCollapse").append(createFriendRequestToDiv(friend.name));
+                }
+            });
+        },
         failure: function(data) { alert("Unable to load friend list."); }
     });
 }
@@ -88,7 +102,9 @@ function refreshRoomList(userId) {
         },
         success: function(data) {
             let roomList = document.getElementById("roomList");
-            roomList.innerHTML = "";
+            while (roomList.firstChild) {
+                roomList.removeChild(roomList.firstChild);
+            }
             let rooms = JSON.parse(data);
             let roomNotSelected = true;
             rooms.forEach((room)=> {
@@ -114,7 +130,6 @@ function refreshRoomList(userId) {
 
 //Deletes a friend
 function deleteFriend(userId, friendName, onComplete, onFailure) {
-    console.log("Delete " + friendName);
     $.ajax({
         url: controllersPath + "friendHandler.php",
         type: "GET",
@@ -177,7 +192,7 @@ function showDefaultSidebar() {
     
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
     $("#signout").on("click", function(){ websocket.close(); });
     //Alternates between the minimized and default sidebar view.
     $("#hideShowSidebarBtn").on("click", function() {
@@ -191,7 +206,14 @@ $(document).ready(function(){
         }
     });
 
-    //Event Listener for room divs
+    //refresh rooms list when the room collapse is opened
+    $("#toggleRoomsCollapse").on("click", () => {
+        if (!$("#roomCollapse").hasClass("show")) {
+            refreshRoomList($("#userId").val());
+        }
+    });
+
+    //Event Listener for room divs and their icons
     let roomList = document.getElementById("roomList");
     roomList.addEventListener("click", function(event) {
         let userId = document.getElementById("userId").value;
@@ -218,9 +240,6 @@ $(document).ready(function(){
             leaveRoom(userId, channelIdToRemove, username);
             removeRoom(userId, channelIdToRemove);
             
-            //TODO If this person was the room owner, then tell the ChannelManager to
-            // kick out any other users currently in the room.
-
             if (roomList.children.length > 0) {
                 let username = document.getElementById("username").value;
                 let firstRoom = roomList.firstChild;
@@ -232,6 +251,38 @@ $(document).ready(function(){
         }
     });
 
+    //refresh friends list when the friends collapse is opened
+    $("#toggleFriendsCollapse").on("click", () => {
+        if (!$("#friendsCollapse").hasClass("show")) {
+            refreshFriendsList($("#userId").val());
+        }
+    });
+    //Event listener for friends list elements icons
+    $("#friendsCollapse").on("click", function(event) {
+        let src = event.target;
+        let userId = $("#userId").val();
+        if ("deleteFriend" in src.dataset) {
+            const name = src.parentElement.innerText;
+            deleteFriend(userId, name,
+                function(data) { 
+                    src.parentElement.parentElement.removeChild(src.parentElement);
+                 },
+                function(data) { alert("Failed to delete friend: " + name);}
+            );
+        }
+        else if ("approveFriendRequest" in src.dataset) {
+            const name = src.parentElement.innerText;
+            approveFriendRequest(userId, name,
+                function(data) {
+                    src.parentElement.removeChild(src);
+                },
+                function(data) { alert("Failed to approve friend request from " + name + "."); }
+            );
+        }
+    });
+
+});
+
 //removes className from node's children
 function removeClassFromChildren(parent, className) {
     let children = $(parent).children();
@@ -240,41 +291,11 @@ function removeClassFromChildren(parent, className) {
     }
 }
 
-    //Event listener for the sidebar friend related icons
-    document.addEventListener("click", function(event) {
-        let src = event.target;
-        let userId = $("#userId").val();
-        if ("deleteFriend" in src.dataset) {
-            let name = src.parentElement.id;
-            deleteFriend(userId, name,
-                function(data) { 
-                    removeFriendElement(name);
-                 },
-                function(data) { alert("Failed to delete friend: " + name);}
-            );
-        }
-        else if ("approveFriendRequest" in src.dataset) {
-            let name = src.parentElement.id;
-            approveFriendRequest(userId, name,
-                function(data) { refreshFriendsList(userId); },
-                function(data) { alert("Failed to approve friend request from" + name + "."); }
-            );
-        }
-    });
-});
-
-
 /*
-Adds an element to the friends list.
+Creates an element for a friend list item.
 */
-function addFriendElement(element) {
-    let friendsList = document.getElementById("friendsCollapse");
-    friendsList.append(element);
-}
-
 function createFriendDiv(username) {
     let div = document.createElement("DIV");
-    div.id = username;
     div.classList.add("friendDiv");
     div.classList.add("animated");
     div.classList.add("zoomIn");
@@ -284,17 +305,21 @@ function createFriendDiv(username) {
     commentIcon.classList.add("fa-comment");
     commentIcon.classList.add("fa-fw");
     commentIcon.style = "float: right";
+    div.append(commentIcon);
     let deleteIcon = document.createElement("I");
     deleteIcon.classList.add("fa");
     deleteIcon.classList.add("fa-trash");
     deleteIcon.classList.add("fa-fw");
     deleteIcon.setAttribute("data-delete-friend", username);
+    div.append(deleteIcon);
     return div;
 }
 
+/*
+Creates an element for a non-approved friend request to another user.
+*/
 function createFriendRequestToDiv(username) {
     let div = document.createElement("DIV");
-    div.id = username;
     div.classList.add("friendDiv");
     div.classList.add("animated");
     div.classList.add("zoomIn");
@@ -308,9 +333,11 @@ function createFriendRequestToDiv(username) {
     return div;
 }
 
+/*
+Creates an element for a non-approved friend request from another user.
+*/
 function createFriendRequestFromDiv(username) {
     let div = document.createElement("DIV");
-    div.id = username;
     div.classList.add("friendDiv");
     div.classList.add("animated");
     div.classList.add("zoomIn");
@@ -320,30 +347,18 @@ function createFriendRequestFromDiv(username) {
     commentIcon.classList.add("fa-comment");
     commentIcon.classList.add("fa-fw");
     commentIcon.style = "float: right";
+    div.append(commentIcon);
     let deleteIcon = document.createElement("I");
     deleteIcon.classList.add("fa");
     deleteIcon.classList.add("fa-trash");
     deleteIcon.classList.add("fa-fw");
     deleteIcon.setAttribute("data-delete-friend", username);
+    div.append(deleteIcon);
     let approveIcon = document.createElement("I");
     approveIcon.classList.add("fa");
     approveIcon.classList.add("fa-plus");
     approveIcon.classList.add("fa-fw");
     approveIcon.setAttribute("data-approve-friend-request", username);
-    div.append(commentIcon);
-    div.append(deleteIcon);
     div.append(approveIcon);
     return div;
-}
-
-/*
-Removes the element with innerText === username from the friends list.
-*/
-function removeFriendElement(username) {
-    let friendList = document.getElementById("friendsCollapse");
-    Array.from(friendList.children).forEach(child => {
-        if (child.id === username) {
-            friendList.removeChild(child);
-        }
-    });
 }

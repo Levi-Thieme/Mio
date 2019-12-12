@@ -343,7 +343,8 @@
     function insertRoom($conn, $username, $roomName) {
         $userId = getUserId($conn, $username);
         $sql = "INSERT INTO room(user_id, name) VALUES($userId, '$roomName')";
-        return execQuery($sql, $conn);
+        execQuery($sql, $conn);
+        return mysqli_insert_id($conn);
     }
     
     /*

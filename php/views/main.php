@@ -106,7 +106,7 @@
             <div id="chatPanel" class="sidebarPanel">
                 <a id="addRoomBtn" class="firstRow sidebarLeft" onclick="openCreateRoomModal()"><i class="fa fa-plus-circle fa-3x"></i></a>
                 <h4 class="firstRow sidebarMiddle">Chats</h4>
-                <a id="toggleRoomsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#roomCollapse" onclick=<?php echo "refreshRoomList($userId)";?> >
+                <a id="toggleRoomsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#roomCollapse">
                     <i id="toggleChatsIcon" class="fa fa-angle-double-down fa-3x"></i>
                 </a>
                 <div id="roomCollapse" class="collapse animated zoomIn secondRow spanAllCols">
@@ -118,7 +118,7 @@
             <div id="friendPanel" class="sidebarPanel">
                 <a id="addFriendBtn" class="firstRow sidebarLeft" onclick="openFriendRequestModal()"><i class="fa fa-plus-circle fa-3x sidebarLeft"></i></a>
                 <h4 class="firstRow sidebarMiddle">Friends</h4>
-                <a id="toggleFriendsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#friendsCollapse" onclick=<?php echo "refreshFriendsList($userId)";?>>
+                <a id="toggleFriendsCollapse" class="firstRow sidebarRight" data-toggle="collapse" href="#friendsCollapse">
                     <i class="fa fa-angle-double-down fa-3x"></i></a>
                 <div id="friendsCollapse" class="collapse secondRow spanAllCols"></div>
             </div>

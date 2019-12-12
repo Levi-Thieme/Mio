@@ -32,8 +32,9 @@ function getRooms() {
 function createRoom() {
     if (isset($_GET["roomName"])) {
         $conn = connect();
-        insertRoom($conn, $_SESSION['username'], $_GET['roomName']);
+        $roomId = insertRoom($conn, $_SESSION['username'], $_GET['roomName']);
         $conn->close();
+        echo($roomId);
     }
 }
 

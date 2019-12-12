@@ -4,8 +4,9 @@ function openCreateRoomModal() {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Chat Name";
     document.getElementById("modalSubmitBtn").innerHTML = "Create";
+    $("#modalInput").unbind("keyup");
     $("#modalSubmitBtn").one("click", function() {
-        let newChatName = $("#modalInput").val().trim();
+        const newChatName = $("#modalInput").val().trim();
         if (newChatName === "") {
             return;
         }
@@ -17,7 +18,12 @@ function openCreateRoomModal() {
                 request: "createRoom",
                 roomName: newChatName
             },
-            complete: function() { refreshRoomList($("#userId").val()); $("#modalInput").val(""); $("#myModal").hide(); },
+            success: function(roomId) { 
+                $("#modalInput").val("");
+                $("#myModal").hide();
+                let roomElement = createRoomDiv(roomId, newChatName);
+                $("#roomList").append(roomElement);
+            },
             failure: function(data) { alert(data["reason"]); }
         });
     });
@@ -29,11 +35,12 @@ function openInviteToChatModal(chatName) {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Invite A Friend to " + chatName;
     document.getElementById("modalSubmitBtn").innerHTML = "Invite";
+    $("#modalInput").on("keyup", function(event) {
+        searchFriends($("#modalInput").val());
+    });
     $("#modalSubmitBtn").one("click", function() {
-        console.log("Invite to " + chatName);
         let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
-        console.log(selectedNames);
-        selectedNames.map(selectedName => {
+        selectedNames.forEach(selectedName => {
             let name = selectedName.innerText;
             $.ajax({
                 url: controllersPath + "roomHandler.php",
@@ -57,9 +64,12 @@ function openFriendRequestModal() {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Send A Friend Request";
     document.getElementById("modalSubmitBtn").innerHTML = "Send";
+    $("#modalInput").on("keyup", function(event) {
+        searchFriends($("#modalInput").val());
+    });
     $("#modalSubmitBtn").one("click", function() {
-        let selectedNames = Array.from(document.getElementsByClassName("list-group-item active"));
-        selectedNames.map(selectedName => {
+        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
+        selectedNames.forEach(selectedName => {
             let name = selectedName.innerText;
             $.ajax({
                 url: controllersPath + "friendHandler.php",
@@ -70,31 +80,21 @@ function openFriendRequestModal() {
                     receiver: name
                 },
                 dataType: "JSON",
-                complete: function () { 
-                    sendFriendRequestNotification($("#username").val(), name); 
+                complete: function () {
+                    $("#modalInput").val("");
+                    $("#myModal").hide();
+                    sendFriendRequestNotification($("#username").val(), name);
                     let element = createFriendRequestToDiv(name); 
-                    addFriendElement(element);
+                    $("#friendsCollapse").append(element);
                 },
                 failure: function () { alert("Failed to send friend request to " + name); }
             });
-            
-            $("#modalInput").val("");
-            $("#myModal").hide();
-            });
         });
+    });
     $("#myModal").modal();
 }
 
 $(document).ready(function() {
-    $("#modalInput").on("keyup", function(event) {
-        if ($("#modalInput").val().trim().length === 0) {
-            $("#optionList").html("");
-        }
-        else {
-            searchFriends($("#modalInput").val());
-        }
-    });
-
     $("#optionList").click(function(event) {
         if (event.target.tagName === "LI") {
             if (event.target.classList.contains("active")) {
@@ -117,7 +117,9 @@ function searchFriends(name) {
             friendName: name
         },
         datatype: "HTML",
-        success: function(data) { $("#optionList").html(data); },
+        success: function(data) { 
+            $("#optionList").html(data);
+         },
         failure: function(data) { console.log("Failed to search for friend: " + $("#addName").val()); }
     });
 }
