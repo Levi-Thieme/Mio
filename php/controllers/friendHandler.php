@@ -64,7 +64,7 @@ function sendFriendRequest() {
 function acceptFriendRequest() {
     if (isset($_GET["requester"])) {
         $conn = connect();
-        updateFriendRequest($conn, $_SESSION["username"], json_decode($_GET["requester"]));
+        updateFriendRequest($conn, $_SESSION["username"], $_GET["requester"]);
         $conn->close();
     }
 }
