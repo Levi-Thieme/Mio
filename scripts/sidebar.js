@@ -236,17 +236,20 @@ $(document).ready(function() {
             openInviteToChatModal(clickedElement.dataset.roomName);
         } else if ("leaveRoom" in clickedElement.dataset) {
             let channelIdToRemove = clickedElement.dataset.leaveRoom;
-            roomList.removeChild(clickedElement.parentNode);
-            leaveRoom(userId, channelIdToRemove, username);
-            removeRoom(userId, channelIdToRemove);
-            
-            if (roomList.children.length > 0) {
-                let username = document.getElementById("username").value;
-                let firstRoom = roomList.firstChild;
-                let roomId = firstRoom.dataset.roomId;
-                let roomName = firstRoom.dataset.roomName;
-                joinRoom(userId, username, roomId, roomName);
-                firstRoom.classList.add("active");
+            let roomName = clickedElement.parentElement.innerText;
+            if (confirm("Are you sure you want to leave " + roomName + "?")) {
+                roomList.removeChild(clickedElement.parentNode);
+                leaveRoom(userId, channelIdToRemove, username);
+                removeRoom(userId, channelIdToRemove);
+                
+                if (roomList.children.length > 0) {
+                    let username = document.getElementById("username").value;
+                    let firstRoom = roomList.firstChild;
+                    let roomId = firstRoom.dataset.roomId;
+                    let roomName = firstRoom.dataset.roomName;
+                    joinRoom(userId, username, roomId, roomName);
+                    firstRoom.classList.add("active");
+                }
             }
         }
     });
@@ -263,12 +266,14 @@ $(document).ready(function() {
         let userId = $("#userId").val();
         if ("deleteFriend" in src.dataset) {
             const name = src.parentElement.innerText;
-            deleteFriend(userId, name,
-                function(data) { 
-                    src.parentElement.parentElement.removeChild(src.parentElement);
-                 },
-                function(data) { alert("Failed to delete friend: " + name);}
-            );
+            if (confirm("Are you sure you want to unfriend " + name + "?")) {
+                deleteFriend(userId, name,
+                    function(data) { 
+                        src.parentElement.parentElement.removeChild(src.parentElement);
+                     },
+                    function(data) { alert("Failed to delete friend: " + name);}
+                );
+            }
         }
         else if ("approveFriendRequest" in src.dataset) {
             const name = src.parentElement.innerText;
