@@ -4,8 +4,9 @@ function openCreateRoomModal() {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Chat Name";
     document.getElementById("modalSubmitBtn").innerHTML = "Create";
-    $("#modalInput").unbind("keyup");
-    $("#modalSubmitBtn").one("click", function() {
+    $("#modalInput").off("keyup");
+    $("#modalSubmitBtn").off("click");
+    $("#modalSubmitBtn").on("click", (event) => {
         const newChatName = $("#modalInput").val().trim();
         if (newChatName === "") {
             return;
@@ -35,10 +36,15 @@ function openInviteToChatModal(chatName) {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Invite A Friend to " + chatName;
     document.getElementById("modalSubmitBtn").innerHTML = "Invite";
+    let searchTimeout;
     $("#modalInput").on("keyup", function(event) {
-        searchFriends($("#modalInput").val());
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        searchTimeout = setTimeout((event) => searchFriends($("#modalInput").val()), 150);
     });
-    $("#modalSubmitBtn").one("click", function() {
+    $("#modalSubmitBtn").off("click");
+    $("#modalSubmitBtn").on("click", (event) => {
         let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
         selectedNames.forEach(selectedName => {
             let name = selectedName.innerText;
@@ -64,10 +70,15 @@ function openFriendRequestModal() {
     $("#optionList").empty();
     document.getElementById("modalTitle").innerHTML = "Send A Friend Request";
     document.getElementById("modalSubmitBtn").innerHTML = "Send";
+    let searchTimeout;
     $("#modalInput").on("keyup", function(event) {
-        searchFriends($("#modalInput").val());
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        searchTimeout = setTimeout((event) => searchFriends($("#modalInput").val()), 150);
     });
-    $("#modalSubmitBtn").one("click", function(event) {
+    $("#modalSubmitBtn").off("click");
+    $("#modalSubmitBtn").on("click", (event) => {
         let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"))
             .map(selectedListItem => selectedListItem.innerText);
         $.ajax({
