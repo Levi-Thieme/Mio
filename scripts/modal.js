@@ -24,6 +24,7 @@ function openCreateRoomModal() {
                 $("#myModal").hide();
                 let roomElement = createRoomDiv(roomId, newChatName);
                 $("#roomList").append(roomElement);
+                displayToast("New Room", "Created New Room: " + newChatName);
             },
             failure: function(data) { alert(data["reason"]); }
         });
@@ -45,9 +46,10 @@ function openInviteToChatModal(chatName) {
     });
     $("#modalSubmitBtn").off("click");
     $("#modalSubmitBtn").on("click", (event) => {
-        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"));
+        let selectedNames = Array.from(document.getElementById("optionList").getElementsByClassName("list-group-item active"))
+            .map(element => element.innerText);
         selectedNames.forEach(selectedName => {
-            let name = selectedName.innerText;
+            let name = selectedName;
             $.ajax({
                 url: controllersPath + "roomHandler.php",
                 type: "GET",
@@ -57,7 +59,11 @@ function openInviteToChatModal(chatName) {
                     userToAdd: name,
                     roomName: chatName
                 },
-                complete: function (data) { $("#modalInput").val("");  $("#myModal").hide();; },
+                complete: function (data) { 
+                    $("#modalInput").val("");
+                    $("#myModal").hide();
+                    displayToast("Room Invite", "Invited " + selectedNames.join(", ") + " to " + chatName);
+                },
                 failure: function (data) { alert("Failed to invite " + name + " to " + $("#currentRoom")); }
             });
         });
@@ -98,6 +104,7 @@ function openFriendRequestModal() {
                     let element = createFriendRequestToDiv(name);
                     $("#friendsCollapse").append(element);
                 });
+                displayToast("Friend Request", "Sent a friend request to " + selectedNames.join(", "));
             },
             failure: function () { alert("Failed to send friend request(s). Please try again later."); }
         });
