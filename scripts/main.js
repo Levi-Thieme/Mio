@@ -104,10 +104,10 @@ $(document).ready(function() {
 
 function displayToast(header, body) {
     $("#notificationToastHeader").text(header);
-    $("#notificationToastTime").text(timestamp());
+    $("#notificationToastTime").text("  " + timestamp());
     $("#notificationToastBody").text(body);
     $(".toast").toast({
-        delay: 3000
+        delay: 5000
     });
     $(".toast").toast("show");
 }

@@ -81,6 +81,11 @@
     width: 300px;
 }
 
+#myAccountLink {
+    font-size: x-large;
+    font-family: "Courier New";
+}
+
 #hideShowDiv {
     position: absolute;
     right: 0;

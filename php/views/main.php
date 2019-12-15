@@ -95,7 +95,7 @@
 
             <div id="sidebarHeader" class="sidebarPanel">
                 <a id="myAccountLink" class="sidebarMiddle" href="myAccount.php">
-                    <h4><?php echo $username;?></h4>
+                    <h4><i class="fa fa-user" aria-hidden="true"></i> My Account</h4>
                 </a>
                 <div id="hideShowDiv" class="sidebarRight">
                     <i id="hideShowSidebarBtn" class="fa fa-bars fa-3x"></i>
